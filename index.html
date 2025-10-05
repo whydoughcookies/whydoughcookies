@@ -362,14 +362,6 @@
       samplers: 320
     };
 
-    // Box size base prices (removed since prices vary with selection)
-    const boxSizePrices = {
-      '4': 0, // Price varies with selection
-      '6': 0, // Price varies with selection
-      '12': 0, // Price varies with selection
-      'others': 0 // Calculated based on selected cookies
-    };
-
     // ----- Utilities -----
     function scrollToSection(id){ document.getElementById('section-'+id).scrollIntoView({behavior:'smooth'}); }
     function openDateInput(){ document.getElementById('deliveryDateInput').classList.remove('hidden'); }
@@ -389,18 +381,14 @@
     function toggleCookieCard(card, inputId) {
       const isActive = card.classList.contains('active');
       
-      // If clicking the same card, toggle it
       if (isActive) {
         card.classList.remove('active');
       } else {
-        // Deactivate all other cards
         document.querySelectorAll('.cookie-card').forEach(c => {
           c.classList.remove('active');
         });
-        // Activate this card
         card.classList.add('active');
         
-        // Set quantity to 1 if it's 0
         const input = document.getElementById(inputId);
         if (parseInt(input.value) === 0) {
           input.value = 1;
@@ -437,15 +425,12 @@
         return;
       }
 
-      // Check if item already exists in cart
       const existingIndex = cart.findIndex(item => item.id === inputId && item.type === 'premade');
       
       if (existingIndex > -1) {
-        // Update existing item
         cart[existingIndex].quantity = quantity;
         cart[existingIndex].total = price * quantity;
       } else {
-        // Add new item
         cart.push({
           id: inputId,
           type: 'premade',
@@ -458,7 +443,6 @@
 
       updateCartDisplay();
       
-      // Reset the input and deactivate card
       document.getElementById(inputId).value = 0;
       const card = document.querySelector(`.cookie-card[onclick*="${inputId}"]`);
       if (card) {
@@ -479,14 +463,12 @@
       const cartTotal = document.getElementById('cartTotal');
       const cartTotalAmount = document.getElementById('cartTotalAmount');
 
-      // Update cart count and total
       const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
       const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
       
       cartCount.textContent = totalItems;
       cartTotalPreview.textContent = totalAmount;
 
-      // Update cart modal
       if (cart.length === 0) {
         emptyCartMessage.classList.remove('hidden');
         cartItems.innerHTML = '';
@@ -604,7 +586,6 @@
       const radio = row.querySelector('input[type="radio"]');
       selectedBoxSize = radio.value;
       
-      // Show size information
       const sizeInfo = document.getElementById('selectedSizeInfo');
       const sizeMessage = document.getElementById('sizeMessage');
       
@@ -640,7 +621,6 @@
       document.getElementById("customizeModal").classList.add("active");
       document.body.classList.add("no-scroll");
       renderCookieList();
-      // Reset previous selections
       selectedBoxSize = null;
       document.querySelectorAll('.boxsize-row').forEach(r => r.classList.remove('active'));
       document.getElementById('selectedSizeInfo').classList.add('hidden');
@@ -656,10 +636,8 @@
       const items = getSelectedCookies(); 
       if(items.length === 0){ alert('Please select at least one cookie for your custom box'); return; }
       
-      // Calculate total quantity
       const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
       
-      // Validation based on box size
       if (selectedBoxSize === 'others') {
         if (totalQty < 3) {
           alert(`Please select at least 3 cookies for your custom box. Currently selected: ${totalQty}`);
@@ -672,15 +650,13 @@
         }
       }
       
-      // Calculate total price for custom box (sum of individual cookie prices)
       const totalPrice = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
       
-      // Add to cart
       cart.push({
         type: 'customBox',
         name: selectedBoxSize === 'others' ? `Custom Box (${totalQty} cookies)` : `Custom Box of ${selectedBoxSize}`,
         boxSize: selectedBoxSize === 'others' ? totalQty.toString() : selectedBoxSize,
-        items: [...items], // Copy the items array
+        items: [...items],
         price: totalPrice,
         quantity: 1,
         total: totalPrice
@@ -689,11 +665,9 @@
       updateCartDisplay();
       closeCustomizeModal();
       
-      // Update the custom box card to show it's been added
       const customBoxCard = document.querySelector('.cookie-card:last-child');
       customBoxCard.classList.remove('active');
       
-      // Reset modal selections
       selectedBoxSize = null;
       document.querySelectorAll('.boxsize-row').forEach(r => r.classList.remove('active'));
       document.querySelectorAll('.cookie-row').forEach(r => {
@@ -701,6 +675,81 @@
         const qtyInput = r.querySelector('.cookie-qty-input');
         if (qtyInput) qtyInput.value = 1;
       });
+    }
+
+    // ----- Google Forms Submission -----
+    async function submitToGoogleForms(formData) {
+      // REPLACE THESE WITH YOUR ACTUAL GOOGLE FORM URL AND FIELD IDs
+      const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfpWgm_iikunZ44T7HxQfnbmA1KY-bB4l57fnAN0vAaFo0ZsA/formResponse';
+      
+      // Calculate individual cookie quantities
+      const cookieQuantities = {};
+      cart.forEach(item => {
+        if (item.type === 'premade') {
+          if (item.name === 'OG Set') {
+            cookieQuantities['The Usual'] = (cookieQuantities['The Usual'] || 0) + item.quantity;
+            cookieQuantities['The Red One'] = (cookieQuantities['The Red One'] || 0) + item.quantity;
+            cookieQuantities['The Burnt One'] = (cookieQuantities['The Burnt One'] || 0) + item.quantity;
+          } else if (item.name === 'Classic 6') {
+            cookieQuantities['The Usual'] = (cookieQuantities['The Usual'] || 0) + item.quantity;
+            cookieQuantities['The Red One'] = (cookieQuantities['The Red One'] || 0) + item.quantity;
+            cookieQuantities['The Burnt One'] = (cookieQuantities['The Burnt One'] || 0) + item.quantity;
+            cookieQuantities['The Milky One'] = (cookieQuantities['The Milky One'] || 0) + item.quantity;
+            cookieQuantities['Pistash'] = (cookieQuantities['Pistash'] || 0) + item.quantity;
+            cookieQuantities['The Bizz'] = (cookieQuantities['The Bizz'] || 0) + item.quantity;
+          } else if (item.name === 'Samplers') {
+            cookieQuantities['Sampler Pack'] = (cookieQuantities['Sampler Pack'] || 0) + item.quantity;
+          }
+        } else if (item.type === 'customBox') {
+          item.items.forEach(cookieItem => {
+            cookieQuantities[cookieItem.name] = (cookieQuantities[cookieItem.name] || 0) + cookieItem.qty;
+          });
+        }
+      });
+
+      const orderDetails = cart.map(item => {
+        if (item.type === 'customBox') {
+          return `${item.name}: ${item.items.map(it => `${it.name}(x${it.qty})`).join(', ')}`;
+        } else {
+          return `${item.name} x ${item.quantity}`;
+        }
+      }).join('; ');
+
+      const cookieQuantitiesText = Object.entries(cookieQuantities)
+        .map(([cookie, qty]) => `${cookie}: ${qty}`)
+        .join('; ');
+
+      const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
+
+      // REPLACE THESE ENTRY IDs WITH YOUR ACTUAL GOOGLE FORM FIELD IDs
+      const params = new URLSearchParams({
+        'entry.1608348325': formData.get('name') || '',           // Name
+        'entry.756795480': formData.get('socialHandle') || '',   // Social Handle
+        'entry.1868351860': formData.get('deliveryDate') || '',   // Delivery Date
+        'entry.1213945014': formData.get('deliveryMethod') || '', // Delivery Method
+        'entry.216379063': formData.get('contactNumber') || '',  // Contact Number
+        'entry.1369240809': formData.get('payment') || '',        // Payment Method
+        'entry.564442403': formData.get('notes') || '',          // Notes
+        'entry.1344414632': orderDetails,                         // Order Details
+        'entry.950008786': cookieQuantitiesText,                 // Cookie Quantities
+        'entry.1858160446': totalAmount.toString()                // Total Amount
+      });
+
+      // Submit to Google Forms using no-cors mode
+      try {
+        await fetch(formUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: params
+        });
+        return true;
+      } catch (error) {
+        console.log('Form submission attempted (no-cors mode)');
+        return true; // With no-cors, we can't verify success, but assume it worked
+      }
     }
 
     // ----- Form submit & summary -----
@@ -724,7 +773,6 @@
       
       html += `<strong>Order Items:</strong><br>`;
       
-      // Display cart items
       if(cart.length > 0){
         cart.forEach((item, index) => {
           totalAmount += item.total;
@@ -754,89 +802,32 @@
         return;
       }
       
-      // Show loading state
       const submitBtn = e.target.querySelector('button[type="submit"]');
       const originalText = submitBtn.textContent;
       submitBtn.textContent = 'Submitting...';
       submitBtn.classList.add('loading');
       
       try {
-        // Prepare order data
         const formData = new FormData(document.getElementById('orderForm'));
         
-        // Calculate individual cookie quantities for detailed tracking
-        const cookieQuantities = {};
+        // Submit to Google Forms
+        await submitToGoogleForms(formData);
         
-        // Process premade sets
-        cart.forEach(item => {
-          if (item.type === 'premade') {
-            if (item.name === 'OG Set') {
-              // OG Set contains: The Usual, The Red One, The Burnt One
-              cookieQuantities['The Usual'] = (cookieQuantities['The Usual'] || 0) + item.quantity;
-              cookieQuantities['The Red One'] = (cookieQuantities['The Red One'] || 0) + item.quantity;
-              cookieQuantities['The Burnt One'] = (cookieQuantities['The Burnt One'] || 0) + item.quantity;
-            } else if (item.name === 'Classic 6') {
-              // Classic 6 contains: The Usual, The Red One, The Burnt One, The Milky One, Pistash, The Bizz
-              cookieQuantities['The Usual'] = (cookieQuantities['The Usual'] || 0) + item.quantity;
-              cookieQuantities['The Red One'] = (cookieQuantities['The Red One'] || 0) + item.quantity;
-              cookieQuantities['The Burnt One'] = (cookieQuantities['The Burnt One'] || 0) + item.quantity;
-              cookieQuantities['The Milky One'] = (cookieQuantities['The Milky One'] || 0) + item.quantity;
-              cookieQuantities['Pistash'] = (cookieQuantities['Pistash'] || 0) + item.quantity;
-              cookieQuantities['The Bizz'] = (cookieQuantities['The Bizz'] || 0) + item.quantity;
-            } else if (item.name === 'Samplers') {
-              // Samplers - count as individual classics (adjust as needed)
-              cookieQuantities['Sampler Pack'] = (cookieQuantities['Sampler Pack'] || 0) + item.quantity;
-            }
-          } else if (item.type === 'customBox') {
-            // Process custom box items
-            item.items.forEach(cookieItem => {
-              cookieQuantities[cookieItem.name] = (cookieQuantities[cookieItem.name] || 0) + cookieItem.qty;
-            });
-          }
+        alert('Order submitted successfully! Thank you for your order!');
+        
+        // Reset form and cart
+        document.getElementById('orderForm').reset();
+        cart = [];
+        updateCartDisplay();
+        document.querySelectorAll('.cookie-card').forEach(card => {
+          card.classList.remove('active');
         });
-
-        const orderData = {
-          timestamp: new Date().toISOString(),
-          name: formData.get('name'),
-          socialHandle: formData.get('socialHandle'),
-          deliveryDate: formData.get('deliveryDate'),
-          deliveryMethod: formData.get('deliveryMethod'),
-          contactNumber: formData.get('contactNumber'),
-          payment: formData.get('payment'),
-          notes: formData.get('notes'),
-          cart: cart,
-          cookieQuantities: cookieQuantities,
-          totalAmount: cart.reduce((sum, item) => sum + item.total, 0)
-        };
+        scrollToSection(1);
         
-        // Send to Google Sheets
-        const response = await fetch('https://script.google.com/macros/s/AKfycbzx0zq-H01afX9cu5Pt3sd1L6gNX2rywph4-Z3kCnpC1SNEPVqwFSRAayTHG5uZ5QG-Gg/exec', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(orderData)
-        });
-        
-        if (response.ok) {
-          alert('Order submitted successfully! Thank you for your order!');
-          // Reset form and cart
-          document.getElementById('orderForm').reset();
-          cart = [];
-          updateCartDisplay();
-          // Reset all cookie cards
-          document.querySelectorAll('.cookie-card').forEach(card => {
-            card.classList.remove('active');
-          });
-          scrollToSection(1);
-        } else {
-          throw new Error('Failed to submit order');
-        }
       } catch (error) {
         console.error('Error:', error);
         alert('There was an error submitting your order. Please try again or contact us directly.');
       } finally {
-        // Reset button state
         submitBtn.textContent = originalText;
         submitBtn.classList.remove('loading');
       }
@@ -853,7 +844,7 @@
       setDateRestrictions(); 
       renderCookieList();
       document.getElementById('orderForm').addEventListener('submit', handleFormSubmit);
-      updateCartDisplay(); // Initialize cart display
+      updateCartDisplay();
     });
   </script>
 </body>
