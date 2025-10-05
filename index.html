@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Parallax Cookie Order</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body { scroll-behavior: smooth; overflow-x: hidden; height: 100%; font-family: 'Poppins', sans-serif; }
+    body { scroll-snap-type: y mandatory; }
+    section { min-height: 100vh; display:flex; align-items:center; justify-content:center; padding:2rem; flex-direction:column; text-align:center; scroll-snap-align:start; background-attachment:fixed; background-size:cover; background-position:center; position:relative; }
+    section::before { content: ""; position:absolute; inset:0; background: rgba(255, 248, 240, 0.9); z-index:-1; }
+    @media (max-width:768px){ section{ padding:1rem; background-attachment:scroll; } }
+
+    /* Modal & lists */
+    body.no-scroll { overflow: hidden; }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; justify-content: center; align-items: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: #fff; border-radius: 12px; width: 90%; max-width: 680px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; }
+    .modal-header, .modal-footer { padding: 1rem; border-bottom: 1px solid #eee; }
+    .modal-footer { border-top: 1px solid #eee; border-bottom: none; }
+    .modal-body { flex: 1; overflow-y: auto; padding: 1rem; }
+
+    .boxsize-list, .cookie-list { display:flex; flex-direction:column; gap:10px; margin-top:12px; }
+    .boxsize-row, .cookie-row { display:flex; align-items:center; justify-content:space-between; border:1px solid #e5e7eb; border-radius:8px; padding:10px 14px; background:#fafafa; cursor:pointer; transition:background .15s; }
+    .boxsize-row:hover, .cookie-row:hover{ background:#f3f4f6; }
+    .boxsize-row.active, .cookie-row.active{ border-color:#f59e0b; background:#fffbeb; }
+
+    .cookie-price { font-size:.9rem; color:#6b7280; margin-left:8px; }
+    .quantity-control, .cookie-qty { display:none; align-items:center; gap:8px; }
+    .cookie-row.active .quantity-control { display:flex; }
+    .cookie-qty-input { width:56px; text-align:center; border:1px solid #d1d5db; border-radius:6px; padding:4px; }
+    .qty-btn { background:#111827; color:#fff; border:none; padding:6px 8px; border-radius:6px; cursor:pointer; }
+    
+    .loading { opacity: 0.6; pointer-events: none; }
+    
+    /* Cookie card styles */
+    .cookie-card { 
+      cursor: pointer; 
+      transition: all 0.3s ease; 
+      border: 2px solid transparent;
+    }
+    .cookie-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .cookie-card.active {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+    .quantity-section {
+      display: none;
+      margin-top: 12px;
+    }
+    .cookie-card.active .quantity-section {
+      display: flex;
+    }
+    
+    /* Delivery option styles */
+    .delivery-option {
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 8px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .delivery-option:hover {
+      border-color: #f59e0b;
+    }
+    .delivery-option.active {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+
+    /* Cart styles */
+    .cart-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 8px 0;
+      background: #fafafa;
+    }
+    .cart-total {
+      font-size: 1.2em;
+      font-weight: bold;
+      border-top: 2px solid #e5e7eb;
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body class="text-gray-800">
+
+  <!-- Welcome -->
+  <section id="section-1" class="bg-yellow-100">
+    <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-md">
+      <h1 class="text-4xl font-bold mb-4">🍪 Welcome to Cookie Order</h1>
+      <p class="text-lg">Scroll or click to begin</p>
+      <button onclick="scrollToSection(2)" class="mt-4 bg-yellow-500 text-white px-4 py-2 rounded">Start Order ⬇️</button>
+    </div>
+  </section>
+
+  <form id="orderForm">
+    <!-- Name -->
+    <section id="section-2" class="bg-white">
+      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-md w-full">
+        <label class="text-2xl font-bold mb-2 block">What's your name?</label>
+        <input name="name" required type="text" class="w-full border p-3 rounded mb-4" onkeydown="if(event.key==='Enter'){event.preventDefault(); scrollToSection(3);}" />
+
+        <label class="text-lg font-semibold mb-2 block">Facebook or Instagram Name</label>
+        <input name="socialHandle" required type="text" placeholder="Enter FB or IG name" class="w-full border p-3 rounded" onkeydown="if(event.key==='Enter'){event.preventDefault(); scrollToSection(3);}" />
+
+        <button type="button" onclick="scrollToSection(3)" class="mt-4 text-blue-500 underline">Next ⬇️</button>
+      </div>
+    </section>
+
+    <!-- Delivery date & method -->
+    <section id="section-3" class="bg-yellow-50">
+      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-md w-full">
+        <label class="text-2xl font-bold mb-2 block">Delivery Date</label>
+        <div id="quickDates" class="grid grid-cols-3 gap-2 mb-4"></div>
+        <a href="#" onclick="openDateInput();return false;" class="text-blue-600 underline block mb-2">Pick another date</a>
+        <input name="deliveryDate" id="deliveryDateInput" required type="date" class="w-full border p-3 rounded hidden" onchange="scrollToSection(4)" />
+        
+        <!-- Delivery Method -->
+        <label class="text-2xl font-bold mb-2 block mt-6">Delivery Method</label>
+        <div class="space-y-2">
+          <div class="delivery-option" onclick="selectDeliveryMethod(this, 'pickup')">
+            <input type="radio" name="deliveryMethod" value="pickup" class="hidden">
+            <span class="font-semibold">🛵 Pick Up</span>
+          </div>
+          <div class="delivery-option" onclick="selectDeliveryMethod(this, 'delivery')">
+            <input type="radio" name="deliveryMethod" value="delivery" class="hidden">
+            <span class="font-semibold">🚚 Delivery</span>
+          </div>
+        </div>
+        
+        <div class="flex justify-between mt-4">
+          <button type="button" onclick="scrollToSection(2)" class="text-blue-500 underline">⬆️ Back</button>
+          <button type="button" onclick="scrollToSection(4)" class="text-blue-500 underline">Next ⬇️</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact details -->
+    <section id="section-4" class="bg-white">
+      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-md w-full">
+        <label class="text-2xl font-bold mb-4 block">Contact Details</label>
+        
+        <label class="block font-semibold mb-2">Contact Number</label>
+        <input name="contactNumber" required type="tel" pattern="[0-9]{11}" title="Please enter an 11-digit number (e.g., 09123456789)" placeholder="e.g. 09XXXXXXXXX" class="w-full border p-3 rounded mb-4" />
+        
+        <div class="flex justify-between mt-4">
+          <button type="button" onclick="scrollToSection(3)" class="text-blue-500 underline">⬆️ Back</button>
+          <button type="button" onclick="scrollToSection(5)" class="text-blue-500 underline">Next ⬇️</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cookie selection (2x2) -->
+    <section id="section-5" class="bg-white">
+      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-3xl w-full space-y-6">
+        <h2 class="text-2xl font-bold mb-4 text-center">Choose your cookies</h2>
+        
+        <!-- Cart Preview -->
+        <div class="bg-yellow-50 p-4 rounded-lg mb-6">
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg font-semibold">🛒 Your Cart</h3>
+            <button type="button" onclick="openCartModal()" class="text-blue-600 underline">View Cart (<span id="cartCount">0</span> items)</button>
+          </div>
+          <p class="text-sm text-gray-600 mt-2">Total: ₱<span id="cartTotalPreview">0</span></p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+          <!-- OG Set Card -->
+          <div class="cookie-card bg-yellow-50 p-6 rounded shadow flex flex-col items-center" onclick="toggleCookieCard(this, 'ogSet')">
+            <p class="font-semibold text-lg mb-1">The OG Set</p>
+            <p class="text-sm text-gray-600 mb-4">(3 cookies: The Usual, The Red One, The Burnt One)</p>
+            <p class="font-bold text-yellow-700 mb-2">₱320</p>
+            
+            <!-- Quantity Section (Hidden by default) -->
+            <div class="quantity-section items-center space-x-2">
+              <button type="button" onclick="event.stopPropagation(); updateCardCount('ogSet', -1)" class="px-3 py-1 bg-gray-200 rounded">-</button>
+              <input type="number" id="ogSet" name="ogSet" value="0" min="0" class="w-16 text-center border rounded" onclick="event.stopPropagation()">
+              <button type="button" onclick="event.stopPropagation(); updateCardCount('ogSet', 1)" class="px-3 py-1 bg-gray-200 rounded">+</button>
+              <button type="button" onclick="event.stopPropagation(); addToCart('ogSet', 'OG Set', 320)" class="ml-2 bg-green-500 text-white px-3 py-1 rounded">Add to Cart</button>
+            </div>
+          </div>
+
+          <!-- Classic 6 Card -->
+          <div class="cookie-card bg-yellow-50 p-6 rounded shadow flex flex-col items-center" onclick="toggleCookieCard(this, 'classic6')">
+            <p class="font-semibold text-lg mb-1">Classic 6</p>
+            <p class="text-sm text-gray-600 mb-4">(6 cookies: Usual, Red, Burnt, Milky, Pistash, Bizz)</p>
+            <p class="font-bold text-yellow-700 mb-2">₱660</p>
+            
+            <div class="quantity-section items-center space-x-2">
+              <button type="button" onclick="event.stopPropagation(); updateCardCount('classic6', -1)" class="px-3 py-1 bg-gray-200 rounded">-</button>
+              <input type="number" id="classic6" name="classic6" value="0" min="0" class="w-16 text-center border rounded" onclick="event.stopPropagation()">
+              <button type="button" onclick="event.stopPropagation(); updateCardCount('classic6', 1)" class="px-3 py-1 bg-gray-200 rounded">+</button>
+              <button type="button" onclick="event.stopPropagation(); addToCart('classic6', 'Classic 6', 660)" class="ml-2 bg-green-500 text-white px-3 py-1 rounded">Add to Cart</button>
+            </div>
+          </div>
+
+          <!-- Samplers Card -->
+          <div class="cookie-card bg-yellow-50 p-6 rounded shadow flex flex-col items-center" onclick="toggleCookieCard(this, 'samplers')">
+            <p class="font-semibold text-lg mb-1">Samplers</p>
+            <p class="text-sm text-gray-600 mb-4">(6 pcs of Classics, 50g each)</p>
+            <p class="font-bold text-yellow-700 mb-2">₱320</p>
+            
+            <div class="quantity-section items-center space-x-2">
+              <button type="button" onclick="event.stopPropagation(); updateCardCount('samplers', -1)" class="px-3 py-1 bg-gray-200 rounded">-</button>
+              <input type="number" id="samplers" name="samplers" value="0" min="0" class="w-16 text-center border rounded" onclick="event.stopPropagation()">
+              <button type="button" onclick="event.stopPropagation(); updateCardCount('samplers', 1)" class="px-3 py-1 bg-gray-200 rounded">+</button>
+              <button type="button" onclick="event.stopPropagation(); addToCart('samplers', 'Samplers', 320)" class="ml-2 bg-green-500 text-white px-3 py-1 rounded">Add to Cart</button>
+            </div>
+          </div>
+
+          <!-- Customize Your Cookie Box Card -->
+          <div class="cookie-card bg-yellow-100 p-6 rounded shadow flex flex-col items-center" onclick="toggleCustomBoxCard(this)">
+            <p class="font-semibold text-lg mb-4">🍪 Customize Your Cookie Box</p>
+            <p class="text-sm text-gray-600 mb-4">Create your own cookie selection</p>
+            
+            <div class="quantity-section items-center">
+              <span class="text-sm text-gray-600">Click to customize</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="flex justify-between mt-4">
+          <button type="button" onclick="scrollToSection(4)" class="text-blue-500 underline">⬆️ Back</button>
+          <button type="button" onclick="scrollToSection(6)" class="text-blue-500 underline">Next ⬇️</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Customize modal -->
+    <div id="customizeModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header flex justify-between items-center">
+          <h3 class="text-lg font-semibold">Customize Your Cookie Box</h3>
+          <button type="button" onclick="closeCustomizeModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
+        </div>
+         <!-- Body -->
+        <div class="modal-body">
+          <p class="font-semibold mb-2">Select Box Size:</p>
+          <div class="boxsize-list">
+            <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="4" class="hidden"><span>Pack of 4</span></label>
+            <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="6" class="hidden"><span>Box of 6</span></label>
+            <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="12" class="hidden"><span>Box of 12</span></label>
+            <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="others" class="hidden"><span>Others (Minimum 3 cookies)</span></label>
+          </div>
+
+          <div id="selectedSizeInfo" class="mt-4 p-3 bg-blue-50 rounded-lg hidden">
+            <p class="text-sm text-blue-800" id="sizeMessage"></p>
+          </div>
+
+          <p class="font-semibold mt-6 mb-2">Select Cookies:</p>
+          <div id="cookieList" class="cookie-list"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+          <button type="button" onclick="addCustomBoxToCart()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded-lg">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header flex justify-between items-center">
+          <h3 class="text-lg font-semibold">🛒 Your Cart</h3>
+          <button type="button" onclick="closeCartModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="cartItems" class="space-y-3">
+            <!-- Cart items will be displayed here -->
+          </div>
+          <div id="emptyCartMessage" class="text-center text-gray-500 py-8">
+            Your cart is empty
+          </div>
+          <div id="cartTotal" class="cart-total mt-4 hidden">
+            Total: ₱<span id="cartTotalAmount">0</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" onclick="closeCartModal()" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 rounded-lg">
+            Continue Shopping
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment -->
+    <section id="section-6" class="bg-yellow-50">
+      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-md w-full">
+        <label class="text-2xl font-bold mb-2 block">Payment Method</label>
+        <select name="payment" class="w-full border p-3 rounded">
+          <option value="COD">Cash on Delivery</option>
+          <option value="GCash">GCash</option>
+          <option value="Bank Transfer">Bank Transfer</option>
+        </select>
+        <div class="flex justify-between mt-4">
+          <button type="button" onclick="scrollToSection(5)" class="text-blue-500 underline">⬆️ Back</button>
+          <button type="button" onclick="scrollToSection(7)" class="text-blue-500 underline">Next ⬇️</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notes -->
+    <section id="section-7" class="bg-white">
+      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-md w-full">
+        <label class="text-2xl font-bold mb-2 block">Notes (Optional)</label>
+        <textarea name="notes" class="w-full border p-3 rounded h-32"></textarea>
+        <div class="flex justify-between mt-4">
+          <button type="button" onclick="scrollToSection(6)" class="text-blue-500 underline">⬆️ Back</button>
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(8);" class="text-blue-500 underline">Next ⬇️</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Summary -->
+    <section id="section-8" class="bg-yellow-100">
+      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-lg w-full">
+        <h2 class="text-2xl font-bold mb-4">Order Summary</h2>
+        <div id="summaryContent" class="text-left space-y-2"></div>
+        <div class="flex justify-between mt-4">
+          <button type="button" onclick="scrollToSection(7)" class="text-blue-500 underline">⬆️ Back</button>
+          <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded">Submit Order ✅</button>
+        </div>
+      </div>
+    </section>
+
+  </form>
+
+  <script>
+    // ----- State -----
+    let selectedBoxSize = null;
+    let cart = []; // Main cart that stores all items
+
+    const cookieFlavors = [
+      { name: "The Usual", price: 100 },
+      { name: "The Red One", price: 110 },
+      { name: "The Burnt One", price: 110 },
+      { name: "The Bizz", price: 115 },
+      { name: "The Milky One", price: 110 },
+      { name: "Pistash", price: 120 },
+      { name: "The OT", price: 115 },
+      { name: "Nut-so-Carrot", price: 130 },
+      { name: "Espress-oh", price: 115 },
+      { name: "Berry match", price: 120 }
+    ];
+
+    // Cookie set prices
+    const setPrices = {
+      ogSet: 320,
+      classic6: 660,
+      samplers: 320
+    };
+
+    // Box size base prices (removed since prices vary with selection)
+    const boxSizePrices = {
+      '4': 0, // Price varies with selection
+      '6': 0, // Price varies with selection
+      '12': 0, // Price varies with selection
+      'others': 0 // Calculated based on selected cookies
+    };
+
+    // ----- Utilities -----
+    function scrollToSection(id){ document.getElementById('section-'+id).scrollIntoView({behavior:'smooth'}); }
+    function openDateInput(){ document.getElementById('deliveryDateInput').classList.remove('hidden'); }
+
+    // Delivery method selection
+    function selectDeliveryMethod(element, method) {
+      document.querySelectorAll('.delivery-option').forEach(opt => {
+        opt.classList.remove('active');
+      });
+      element.classList.add('active');
+      
+      const radio = element.querySelector('input[type="radio"]');
+      radio.checked = true;
+    }
+
+    // Cookie card functionality
+    function toggleCookieCard(card, inputId) {
+      const isActive = card.classList.contains('active');
+      
+      // If clicking the same card, toggle it
+      if (isActive) {
+        card.classList.remove('active');
+      } else {
+        // Deactivate all other cards
+        document.querySelectorAll('.cookie-card').forEach(c => {
+          c.classList.remove('active');
+        });
+        // Activate this card
+        card.classList.add('active');
+        
+        // Set quantity to 1 if it's 0
+        const input = document.getElementById(inputId);
+        if (parseInt(input.value) === 0) {
+          input.value = 1;
+        }
+      }
+    }
+
+    function toggleCustomBoxCard(card) {
+      const isActive = card.classList.contains('active');
+      
+      if (isActive) {
+        card.classList.remove('active');
+      } else {
+        document.querySelectorAll('.cookie-card').forEach(c => {
+          c.classList.remove('active');
+        });
+        card.classList.add('active');
+        openCustomizeModal();
+      }
+    }
+
+    function updateCardCount(inputId, delta) {
+      const input = document.getElementById(inputId);
+      let value = parseInt(input.value) || 0;
+      input.value = Math.max(0, value + delta);
+    }
+
+    // Cart functionality
+    function addToCart(inputId, itemName, price) {
+      const quantity = parseInt(document.getElementById(inputId).value) || 0;
+      
+      if (quantity <= 0) {
+        alert('Please select at least 1 quantity');
+        return;
+      }
+
+      // Check if item already exists in cart
+      const existingIndex = cart.findIndex(item => item.id === inputId && item.type === 'premade');
+      
+      if (existingIndex > -1) {
+        // Update existing item
+        cart[existingIndex].quantity = quantity;
+        cart[existingIndex].total = price * quantity;
+      } else {
+        // Add new item
+        cart.push({
+          id: inputId,
+          type: 'premade',
+          name: itemName,
+          price: price,
+          quantity: quantity,
+          total: price * quantity
+        });
+      }
+
+      updateCartDisplay();
+      
+      // Reset the input and deactivate card
+      document.getElementById(inputId).value = 0;
+      const card = document.querySelector(`.cookie-card[onclick*="${inputId}"]`);
+      if (card) {
+        card.classList.remove('active');
+      }
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartDisplay();
+    }
+
+    function updateCartDisplay() {
+      const cartCount = document.getElementById('cartCount');
+      const cartTotalPreview = document.getElementById('cartTotalPreview');
+      const cartItems = document.getElementById('cartItems');
+      const emptyCartMessage = document.getElementById('emptyCartMessage');
+      const cartTotal = document.getElementById('cartTotal');
+      const cartTotalAmount = document.getElementById('cartTotalAmount');
+
+      // Update cart count and total
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
+      
+      cartCount.textContent = totalItems;
+      cartTotalPreview.textContent = totalAmount;
+
+      // Update cart modal
+      if (cart.length === 0) {
+        emptyCartMessage.classList.remove('hidden');
+        cartItems.innerHTML = '';
+        cartTotal.classList.add('hidden');
+      } else {
+        emptyCartMessage.classList.add('hidden');
+        cartTotal.classList.remove('hidden');
+        cartTotalAmount.textContent = totalAmount;
+
+        cartItems.innerHTML = cart.map((item, index) => `
+          <div class="cart-item">
+            <div class="flex justify-between items-start">
+              <div class="flex-1">
+                <h4 class="font-semibold">${item.name}</h4>
+                ${item.type === 'customBox' ? 
+                  `<p class="text-sm text-gray-600">Box of ${item.boxSize}</p>
+                   <p class="text-sm text-gray-600">${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')}</p>` : 
+                  `<p class="text-sm text-gray-600">Quantity: ${item.quantity}</p>`
+                }
+                <p class="font-semibold">₱${item.total}</p>
+              </div>
+              <button type="button" onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 ml-2">🗑️</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function openCartModal() {
+      document.getElementById("cartModal").classList.add("active");
+      document.body.classList.add("no-scroll");
+      updateCartDisplay();
+    }
+
+    function closeCartModal() {
+      document.getElementById("cartModal").classList.remove("active");
+      document.body.classList.remove("no-scroll");
+    }
+
+    function generateWeekendDates(){
+      const container = document.getElementById('quickDates');
+      const today = new Date();
+      let count = 0, dayOffset = 0; container.innerHTML = '';
+      while(count < 6){
+        const future = new Date(); future.setDate(today.getDate() + dayOffset);
+        const day = future.getDay();
+        if([5,6,0].includes(day)){
+          const yyyy = future.getFullYear(); const mm = String(future.getMonth()+1).padStart(2,'0'); const dd = String(future.getDate()).padStart(2,'0');
+          const dateStr = `${yyyy}-${mm}-${dd}`;
+          const btn = document.createElement('button'); btn.type='button'; btn.textContent = `${mm}/${dd}`;
+          btn.className = 'bg-yellow-300 px-3 py-2 rounded text-sm';
+          btn.onclick = ()=>{ const input = document.getElementById('deliveryDateInput'); input.value = dateStr; input.classList.remove('hidden'); };
+          container.appendChild(btn); count++; }
+        dayOffset++; }
+    }
+
+    function setDateRestrictions(){
+      const input = document.getElementById('deliveryDateInput');
+      const today = new Date(); input.setAttribute('min', today.toISOString().split('T')[0]);
+      input.addEventListener('input', function(){ const chosenDate = new Date(this.value); if(![5,6,0].includes(chosenDate.getDay())){ alert('Only Friday, Saturday, or Sunday are allowed.'); this.value = ''; } });
+    }
+
+    // ----- Cookie list (dynamic) -----
+    function renderCookieList(){
+      const container = document.getElementById('cookieList'); if(!container) return; container.innerHTML = '';
+      cookieFlavors.forEach((flavor, idx) => {
+        const row = document.createElement('div'); 
+        row.className = 'cookie-row'; 
+        row.dataset.cookie = flavor.name;
+        row.onclick = function() { toggleCookieSelection(this); };
+
+        const label = document.createElement('div'); 
+        label.className = 'flex-1 flex justify-between pr-4 cursor-pointer';
+        label.innerHTML = `<span>${flavor.name}</span><span class="cookie-price">₱${flavor.price}</span>`;
+
+        const qtyDiv = document.createElement('div'); 
+        qtyDiv.className = 'quantity-control hidden items-center';
+        qtyDiv.innerHTML = `<button type="button" class="qty-btn" onclick="event.stopPropagation(); updateCookieQty(this, -1)">-</button><input type="number" value="1" min="0" class="cookie-qty-input" onclick="event.stopPropagation()" /><button type="button" class="qty-btn" onclick="event.stopPropagation(); updateCookieQty(this, 1)">+</button>`;
+
+        row.appendChild(label); 
+        row.appendChild(qtyDiv); 
+        container.appendChild(row);
+      });
+    }
+
+    function toggleCookieSelection(row) {
+      const isActive = row.classList.contains('active');
+      
+      if (isActive) {
+        row.classList.remove('active');
+        const qtyInput = row.querySelector('.cookie-qty-input');
+        qtyInput.value = 1;
+      } else {
+        row.classList.add('active');
+      }
+    }
+
+    function updateCookieQty(button, delta) {
+      const qtyDiv = button.closest('.quantity-control');
+      const inputEl = qtyDiv.querySelector('input');
+      let v = parseInt(inputEl.value, 10) || 0;
+      v = Math.max(0, v + delta);
+      inputEl.value = v;
+      
+      if (v === 0) {
+        const row = qtyDiv.closest('.cookie-row');
+        qtyDiv.classList.add('hidden');
+        row.classList.remove('active');
+      }
+    }
+
+    function selectBoxSize(row){ 
+      document.querySelectorAll('.boxsize-row').forEach(r=> r.classList.remove('active')); 
+      row.classList.add('active'); 
+      const radio = row.querySelector('input[type="radio"]');
+      selectedBoxSize = radio.value;
+      
+      // Show size information
+      const sizeInfo = document.getElementById('selectedSizeInfo');
+      const sizeMessage = document.getElementById('sizeMessage');
+      
+      if (selectedBoxSize === 'others') {
+        sizeMessage.textContent = 'Please select at least 3 cookies for your custom box.';
+        sizeInfo.classList.remove('hidden');
+      } else {
+        sizeMessage.textContent = `Please select exactly ${selectedBoxSize} cookies for your box.`;
+        sizeInfo.classList.remove('hidden');
+      }
+    }
+
+    function getSelectedCookies(){ 
+      const selections = []; 
+      document.querySelectorAll('#cookieList .cookie-row.active').forEach(r=>{
+        const qtyDiv = r.querySelector('.quantity-control'); 
+        if(!qtyDiv) return; 
+        const q = parseInt(qtyDiv.querySelector('input').value,10)||0; 
+        if(q>0) {
+          const cookieName = r.dataset.cookie;
+          const cookie = cookieFlavors.find(c => c.name === cookieName);
+          selections.push({ 
+            name: cookieName, 
+            qty: q,
+            price: cookie ? cookie.price : 0
+          }); 
+        }
+      }); 
+      return selections; 
+    }
+
+    function openCustomizeModal() {
+      document.getElementById("customizeModal").classList.add("active");
+      document.body.classList.add("no-scroll");
+      renderCookieList();
+      // Reset previous selections
+      selectedBoxSize = null;
+      document.querySelectorAll('.boxsize-row').forEach(r => r.classList.remove('active'));
+      document.getElementById('selectedSizeInfo').classList.add('hidden');
+    }
+
+    function closeCustomizeModal() {
+      document.getElementById("customizeModal").classList.remove("active");
+      document.body.classList.remove("no-scroll");
+    }
+
+    function addCustomBoxToCart(){
+      if(!selectedBoxSize){ alert('Please select a box size first'); return; }
+      const items = getSelectedCookies(); 
+      if(items.length === 0){ alert('Please select at least one cookie for your custom box'); return; }
+      
+      // Calculate total quantity
+      const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
+      
+      // Validation based on box size
+      if (selectedBoxSize === 'others') {
+        if (totalQty < 3) {
+          alert(`Please select at least 3 cookies for your custom box. Currently selected: ${totalQty}`);
+          return;
+        }
+      } else {
+        if (totalQty != selectedBoxSize) {
+          alert(`Please select exactly ${selectedBoxSize} cookies for your box. Currently selected: ${totalQty}`);
+          return;
+        }
+      }
+      
+      // Calculate total price for custom box (sum of individual cookie prices)
+      const totalPrice = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      
+      // Add to cart
+      cart.push({
+        type: 'customBox',
+        name: selectedBoxSize === 'others' ? `Custom Box (${totalQty} cookies)` : `Custom Box of ${selectedBoxSize}`,
+        boxSize: selectedBoxSize === 'others' ? totalQty.toString() : selectedBoxSize,
+        items: [...items], // Copy the items array
+        price: totalPrice,
+        quantity: 1,
+        total: totalPrice
+      });
+
+      updateCartDisplay();
+      closeCustomizeModal();
+      
+      // Update the custom box card to show it's been added
+      const customBoxCard = document.querySelector('.cookie-card:last-child');
+      customBoxCard.classList.remove('active');
+      
+      // Reset modal selections
+      selectedBoxSize = null;
+      document.querySelectorAll('.boxsize-row').forEach(r => r.classList.remove('active'));
+      document.querySelectorAll('.cookie-row').forEach(r => {
+        r.classList.remove('active');
+        const qtyInput = r.querySelector('.cookie-qty-input');
+        if (qtyInput) qtyInput.value = 1;
+      });
+    }
+
+    // ----- Form submit & summary -----
+    function buildOrderSummary(){
+      const form = document.getElementById('orderForm'); 
+      const name = form.name.value.trim(); 
+      const social = form.socialHandle.value.trim(); 
+      const deliveryDate = form.deliveryDate.value || '—';
+      const deliveryMethod = form.deliveryMethod?.value || 'Not selected';
+      const contact = form.contactNumber.value.trim(); 
+      const notes = form.notes.value.trim();
+      const payment = form.payment.value;
+
+      let totalAmount = 0;
+      let html = `<strong>Name:</strong> ${escapeHtml(name)}<br>
+                  <strong>Social:</strong> ${escapeHtml(social)}<br>
+                  <strong>Delivery Date:</strong> ${escapeHtml(deliveryDate)}<br>
+                  <strong>Delivery Method:</strong> ${escapeHtml(deliveryMethod === 'pickup' ? 'Pick Up' : 'Delivery')}<br>
+                  <strong>Contact Number:</strong> ${escapeHtml(contact)}<br>
+                  <strong>Payment Method:</strong> ${escapeHtml(payment)}<br><hr>`;
+      
+      html += `<strong>Order Items:</strong><br>`;
+      
+      // Display cart items
+      if(cart.length > 0){
+        cart.forEach((item, index) => {
+          totalAmount += item.total;
+          if (item.type === 'customBox') {
+            html += `- ${item.name}: ` + 
+                    item.items.map(it => `${it.name} x ${it.qty}`).join(', ') + 
+                    ` = ₱${item.total}<br>`;
+          } else {
+            html += `- ${item.name} x ${item.quantity} = ₱${item.total}<br>`;
+          }
+        });
+      } else {
+        html += `No items in cart<br>`;
+      }
+      
+      html += `<hr><strong>Total Amount:</strong> ₱${totalAmount}<br>`;
+      html += `<hr><strong>Notes:</strong><br>${escapeHtml(notes)}<br>`;
+      
+      document.getElementById('summaryContent').innerHTML = html;
+    }
+
+    async function handleFormSubmit(e){ 
+      e.preventDefault(); 
+      
+      if (cart.length === 0) {
+        alert('Please add at least one item to your cart before submitting.');
+        return;
+      }
+      
+      // Show loading state
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Submitting...';
+      submitBtn.classList.add('loading');
+      
+      try {
+        // Prepare order data
+        const formData = new FormData(document.getElementById('orderForm'));
+        
+        // Calculate individual cookie quantities for detailed tracking
+        const cookieQuantities = {};
+        
+        // Process premade sets
+        cart.forEach(item => {
+          if (item.type === 'premade') {
+            if (item.name === 'OG Set') {
+              // OG Set contains: The Usual, The Red One, The Burnt One
+              cookieQuantities['The Usual'] = (cookieQuantities['The Usual'] || 0) + item.quantity;
+              cookieQuantities['The Red One'] = (cookieQuantities['The Red One'] || 0) + item.quantity;
+              cookieQuantities['The Burnt One'] = (cookieQuantities['The Burnt One'] || 0) + item.quantity;
+            } else if (item.name === 'Classic 6') {
+              // Classic 6 contains: The Usual, The Red One, The Burnt One, The Milky One, Pistash, The Bizz
+              cookieQuantities['The Usual'] = (cookieQuantities['The Usual'] || 0) + item.quantity;
+              cookieQuantities['The Red One'] = (cookieQuantities['The Red One'] || 0) + item.quantity;
+              cookieQuantities['The Burnt One'] = (cookieQuantities['The Burnt One'] || 0) + item.quantity;
+              cookieQuantities['The Milky One'] = (cookieQuantities['The Milky One'] || 0) + item.quantity;
+              cookieQuantities['Pistash'] = (cookieQuantities['Pistash'] || 0) + item.quantity;
+              cookieQuantities['The Bizz'] = (cookieQuantities['The Bizz'] || 0) + item.quantity;
+            } else if (item.name === 'Samplers') {
+              // Samplers - count as individual classics (adjust as needed)
+              cookieQuantities['Sampler Pack'] = (cookieQuantities['Sampler Pack'] || 0) + item.quantity;
+            }
+          } else if (item.type === 'customBox') {
+            // Process custom box items
+            item.items.forEach(cookieItem => {
+              cookieQuantities[cookieItem.name] = (cookieQuantities[cookieItem.name] || 0) + cookieItem.qty;
+            });
+          }
+        });
+
+        const orderData = {
+          timestamp: new Date().toISOString(),
+          name: formData.get('name'),
+          socialHandle: formData.get('socialHandle'),
+          deliveryDate: formData.get('deliveryDate'),
+          deliveryMethod: formData.get('deliveryMethod'),
+          contactNumber: formData.get('contactNumber'),
+          payment: formData.get('payment'),
+          notes: formData.get('notes'),
+          cart: cart,
+          cookieQuantities: cookieQuantities,
+          totalAmount: cart.reduce((sum, item) => sum + item.total, 0)
+        };
+        
+        // Send to Google Sheets
+        const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(orderData)
+        });
+        
+        if (response.ok) {
+          alert('Order submitted successfully! Thank you for your order!');
+          // Reset form and cart
+          document.getElementById('orderForm').reset();
+          cart = [];
+          updateCartDisplay();
+          // Reset all cookie cards
+          document.querySelectorAll('.cookie-card').forEach(card => {
+            card.classList.remove('active');
+          });
+          scrollToSection(1);
+        } else {
+          throw new Error('Failed to submit order');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error submitting your order. Please try again or contact us directly.');
+      } finally {
+        // Reset button state
+        submitBtn.textContent = originalText;
+        submitBtn.classList.remove('loading');
+      }
+    }
+
+    function escapeHtml(str){ 
+      if(!str) return '—'; 
+      return String(str).replace(/[&<>"']/g, s=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); 
+    }
+
+    // ----- Init -----
+    document.addEventListener('DOMContentLoaded', ()=>{
+      generateWeekendDates(); 
+      setDateRestrictions(); 
+      renderCookieList();
+      document.getElementById('orderForm').addEventListener('submit', handleFormSubmit);
+      updateCartDisplay(); // Initialize cart display
+    });
+  </script>
+</body>
+</html>
