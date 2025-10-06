@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Why Dough Cookies</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
+  <!-- Fixed Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html, body { scroll-behavior: smooth; overflow-x: hidden; height: 100%; font-family: 'Poppins', sans-serif; }
@@ -271,7 +272,6 @@
     #WhyNotWhyDough  |  #WhyDoughItBetter
   </div>
 
-  
   <form id="orderForm">
     <!-- Name Section -->
     <section id="section-2" class="relative">
@@ -350,8 +350,7 @@
       </div>
     </section>
 
-    <!-- Rest of your sections remain exactly the same, just removed arrows from nav-buttons -->
-    <!-- Cookie selection section -->
+    <!-- Cookie selection (2x2) -->
     <section id="section-5" class="relative">
       <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-4xl w-full space-y-8 border border-amber-100">
         <h2 class="text-3xl font-bold text-amber-900 text-center">Choose your cookies</h2>
@@ -366,12 +365,14 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+
           <!-- OG Set Card -->
           <div class="cookie-card p-8 rounded-2xl flex flex-col items-center" onclick="toggleCookieCard(this, 'ogSet')">
             <p class="font-semibold text-xl mb-2 text-amber-900">The OG Set</p>
             <p class="text-sm text-amber-600 mb-4">(3 cookies: The Usual, The Red One, The Burnt One)</p>
             <p class="font-bold text-amber-700 mb-4 text-xl">₱320</p>
             
+            <!-- Quantity Section (Hidden by default) -->
             <div class="quantity-section items-center space-x-3">
               <button type="button" onclick="event.stopPropagation(); updateCardCount('ogSet', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
               <input type="number" id="ogSet" name="ogSet" value="0" min="0" class="w-16 text-center border border-amber-300 rounded-lg py-2" onclick="event.stopPropagation()">
@@ -417,8 +418,8 @@
               <span class="text-sm text-amber-600">Click to customize</span>
             </div>
           </div>
+
         </div>
-        
         <div class="flex justify-between items-center mt-8">
           <button type="button" onclick="scrollToSection(4)" class="arrow-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -431,6 +432,66 @@
         </div>
       </div>
     </section>
+
+    <!-- Customize modal -->
+    <div id="customizeModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header flex justify-between items-center">
+          <h3 class="text-lg font-semibold text-amber-900">Customize Your Cookie Box</h3>
+          <button type="button" onclick="closeCustomizeModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
+        </div>
+         <!-- Body -->
+        <div class="modal-body">
+          <p class="font-semibold mb-2 text-amber-900">Select Box Size:</p>
+          <div class="boxsize-list">
+            <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="4" class="hidden"><span class="text-amber-900">Pack of 4</span></label>
+            <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="6" class="hidden"><span class="text-amber-900">Box of 6</span></label>
+            <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="12" class="hidden"><span class="text-amber-900">Box of 12</span></label>
+            <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="others" class="hidden"><span class="text-amber-900">Others (Minimum 3 cookies)</span></label>
+          </div>
+
+          <div id="selectedSizeInfo" class="mt-4 p-3 bg-amber-50 rounded-lg hidden border border-amber-200">
+            <p class="text-sm text-amber-800" id="sizeMessage"></p>
+          </div>
+
+          <p class="font-semibold mt-6 mb-2 text-amber-900">Select Cookies:</p>
+          <div id="cookieList" class="cookie-list"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+          <button type="button" onclick="addCustomBoxToCart()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-lg transition-all duration-300">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header flex justify-between items-center">
+          <h3 class="text-lg font-semibold text-amber-900">🛒 Your Cart</h3>
+          <button type="button" onclick="closeCartModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="cartItems" class="space-y-3">
+            <!-- Cart items will be displayed here -->
+          </div>
+          <div id="emptyCartMessage" class="text-center text-amber-600 py-8">
+            Your cart is empty
+          </div>
+          <div id="cartTotal" class="cart-total mt-4 hidden">
+            Total: ₱<span id="cartTotalAmount">0</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" onclick="closeCartModal()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-lg transition-all duration-300">
+            Continue Shopping
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- Payment -->
     <section id="section-6" class="relative">
@@ -449,9 +510,6 @@
           </button>
           <button type="button" onclick="scrollToSection(7)" class="nav-button">
             Next
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
           </button>
         </div>
       </div>
@@ -470,9 +528,6 @@
           </button>
           <button type="button" onclick="buildOrderSummary(); scrollToSection(8);" class="nav-button">
             Next
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
           </button>
         </div>
       </div>
@@ -501,7 +556,7 @@
   <script>
     // ----- State -----
     let selectedBoxSize = null;
-    let cart = []; // Main cart that stores all items
+    let cart = [];
 
     const cookieFlavors = [
       { name: "The Usual", price: 100 },
@@ -516,18 +571,27 @@
       { name: "Berry match", price: 120 }
     ];
 
-    // Cookie set prices
     const setPrices = {
       ogSet: 320,
       classic6: 660,
       samplers: 320
     };
 
-    // ----- Utilities -----
-    function scrollToSection(id){ document.getElementById('section-'+id).scrollIntoView({behavior:'smooth'}); }
-    function openDateInput(){ document.getElementById('deliveryDateInput').classList.remove('hidden'); }
+    // ----- Fixed JavaScript Functions -----
+    function scrollToSection(id){ 
+        const element = document.getElementById('section-'+id);
+        if (element) {
+            element.scrollIntoView({behavior:'smooth'});
+        }
+    }
 
-    // Delivery method selection
+    function openDateInput(){ 
+        const input = document.getElementById('deliveryDateInput');
+        if (input) {
+            input.classList.remove('hidden'); 
+        }
+    }
+
     function selectDeliveryMethod(element, method) {
       document.querySelectorAll('.delivery-option').forEach(opt => {
         opt.classList.remove('active');
@@ -535,10 +599,9 @@
       element.classList.add('active');
       
       const radio = element.querySelector('input[type="radio"]');
-      radio.checked = true;
+      if (radio) radio.checked = true;
     }
 
-    // Cookie card functionality
     function toggleCookieCard(card, inputId) {
       const isActive = card.classList.contains('active');
       
@@ -551,7 +614,7 @@
         card.classList.add('active');
         
         const input = document.getElementById(inputId);
-        if (parseInt(input.value) === 0) {
+        if (input && parseInt(input.value) === 0) {
           input.value = 1;
         }
       }
@@ -573,11 +636,12 @@
 
     function updateCardCount(inputId, delta) {
       const input = document.getElementById(inputId);
-      let value = parseInt(input.value) || 0;
-      input.value = Math.max(0, value + delta);
+      if (input) {
+        let value = parseInt(input.value) || 0;
+        input.value = Math.max(0, value + delta);
+      }
     }
 
-    // Cart functionality
     function addToCart(inputId, itemName, price) {
       const quantity = parseInt(document.getElementById(inputId).value) || 0;
       
@@ -624,6 +688,12 @@
       const cartTotal = document.getElementById('cartTotal');
       const cartTotalAmount = document.getElementById('cartTotalAmount');
 
+      // Check if elements exist before manipulating them
+      if (!cartCount || !cartTotalPreview || !cartItems || !emptyCartMessage || !cartTotal || !cartTotalAmount) {
+        console.log('Cart elements not found');
+        return;
+      }
+
       const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
       const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
       
@@ -659,42 +729,77 @@
     }
 
     function openCartModal() {
-      document.getElementById("cartModal").classList.add("active");
-      document.body.classList.add("no-scroll");
-      updateCartDisplay();
+      const modal = document.getElementById("cartModal");
+      if (modal) {
+        modal.classList.add("active");
+        document.body.classList.add("no-scroll");
+        updateCartDisplay();
+      }
     }
 
     function closeCartModal() {
-      document.getElementById("cartModal").classList.remove("active");
-      document.body.classList.remove("no-scroll");
+      const modal = document.getElementById("cartModal");
+      if (modal) {
+        modal.classList.remove("active");
+        document.body.classList.remove("no-scroll");
+      }
     }
 
     function generateWeekendDates(){
       const container = document.getElementById('quickDates');
+      if (!container) return;
+      
       const today = new Date();
-      let count = 0, dayOffset = 0; container.innerHTML = '';
+      let count = 0, dayOffset = 0; 
+      container.innerHTML = '';
+      
       while(count < 6){
-        const future = new Date(); future.setDate(today.getDate() + dayOffset);
+        const future = new Date(); 
+        future.setDate(today.getDate() + dayOffset);
         const day = future.getDay();
         if([5,6,0].includes(day)){
-          const yyyy = future.getFullYear(); const mm = String(future.getMonth()+1).padStart(2,'0'); const dd = String(future.getDate()).padStart(2,'0');
+          const yyyy = future.getFullYear(); 
+          const mm = String(future.getMonth()+1).padStart(2,'0'); 
+          const dd = String(future.getDate()).padStart(2,'0');
           const dateStr = `${yyyy}-${mm}-${dd}`;
-          const btn = document.createElement('button'); btn.type='button'; btn.textContent = `${mm}/${dd}`;
+          const btn = document.createElement('button'); 
+          btn.type='button'; 
+          btn.textContent = `${mm}/${dd}`;
           btn.className = 'bg-yellow-300 px-3 py-2 rounded text-sm';
-          btn.onclick = ()=>{ const input = document.getElementById('deliveryDateInput'); input.value = dateStr; input.classList.remove('hidden'); };
-          container.appendChild(btn); count++; }
-        dayOffset++; }
+          btn.onclick = ()=>{ 
+            const input = document.getElementById('deliveryDateInput'); 
+            if (input) {
+              input.value = dateStr; 
+              input.classList.remove('hidden'); 
+            }
+          };
+          container.appendChild(btn); 
+          count++; 
+        }
+        dayOffset++; 
+      }
     }
 
     function setDateRestrictions(){
       const input = document.getElementById('deliveryDateInput');
-      const today = new Date(); input.setAttribute('min', today.toISOString().split('T')[0]);
-      input.addEventListener('input', function(){ const chosenDate = new Date(this.value); if(![5,6,0].includes(chosenDate.getDay())){ alert('Only Friday, Saturday, or Sunday are allowed.'); this.value = ''; } });
+      if (input) {
+        const today = new Date(); 
+        input.setAttribute('min', today.toISOString().split('T')[0]);
+        input.addEventListener('input', function(){ 
+          const chosenDate = new Date(this.value); 
+          if(![5,6,0].includes(chosenDate.getDay())){ 
+            alert('Only Friday, Saturday, or Sunday are allowed.'); 
+            this.value = ''; 
+          } 
+        });
+      }
     }
 
-    // ----- Cookie list (dynamic) -----
     function renderCookieList(){
-      const container = document.getElementById('cookieList'); if(!container) return; container.innerHTML = '';
+      const container = document.getElementById('cookieList'); 
+      if(!container) return; 
+      
+      container.innerHTML = '';
       cookieFlavors.forEach((flavor, idx) => {
         const row = document.createElement('div'); 
         row.className = 'cookie-row'; 
@@ -721,7 +826,7 @@
       if (isActive) {
         row.classList.remove('active');
         const qtyInput = row.querySelector('.cookie-qty-input');
-        qtyInput.value = 1;
+        if (qtyInput) qtyInput.value = 1;
       } else {
         row.classList.add('active');
       }
@@ -729,15 +834,21 @@
 
     function updateCookieQty(button, delta) {
       const qtyDiv = button.closest('.quantity-control');
+      if (!qtyDiv) return;
+      
       const inputEl = qtyDiv.querySelector('input');
+      if (!inputEl) return;
+      
       let v = parseInt(inputEl.value, 10) || 0;
       v = Math.max(0, v + delta);
       inputEl.value = v;
       
       if (v === 0) {
         const row = qtyDiv.closest('.cookie-row');
-        qtyDiv.classList.add('hidden');
-        row.classList.remove('active');
+        if (row) {
+          qtyDiv.classList.add('hidden');
+          row.classList.remove('active');
+        }
       }
     }
 
@@ -745,17 +856,21 @@
       document.querySelectorAll('.boxsize-row').forEach(r=> r.classList.remove('active')); 
       row.classList.add('active'); 
       const radio = row.querySelector('input[type="radio"]');
-      selectedBoxSize = radio.value;
+      if (radio) {
+        selectedBoxSize = radio.value;
+      }
       
       const sizeInfo = document.getElementById('selectedSizeInfo');
       const sizeMessage = document.getElementById('sizeMessage');
       
-      if (selectedBoxSize === 'others') {
-        sizeMessage.textContent = 'Please select at least 3 cookies for your custom box.';
-        sizeInfo.classList.remove('hidden');
-      } else {
-        sizeMessage.textContent = `Please select exactly ${selectedBoxSize} cookies for your box.`;
-        sizeInfo.classList.remove('hidden');
+      if (sizeInfo && sizeMessage) {
+        if (selectedBoxSize === 'others') {
+          sizeMessage.textContent = 'Please select at least 3 cookies for your custom box.';
+          sizeInfo.classList.remove('hidden');
+        } else {
+          sizeMessage.textContent = `Please select exactly ${selectedBoxSize} cookies for your box.`;
+          sizeInfo.classList.remove('hidden');
+        }
       }
     }
 
@@ -779,17 +894,27 @@
     }
 
     function openCustomizeModal() {
-      document.getElementById("customizeModal").classList.add("active");
-      document.body.classList.add("no-scroll");
-      renderCookieList();
-      selectedBoxSize = null;
-      document.querySelectorAll('.boxsize-row').forEach(r => r.classList.remove('active'));
-      document.getElementById('selectedSizeInfo').classList.add('hidden');
+      const modal = document.getElementById("customizeModal");
+      if (modal) {
+        modal.classList.add("active");
+        document.body.classList.add("no-scroll");
+        renderCookieList();
+        selectedBoxSize = null;
+        document.querySelectorAll('.boxsize-row').forEach(r => r.classList.remove('active'));
+        
+        const sizeInfo = document.getElementById('selectedSizeInfo');
+        if (sizeInfo) {
+          sizeInfo.classList.add('hidden');
+        }
+      }
     }
 
     function closeCustomizeModal() {
-      document.getElementById("customizeModal").classList.remove("active");
-      document.body.classList.remove("no-scroll");
+      const modal = document.getElementById("customizeModal");
+      if (modal) {
+        modal.classList.remove("active");
+        document.body.classList.remove("no-scroll");
+      }
     }
 
     function addCustomBoxToCart(){
@@ -827,7 +952,9 @@
       closeCustomizeModal();
       
       const customBoxCard = document.querySelector('.cookie-card:last-child');
-      customBoxCard.classList.remove('active');
+      if (customBoxCard) {
+        customBoxCard.classList.remove('active');
+      }
       
       selectedBoxSize = null;
       document.querySelectorAll('.boxsize-row').forEach(r => r.classList.remove('active'));
@@ -840,82 +967,83 @@
 
     // ----- Google Forms Submission -----
     async function submitToGoogleForms(formData) {
-      // REPLACE THESE WITH YOUR ACTUAL GOOGLE FORM URL AND FIELD IDs
-      const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfpWgm_iikunZ44T7HxQfnbmA1KY-bB4l57fnAN0vAaFo0ZsA/formResponse';
-      
-      // Calculate individual cookie quantities
-      const cookieQuantities = {};
-      cart.forEach(item => {
-        if (item.type === 'premade') {
-          if (item.name === 'OG Set') {
-            cookieQuantities['The Usual'] = (cookieQuantities['The Usual'] || 0) + item.quantity;
-            cookieQuantities['The Red One'] = (cookieQuantities['The Red One'] || 0) + item.quantity;
-            cookieQuantities['The Burnt One'] = (cookieQuantities['The Burnt One'] || 0) + item.quantity;
-          } else if (item.name === 'Classic 6') {
-            cookieQuantities['The Usual'] = (cookieQuantities['The Usual'] || 0) + item.quantity;
-            cookieQuantities['The Red One'] = (cookieQuantities['The Red One'] || 0) + item.quantity;
-            cookieQuantities['The Burnt One'] = (cookieQuantities['The Burnt One'] || 0) + item.quantity;
-            cookieQuantities['The Milky One'] = (cookieQuantities['The Milky One'] || 0) + item.quantity;
-            cookieQuantities['Pistash'] = (cookieQuantities['Pistash'] || 0) + item.quantity;
-            cookieQuantities['The Bizz'] = (cookieQuantities['The Bizz'] || 0) + item.quantity;
-          } else if (item.name === 'Samplers') {
-            cookieQuantities['Sampler Pack'] = (cookieQuantities['Sampler Pack'] || 0) + item.quantity;
-          }
-        } else if (item.type === 'customBox') {
-          item.items.forEach(cookieItem => {
-            cookieQuantities[cookieItem.name] = (cookieQuantities[cookieItem.name] || 0) + cookieItem.qty;
-          });
-        }
-      });
-
-      const orderDetails = cart.map(item => {
-        if (item.type === 'customBox') {
-          return `${item.name}: ${item.items.map(it => `${it.name}(x${it.qty})`).join(', ')}`;
-        } else {
-          return `${item.name} x ${item.quantity}`;
-        }
-      }).join('; ');
-
-      const cookieQuantitiesText = Object.entries(cookieQuantities)
-        .map(([cookie, qty]) => `${cookie}: ${qty}`)
-        .join('; ');
-
-      const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
-
-      // REPLACE THESE ENTRY IDs WITH YOUR ACTUAL GOOGLE FORM FIELD IDs
-      const params = new URLSearchParams({
-        'entry.1608348325': formData.get('name') || '',           // Name
-        'entry.756795480': formData.get('socialHandle') || '',   // Social Handle
-        'entry.1868351860': formData.get('deliveryDate') || '',   // Delivery Date
-        'entry.1213945014': formData.get('deliveryMethod') || '', // Delivery Method
-        'entry.216379063': formData.get('contactNumber') || '',  // Contact Number
-        'entry.1369240809': formData.get('payment') || '',        // Payment Method
-        'entry.564442403': formData.get('notes') || '',          // Notes
-        'entry.1344414632': orderDetails,                         // Order Details
-        'entry.950008786': cookieQuantitiesText,                 // Cookie Quantities
-        'entry.1858160446': totalAmount.toString()                // Total Amount
-      });
-
-      // Submit to Google Forms using no-cors mode
-      try {
-        await fetch(formUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: params
+        // REPLACE THIS WITH YOUR ACTUAL GOOGLE FORM URL
+        const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfpWgm_iikunZ44T7HxQfnbmA1KY-bB4l57fnAN0vAaFo0ZsA/formResponse';
+        
+        // Calculate individual cookie quantities
+        const cookieQuantities = {};
+        cart.forEach(item => {
+            if (item.type === 'premade') {
+                if (item.name === 'OG Set') {
+                    cookieQuantities['The Usual'] = (cookieQuantities['The Usual'] || 0) + item.quantity;
+                    cookieQuantities['The Red One'] = (cookieQuantities['The Red One'] || 0) + item.quantity;
+                    cookieQuantities['The Burnt One'] = (cookieQuantities['The Burnt One'] || 0) + item.quantity;
+                } else if (item.name === 'Classic 6') {
+                    cookieQuantities['The Usual'] = (cookieQuantities['The Usual'] || 0) + item.quantity;
+                    cookieQuantities['The Red One'] = (cookieQuantities['The Red One'] || 0) + item.quantity;
+                    cookieQuantities['The Burnt One'] = (cookieQuantities['The Burnt One'] || 0) + item.quantity;
+                    cookieQuantities['The Milky One'] = (cookieQuantities['The Milky One'] || 0) + item.quantity;
+                    cookieQuantities['Pistash'] = (cookieQuantities['Pistash'] || 0) + item.quantity;
+                    cookieQuantities['The Bizz'] = (cookieQuantities['The Bizz'] || 0) + item.quantity;
+                } else if (item.name === 'Samplers') {
+                    cookieQuantities['Sampler Pack'] = (cookieQuantities['Sampler Pack'] || 0) + item.quantity;
+                }
+            } else if (item.type === 'customBox') {
+                item.items.forEach(cookieItem => {
+                    cookieQuantities[cookieItem.name] = (cookieQuantities[cookieItem.name] || 0) + cookieItem.qty;
+                });
+            }
         });
-        return true;
-      } catch (error) {
-        console.log('Form submission attempted (no-cors mode)');
-        return true; // With no-cors, we can't verify success, but assume it worked
-      }
+
+        const orderDetails = cart.map(item => {
+            if (item.type === 'customBox') {
+                return `${item.name}: ${item.items.map(it => `${it.name}(x${it.qty})`).join(', ')}`;
+            } else {
+                return `${item.name} x ${item.quantity}`;
+            }
+        }).join('; ');
+
+        const cookieQuantitiesText = Object.entries(cookieQuantities)
+            .map(([cookie, qty]) => `${cookie}: ${qty}`)
+            .join('; ');
+
+        const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
+
+        // REPLACE THESE ENTRY IDs WITH YOUR ACTUAL GOOGLE FORM FIELD IDs
+        const params = new URLSearchParams({
+            'entry.1608348325': formData.get('name') || '',             // Name
+            'entry.756795480': formData.get('socialHandle') || '',      // Social Handle
+            'entry.1868351860': formData.get('deliveryDate') || '',     // Delivery Date
+            'entry.1213945014': formData.get('deliveryMethod') || '',   // Delivery Method
+            'entry.216379063': formData.get('contactNumber') || '',     // Contact Number
+            'entry.1369240809': formData.get('payment') || '',          // Payment Method
+            'entry.564442403': formData.get('notes') || '',             // Notes
+            'entry.1344414632': orderDetails,                           // Order Details
+            'entry.950008786': cookieQuantitiesText,                    // Cookie Quantities
+            'entry.1858160446': totalAmount.toString()                  // Total Amount
+        });
+
+        // Submit to Google Forms using no-cors mode
+        try {
+            await fetch(formUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: params
+            });
+            return true;
+        } catch (error) {
+            console.log('Form submission attempted (no-cors mode)');
+            return true; // With no-cors, we can't verify success, but assume it worked
+        }
     }
 
-    // ----- Form submit & summary -----
     function buildOrderSummary(){
       const form = document.getElementById('orderForm'); 
+      if (!form) return;
+      
       const name = form.name.value.trim(); 
       const social = form.socialHandle.value.trim(); 
       const deliveryDate = form.deliveryDate.value || '—';
@@ -952,7 +1080,10 @@
       html += `<hr><strong>Total Amount:</strong> ₱${totalAmount}<br>`;
       html += `<hr><strong>Notes:</strong><br>${escapeHtml(notes)}<br>`;
       
-      document.getElementById('summaryContent').innerHTML = html;
+      const summaryContent = document.getElementById('summaryContent');
+      if (summaryContent) {
+        summaryContent.innerHTML = html;
+      }
     }
 
     async function handleFormSubmit(e){ 
@@ -971,12 +1102,10 @@
       try {
         const formData = new FormData(document.getElementById('orderForm'));
         
-        // Submit to Google Forms
         await submitToGoogleForms(formData);
         
         alert('Order submitted successfully! Thank you for your order!');
         
-        // Reset form and cart
         document.getElementById('orderForm').reset();
         cart = [];
         updateCartDisplay();
@@ -1004,7 +1133,12 @@
       generateWeekendDates(); 
       setDateRestrictions(); 
       renderCookieList();
-      document.getElementById('orderForm').addEventListener('submit', handleFormSubmit);
+      
+      const orderForm = document.getElementById('orderForm');
+      if (orderForm) {
+        orderForm.addEventListener('submit', handleFormSubmit);
+      }
+      
       updateCartDisplay();
     });
   </script>
