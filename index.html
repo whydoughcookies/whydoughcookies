@@ -3,14 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Parallax Cookie Order</title>
+  <title>Why Dough Cookies</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html, body { scroll-behavior: smooth; overflow-x: hidden; height: 100%; font-family: 'Poppins', sans-serif; }
     body { scroll-snap-type: y mandatory; }
-    section { min-height: 100vh; display:flex; align-items:center; justify-content:center; padding:2rem; flex-direction:column; text-align:center; scroll-snap-align:start; background-attachment:fixed; background-size:cover; background-position:center; position:relative; }
-    section::before { content: ""; position:absolute; inset:0; background: rgba(255, 248, 240, 0.9); z-index:-1; }
-    @media (max-width:768px){ section{ padding:1rem; background-attachment:scroll; } }
+    
+    /* New Nude Gradient Background */
+    section { 
+      min-height: 100vh; 
+      display:flex; 
+      align-items:center; 
+      justify-content:center; 
+      padding:2rem; 
+      flex-direction:column; 
+      text-align:center; 
+      scroll-snap-align:start; 
+      background-attachment:fixed; 
+      background-size:cover; 
+      background-position:center; 
+      position:relative; 
+      background: linear-gradient(135deg, #f5e8d5 0%, #f8f4e9 50%, #fefaf0 100%);
+    }
+    
+    section::before { 
+      content: ""; 
+      position:absolute; 
+      inset:0; 
+      background: rgba(255, 248, 240, 0.3); 
+      z-index:-1; 
+    }
+    
+    @media (max-width:768px){ 
+      section{ padding:1rem; background-attachment:scroll; } 
+    }
 
     /* Modal & lists */
     body.no-scroll { overflow: hidden; }
@@ -24,7 +51,7 @@
     .boxsize-list, .cookie-list { display:flex; flex-direction:column; gap:10px; margin-top:12px; }
     .boxsize-row, .cookie-row { display:flex; align-items:center; justify-content:space-between; border:1px solid #e5e7eb; border-radius:8px; padding:10px 14px; background:#fafafa; cursor:pointer; transition:background .15s; }
     .boxsize-row:hover, .cookie-row:hover{ background:#f3f4f6; }
-    .boxsize-row.active, .cookie-row.active{ border-color:#f59e0b; background:#fffbeb; }
+    .boxsize-row.active, .cookie-row.active{ border-color:#d97706; background:#fffbeb; }
 
     .cookie-price { font-size:.9rem; color:#6b7280; margin-left:8px; }
     .quantity-control, .cookie-qty { display:none; align-items:center; gap:8px; }
@@ -39,14 +66,18 @@
       cursor: pointer; 
       transition: all 0.3s ease; 
       border: 2px solid transparent;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(120, 53, 15, 0.1);
     }
     .cookie-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(120, 53, 15, 0.15);
+      border-color: #d97706;
     }
     .cookie-card.active {
-      border-color: #f59e0b;
+      border-color: #d97706;
       background: #fffbeb;
+      box-shadow: 0 4px 15px rgba(120, 53, 15, 0.2);
     }
     .quantity-section {
       display: none;
@@ -64,12 +95,14 @@
       margin: 8px 0;
       cursor: pointer;
       transition: all 0.3s ease;
+      background: #fff;
     }
     .delivery-option:hover {
-      border-color: #f59e0b;
+      border-color: #d97706;
+      background: #fffbeb;
     }
     .delivery-option.active {
-      border-color: #f59e0b;
+      border-color: #d97706;
       background: #fffbeb;
     }
 
@@ -87,250 +120,378 @@
       border-top: 2px solid #e5e7eb;
       padding-top: 12px;
       margin-top: 12px;
+      color: #78350f;
+    }
+
+    /* Enhanced Navigation Buttons */
+    .nav-button {
+      background: #78350f;
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(120, 53, 15, 0.3);
+      font-size: 1.1em;
+    }
+    
+    .nav-button:hover {
+      background: #92400e;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(120, 53, 15, 0.4);
+    }
+    
+    .nav-button:active {
+      transform: translateY(0);
+    }
+    
+    /* Secondary button style */
+    .secondary-button {
+      background: transparent;
+      color: #78350f;
+      border: 2px solid #78350f;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .secondary-button:hover {
+      background: #78350f;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(120, 53, 15, 0.3);
+    }
+    
+    /* Arrow button styles */
+    .arrow-btn {
+      background: #78350f;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px rgba(120, 53, 15, 0.3);
+      font-size: 18px;
+      width: 48px;
+      height: 48px;
+    }
+    
+    .arrow-btn:hover {
+      background: #92400e;
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(120, 53, 15, 0.4);
+    }
+    
+    .text-link {
+      color: #78350f;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+    
+    .text-link:hover {
+      background: rgba(120, 53, 15, 0.1);
+      text-decoration: underline;
+    }
+
+    /* Footer styles */
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(120, 53, 15, 0.9);
+      color: white;
+      padding: 12px;
+      text-align: center;
+      font-size: 0.9em;
+      z-index: 40;
     }
   </style>
 </head>
 <body class="text-gray-800">
 
-  <!-- Welcome -->
-  <section id="section-1" class="bg-yellow-100">
-    <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-md">
-      <h1 class="text-4xl font-bold mb-4">🍪 Welcome to Cookie Order</h1>
-      <p class="text-lg">Scroll or click to begin</p>
-      <button onclick="scrollToSection(2)" class="mt-4 bg-yellow-500 text-white px-4 py-2 rounded">Start Order ⬇️</button>
+  <!-- Welcome Section -->
+  <section id="section-1" class="relative justify-center">
+    <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-2xl w-full border border-amber-100 mb-16">
+      <h1 class="text-5xl font-bold mb-4 text-amber-900">Welcome to Why Dough?</h1>
+      
+      <!-- New Sub Header -->
+      <p class="text-xl text-amber-700 mb-8 leading-relaxed">
+        🍪 WHY NOT WHY DOUGH?<br>
+        <span class="text-lg">Soft. Chewy. Honest. We dough it better.</span>
+      </p>
+      
+      <!-- Main CTA Button -->
+      <div class="mb-8">
+        <button onclick="scrollToSection(2)" class="nav-button">
+          Shop now!
+        </button>
+      </div>
+      
+      <!-- Secondary Action Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <button class="secondary-button">
+          Meet the Dough
+        </button>
+        <button class="secondary-button">
+          View Cookie Menu
+        </button>
+      </div>
+    </div>
+    
+    <!-- Scroll indicator - Centered -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <button onclick="scrollToSection(2)" class="arrow-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12l7 7 7-7"/>
+        </svg>
+      </button>
     </div>
   </section>
 
+  <!-- Footer -->
+  <div class="footer">
+    #WhyNotWhyDough  |  #WhyDoughItBetter
+  </div>
+
+  
   <form id="orderForm">
-    <!-- Name -->
-    <section id="section-2" class="bg-white">
-      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-md w-full">
-        <label class="text-2xl font-bold mb-2 block">What's your name?</label>
-        <input name="name" required type="text" class="w-full border p-3 rounded mb-4" onkeydown="if(event.key==='Enter'){event.preventDefault(); scrollToSection(3);}" />
-
-        <label class="text-lg font-semibold mb-2 block">Facebook or Instagram Name</label>
-        <input name="socialHandle" required type="text" placeholder="Enter FB or IG name" class="w-full border p-3 rounded" onkeydown="if(event.key==='Enter'){event.preventDefault(); scrollToSection(3);}" />
-
-        <button type="button" onclick="scrollToSection(3)" class="mt-4 text-blue-500 underline">Next ⬇️</button>
+    <!-- Name Section -->
+    <section id="section-2" class="relative">
+      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-amber-100">
+        <label class="text-2xl font-bold mb-4 block text-amber-900">What's your name?</label>
+        <input name="name" required type="text" class="w-full border border-amber-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-amber-500 focus:border-transparent" placeholder="Your full name" />
+        
+        <label class="text-lg font-semibold mb-4 block text-amber-800">Facebook or Instagram Name</label>
+        <input name="socialHandle" required type="text" placeholder="Enter FB or IG name" class="w-full border border-amber-200 p-4 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent" />
+        
+        <div class="flex justify-between items-center mt-8">
+          <button type="button" onclick="scrollToSection(1)" class="arrow-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+          <button type="button" onclick="scrollToSection(3)" class="nav-button">
+            Next
+          </button>
+        </div>
       </div>
     </section>
 
     <!-- Delivery date & method -->
-    <section id="section-3" class="bg-yellow-50">
-      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-md w-full">
-        <label class="text-2xl font-bold mb-2 block">Delivery Date</label>
-        <div id="quickDates" class="grid grid-cols-3 gap-2 mb-4"></div>
-        <a href="#" onclick="openDateInput();return false;" class="text-blue-600 underline block mb-2">Pick another date</a>
-        <input name="deliveryDate" id="deliveryDateInput" required type="date" class="w-full border p-3 rounded hidden" onchange="scrollToSection(4)" />
+    <section id="section-3" class="relative">
+      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-amber-100">
+        <label class="text-2xl font-bold mb-4 block text-amber-900">Delivery Date</label>
+        <div id="quickDates" class="grid grid-cols-3 gap-3 mb-6"></div>
+        <a href="#" onclick="openDateInput();return false;" class="text-link block mb-4">Pick another date</a>
+        <input name="deliveryDate" id="deliveryDateInput" required type="date" class="w-full border border-amber-200 p-4 rounded-xl hidden focus:ring-2 focus:ring-amber-500 focus:border-transparent" />
         
         <!-- Delivery Method -->
-        <label class="text-2xl font-bold mb-2 block mt-6">Delivery Method</label>
-        <div class="space-y-2">
+        <label class="text-2xl font-bold mb-4 block mt-8 text-amber-900">Delivery Method</label>
+        <div class="space-y-3">
           <div class="delivery-option" onclick="selectDeliveryMethod(this, 'pickup')">
             <input type="radio" name="deliveryMethod" value="pickup" class="hidden">
-            <span class="font-semibold">🛵 Pick Up</span>
+            <span class="font-semibold text-amber-900">🛵 Pick Up</span>
           </div>
           <div class="delivery-option" onclick="selectDeliveryMethod(this, 'delivery')">
             <input type="radio" name="deliveryMethod" value="delivery" class="hidden">
-            <span class="font-semibold">🚚 Delivery</span>
+            <span class="font-semibold text-amber-900">🚚 Delivery</span>
           </div>
         </div>
         
-        <div class="flex justify-between mt-4">
-          <button type="button" onclick="scrollToSection(2)" class="text-blue-500 underline">⬆️ Back</button>
-          <button type="button" onclick="scrollToSection(4)" class="text-blue-500 underline">Next ⬇️</button>
+        <div class="flex justify-between items-center mt-8">
+          <button type="button" onclick="scrollToSection(2)" class="arrow-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+          <button type="button" onclick="scrollToSection(4)" class="nav-button">
+            Next
+          </button>
         </div>
       </div>
     </section>
 
     <!-- Contact details -->
-    <section id="section-4" class="bg-white">
-      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-md w-full">
-        <label class="text-2xl font-bold mb-4 block">Contact Details</label>
+    <section id="section-4" class="relative">
+      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-amber-100">
+        <label class="text-2xl font-bold mb-6 block text-amber-900">Contact Details</label>
         
-        <label class="block font-semibold mb-2">Contact Number</label>
-        <input name="contactNumber" required type="tel" pattern="[0-9]{11}" title="Please enter an 11-digit number (e.g., 09123456789)" placeholder="e.g. 09XXXXXXXXX" class="w-full border p-3 rounded mb-4" />
+        <label class="block font-semibold mb-3 text-amber-800">Contact Number</label>
+        <input name="contactNumber" required type="tel" pattern="[0-9]{11}" title="Please enter an 11-digit number (e.g., 09123456789)" placeholder="e.g. 09XXXXXXXXX" class="w-full border border-amber-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-amber-500 focus:border-transparent" />
         
-        <div class="flex justify-between mt-4">
-          <button type="button" onclick="scrollToSection(3)" class="text-blue-500 underline">⬆️ Back</button>
-          <button type="button" onclick="scrollToSection(5)" class="text-blue-500 underline">Next ⬇️</button>
+        <div class="flex justify-between items-center mt-8">
+          <button type="button" onclick="scrollToSection(3)" class="arrow-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+          <button type="button" onclick="scrollToSection(5)" class="nav-button">
+            Next
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- Cookie selection (2x2) -->
-    <section id="section-5" class="bg-white">
-      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-3xl w-full space-y-6">
-        <h2 class="text-2xl font-bold mb-4 text-center">Choose your cookies</h2>
+    <!-- Rest of your sections remain exactly the same, just removed arrows from nav-buttons -->
+    <!-- Cookie selection section -->
+    <section id="section-5" class="relative">
+      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-4xl w-full space-y-8 border border-amber-100">
+        <h2 class="text-3xl font-bold text-amber-900 text-center">Choose your cookies</h2>
         
         <!-- Cart Preview -->
-        <div class="bg-yellow-50 p-4 rounded-lg mb-6">
+        <div class="bg-amber-50 p-6 rounded-2xl mb-6 border border-amber-200">
           <div class="flex justify-between items-center">
-            <h3 class="text-lg font-semibold">🛒 Your Cart</h3>
-            <button type="button" onclick="openCartModal()" class="text-blue-600 underline">View Cart (<span id="cartCount">0</span> items)</button>
+            <h3 class="text-lg font-semibold text-amber-900">🛒 Your Cart</h3>
+            <button type="button" onclick="openCartModal()" class="text-link">View Cart (<span id="cartCount">0</span> items)</button>
           </div>
-          <p class="text-sm text-gray-600 mt-2">Total: ₱<span id="cartTotalPreview">0</span></p>
+          <p class="text-sm text-amber-700 mt-2">Total: ₱<span id="cartTotalPreview">0</span></p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
           <!-- OG Set Card -->
-          <div class="cookie-card bg-yellow-50 p-6 rounded shadow flex flex-col items-center" onclick="toggleCookieCard(this, 'ogSet')">
-            <p class="font-semibold text-lg mb-1">The OG Set</p>
-            <p class="text-sm text-gray-600 mb-4">(3 cookies: The Usual, The Red One, The Burnt One)</p>
-            <p class="font-bold text-yellow-700 mb-2">₱320</p>
+          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center" onclick="toggleCookieCard(this, 'ogSet')">
+            <p class="font-semibold text-xl mb-2 text-amber-900">The OG Set</p>
+            <p class="text-sm text-amber-600 mb-4">(3 cookies: The Usual, The Red One, The Burnt One)</p>
+            <p class="font-bold text-amber-700 mb-4 text-xl">₱320</p>
             
-            <!-- Quantity Section (Hidden by default) -->
-            <div class="quantity-section items-center space-x-2">
-              <button type="button" onclick="event.stopPropagation(); updateCardCount('ogSet', -1)" class="px-3 py-1 bg-gray-200 rounded">-</button>
-              <input type="number" id="ogSet" name="ogSet" value="0" min="0" class="w-16 text-center border rounded" onclick="event.stopPropagation()">
-              <button type="button" onclick="event.stopPropagation(); updateCardCount('ogSet', 1)" class="px-3 py-1 bg-gray-200 rounded">+</button>
-              <button type="button" onclick="event.stopPropagation(); addToCart('ogSet', 'OG Set', 320)" class="ml-2 bg-green-500 text-white px-3 py-1 rounded">Add to Cart</button>
+            <div class="quantity-section items-center space-x-3">
+              <button type="button" onclick="event.stopPropagation(); updateCardCount('ogSet', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
+              <input type="number" id="ogSet" name="ogSet" value="0" min="0" class="w-16 text-center border border-amber-300 rounded-lg py-2" onclick="event.stopPropagation()">
+              <button type="button" onclick="event.stopPropagation(); updateCardCount('ogSet', 1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">+</button>
+              <button type="button" onclick="event.stopPropagation(); addToCart('ogSet', 'OG Set', 320)" class="ml-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-semibold">Add to Cart</button>
             </div>
           </div>
 
           <!-- Classic 6 Card -->
-          <div class="cookie-card bg-yellow-50 p-6 rounded shadow flex flex-col items-center" onclick="toggleCookieCard(this, 'classic6')">
-            <p class="font-semibold text-lg mb-1">Classic 6</p>
-            <p class="text-sm text-gray-600 mb-4">(6 cookies: Usual, Red, Burnt, Milky, Pistash, Bizz)</p>
-            <p class="font-bold text-yellow-700 mb-2">₱660</p>
+          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center" onclick="toggleCookieCard(this, 'classic6')">
+            <p class="font-semibold text-xl mb-2 text-amber-900">Classic 6</p>
+            <p class="text-sm text-amber-600 mb-4">(6 cookies: Usual, Red, Burnt, Milky, Pistash, Bizz)</p>
+            <p class="font-bold text-amber-700 mb-4 text-xl">₱660</p>
             
-            <div class="quantity-section items-center space-x-2">
-              <button type="button" onclick="event.stopPropagation(); updateCardCount('classic6', -1)" class="px-3 py-1 bg-gray-200 rounded">-</button>
-              <input type="number" id="classic6" name="classic6" value="0" min="0" class="w-16 text-center border rounded" onclick="event.stopPropagation()">
-              <button type="button" onclick="event.stopPropagation(); updateCardCount('classic6', 1)" class="px-3 py-1 bg-gray-200 rounded">+</button>
-              <button type="button" onclick="event.stopPropagation(); addToCart('classic6', 'Classic 6', 660)" class="ml-2 bg-green-500 text-white px-3 py-1 rounded">Add to Cart</button>
+            <div class="quantity-section items-center space-x-3">
+              <button type="button" onclick="event.stopPropagation(); updateCardCount('classic6', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
+              <input type="number" id="classic6" name="classic6" value="0" min="0" class="w-16 text-center border border-amber-300 rounded-lg py-2" onclick="event.stopPropagation()">
+              <button type="button" onclick="event.stopPropagation(); updateCardCount('classic6', 1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">+</button>
+              <button type="button" onclick="event.stopPropagation(); addToCart('classic6', 'Classic 6', 660)" class="ml-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-semibold">Add to Cart</button>
             </div>
           </div>
 
           <!-- Samplers Card -->
-          <div class="cookie-card bg-yellow-50 p-6 rounded shadow flex flex-col items-center" onclick="toggleCookieCard(this, 'samplers')">
-            <p class="font-semibold text-lg mb-1">Samplers</p>
-            <p class="text-sm text-gray-600 mb-4">(6 pcs of Classics, 50g each)</p>
-            <p class="font-bold text-yellow-700 mb-2">₱320</p>
+          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center" onclick="toggleCookieCard(this, 'samplers')">
+            <p class="font-semibold text-xl mb-2 text-amber-900">Samplers</p>
+            <p class="text-sm text-amber-600 mb-4">(6 pcs of Classics, 50g each)</p>
+            <p class="font-bold text-amber-700 mb-4 text-xl">₱320</p>
             
-            <div class="quantity-section items-center space-x-2">
-              <button type="button" onclick="event.stopPropagation(); updateCardCount('samplers', -1)" class="px-3 py-1 bg-gray-200 rounded">-</button>
-              <input type="number" id="samplers" name="samplers" value="0" min="0" class="w-16 text-center border rounded" onclick="event.stopPropagation()">
-              <button type="button" onclick="event.stopPropagation(); updateCardCount('samplers', 1)" class="px-3 py-1 bg-gray-200 rounded">+</button>
-              <button type="button" onclick="event.stopPropagation(); addToCart('samplers', 'Samplers', 320)" class="ml-2 bg-green-500 text-white px-3 py-1 rounded">Add to Cart</button>
+            <div class="quantity-section items-center space-x-3">
+              <button type="button" onclick="event.stopPropagation(); updateCardCount('samplers', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
+              <input type="number" id="samplers" name="samplers" value="0" min="0" class="w-16 text-center border border-amber-300 rounded-lg py-2" onclick="event.stopPropagation()">
+              <button type="button" onclick="event.stopPropagation(); updateCardCount('samplers', 1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">+</button>
+              <button type="button" onclick="event.stopPropagation(); addToCart('samplers', 'Samplers', 320)" class="ml-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-semibold">Add to Cart</button>
             </div>
           </div>
 
           <!-- Customize Your Cookie Box Card -->
-          <div class="cookie-card bg-yellow-100 p-6 rounded shadow flex flex-col items-center" onclick="toggleCustomBoxCard(this)">
-            <p class="font-semibold text-lg mb-4">🍪 Customize Your Cookie Box</p>
-            <p class="text-sm text-gray-600 mb-4">Create your own cookie selection</p>
+          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center bg-amber-50" onclick="toggleCustomBoxCard(this)">
+            <p class="font-semibold text-xl mb-4 text-amber-900">🍪 Customize Your Cookie Box</p>
+            <p class="text-sm text-amber-600 mb-4">Create your own cookie selection</p>
             
             <div class="quantity-section items-center">
-              <span class="text-sm text-gray-600">Click to customize</span>
+              <span class="text-sm text-amber-600">Click to customize</span>
             </div>
           </div>
-
         </div>
-        <div class="flex justify-between mt-4">
-          <button type="button" onclick="scrollToSection(4)" class="text-blue-500 underline">⬆️ Back</button>
-          <button type="button" onclick="scrollToSection(6)" class="text-blue-500 underline">Next ⬇️</button>
+        
+        <div class="flex justify-between items-center mt-8">
+          <button type="button" onclick="scrollToSection(4)" class="arrow-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+          <button type="button" onclick="scrollToSection(6)" class="nav-button">
+            Next
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- Customize modal -->
-    <div id="customizeModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header flex justify-between items-center">
-          <h3 class="text-lg font-semibold">Customize Your Cookie Box</h3>
-          <button type="button" onclick="closeCustomizeModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
-        </div>
-         <!-- Body -->
-        <div class="modal-body">
-          <p class="font-semibold mb-2">Select Box Size:</p>
-          <div class="boxsize-list">
-            <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="4" class="hidden"><span>Pack of 4</span></label>
-            <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="6" class="hidden"><span>Box of 6</span></label>
-            <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="12" class="hidden"><span>Box of 12</span></label>
-            <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="others" class="hidden"><span>Others (Minimum 3 cookies)</span></label>
-          </div>
-
-          <div id="selectedSizeInfo" class="mt-4 p-3 bg-blue-50 rounded-lg hidden">
-            <p class="text-sm text-blue-800" id="sizeMessage"></p>
-          </div>
-
-          <p class="font-semibold mt-6 mb-2">Select Cookies:</p>
-          <div id="cookieList" class="cookie-list"></div>
-        </div>
-
-        <!-- Footer -->
-        <div class="modal-footer">
-          <button type="button" onclick="addCustomBoxToCart()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded-lg">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Cart Modal -->
-    <div id="cartModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header flex justify-between items-center">
-          <h3 class="text-lg font-semibold">🛒 Your Cart</h3>
-          <button type="button" onclick="closeCartModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div id="cartItems" class="space-y-3">
-            <!-- Cart items will be displayed here -->
-          </div>
-          <div id="emptyCartMessage" class="text-center text-gray-500 py-8">
-            Your cart is empty
-          </div>
-          <div id="cartTotal" class="cart-total mt-4 hidden">
-            Total: ₱<span id="cartTotalAmount">0</span>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" onclick="closeCartModal()" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 rounded-lg">
-            Continue Shopping
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Payment -->
-    <section id="section-6" class="bg-yellow-50">
-      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-md w-full">
-        <label class="text-2xl font-bold mb-2 block">Payment Method</label>
-        <select name="payment" class="w-full border p-3 rounded">
+    <section id="section-6" class="relative">
+      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-amber-100">
+        <label class="text-2xl font-bold mb-4 block text-amber-900">Payment Method</label>
+        <select name="payment" class="w-full border border-amber-200 p-4 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent">
           <option value="COD">Cash on Delivery</option>
           <option value="GCash">GCash</option>
           <option value="Bank Transfer">Bank Transfer</option>
         </select>
-        <div class="flex justify-between mt-4">
-          <button type="button" onclick="scrollToSection(5)" class="text-blue-500 underline">⬆️ Back</button>
-          <button type="button" onclick="scrollToSection(7)" class="text-blue-500 underline">Next ⬇️</button>
+        <div class="flex justify-between items-center mt-8">
+          <button type="button" onclick="scrollToSection(5)" class="arrow-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+          <button type="button" onclick="scrollToSection(7)" class="nav-button">
+            Next
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+          </button>
         </div>
       </div>
     </section>
 
     <!-- Notes -->
-    <section id="section-7" class="bg-white">
-      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-md w-full">
-        <label class="text-2xl font-bold mb-2 block">Notes (Optional)</label>
-        <textarea name="notes" class="w-full border p-3 rounded h-32"></textarea>
-        <div class="flex justify-between mt-4">
-          <button type="button" onclick="scrollToSection(6)" class="text-blue-500 underline">⬆️ Back</button>
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(8);" class="text-blue-500 underline">Next ⬇️</button>
+    <section id="section-7" class="relative">
+      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-amber-100">
+        <label class="text-2xl font-bold mb-4 block text-amber-900">Notes (Optional)</label>
+        <textarea name="notes" class="w-full border border-amber-200 p-4 rounded-xl h-32 focus:ring-2 focus:ring-amber-500 focus:border-transparent" placeholder="Any special requests or instructions..."></textarea>
+        <div class="flex justify-between items-center mt-8">
+          <button type="button" onclick="scrollToSection(6)" class="arrow-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(8);" class="nav-button">
+            Next
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+          </button>
         </div>
       </div>
     </section>
 
     <!-- Summary -->
-    <section id="section-8" class="bg-yellow-100">
-      <div class="bg-white bg-opacity-80 p-6 rounded shadow-lg max-w-lg w-full">
-        <h2 class="text-2xl font-bold mb-4">Order Summary</h2>
-        <div id="summaryContent" class="text-left space-y-2"></div>
-        <div class="flex justify-between mt-4">
-          <button type="button" onclick="scrollToSection(7)" class="text-blue-500 underline">⬆️ Back</button>
-          <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded">Submit Order ✅</button>
+    <section id="section-8" class="relative">
+      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-lg w-full border border-amber-100">
+        <h2 class="text-2xl font-bold mb-6 text-amber-900">Order Summary</h2>
+        <div id="summaryContent" class="text-left space-y-3 text-amber-800"></div>
+        <div class="flex justify-between items-center mt-8">
+          <button type="button" onclick="scrollToSection(7)" class="arrow-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+          <button type="submit" class="nav-button bg-green-600 hover:bg-green-700">
+            Submit Order ✅
+          </button>
         </div>
       </div>
     </section>
