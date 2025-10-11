@@ -1,5 +1,6 @@
 // ----- State -----
 let selectedBoxSize = null;
+let activeCard = null;
 let cart = [];
 
 const cookieFlavors = [
@@ -15,65 +16,57 @@ const cookieFlavors = [
     { name: "Berry match", price: 120 }
 ];
 
-const setPrices = {
-    ogSet: 320,
-    classic6: 660,
-    samplers: 320
-};
-
-// ----- Fixed JavaScript Functions -----
+// ----- Navigation -----
 function scrollToSection(id){ 
     const element = document.getElementById('section-'+id);
-    if (element) {
-        element.scrollIntoView({behavior:'smooth'});
-    }
+    if (element) element.scrollIntoView({behavior:'smooth'});
 }
 
+// ----- Form Sections -----
 function openDateInput(){ 
     const input = document.getElementById('deliveryDateInput');
-    if (input) {
-        input.classList.remove('hidden'); 
-    }
+    if (input) input.classList.remove('hidden'); 
 }
 
 function selectDeliveryMethod(element, method) {
-    document.querySelectorAll('.delivery-option').forEach(opt => {
-        opt.classList.remove('active');
-    });
+    document.querySelectorAll('.delivery-option').forEach(opt => opt.classList.remove('active'));
     element.classList.add('active');
-    
     const radio = element.querySelector('input[type="radio"]');
     if (radio) radio.checked = true;
 }
 
+// ----- Cookie Cards -----
 function toggleCookieCard(card, inputId) {
     const isActive = card.classList.contains('active');
     
+    document.querySelectorAll('.cookie-card').forEach(c => {
+        if (c !== card) c.classList.remove('active');
+    });
+    
     if (isActive) {
         card.classList.remove('active');
+        activeCard = null;
     } else {
-        document.querySelectorAll('.cookie-card').forEach(c => {
-            c.classList.remove('active');
-        });
         card.classList.add('active');
-        
+        activeCard = card;
         const input = document.getElementById(inputId);
-        if (input && parseInt(input.value) === 0) {
-            input.value = 1;
-        }
+        if (input && parseInt(input.value) === 0) input.value = 1;
     }
 }
 
 function toggleCustomBoxCard(card) {
     const isActive = card.classList.contains('active');
     
+    document.querySelectorAll('.cookie-card').forEach(c => {
+        if (c !== card) c.classList.remove('active');
+    });
+    
     if (isActive) {
         card.classList.remove('active');
+        activeCard = null;
     } else {
-        document.querySelectorAll('.cookie-card').forEach(c => {
-            c.classList.remove('active');
-        });
         card.classList.add('active');
+        activeCard = card;
         openCustomizeModal();
     }
 }
@@ -84,39 +77,39 @@ function updateCardCount(inputId, delta) {
         let value = parseInt(input.value) || 0;
         input.value = Math.max(0, value + delta);
     }
+    event.stopPropagation();
 }
 
 function addToCart(inputId, itemName, price) {
-    const quantity = parseInt(document.getElementById(inputId).value) || 0;
+    const input = document.getElementById(inputId);
+    const quantity = parseInt(input.value) || 0;
     
     if (quantity <= 0) {
         alert('Please select at least 1 quantity');
         return;
     }
 
-    const existingIndex = cart.findIndex(item => item.id === inputId && item.type === 'premade');
+    cart = cart.filter(item => item.id !== inputId);
     
-    if (existingIndex > -1) {
-        cart[existingIndex].quantity = quantity;
-        cart[existingIndex].total = price * quantity;
-    } else {
-        cart.push({
-            id: inputId,
-            type: 'premade',
-            name: itemName,
-            price: price,
-            quantity: quantity,
-            total: price * quantity
-        });
-    }
+    cart.push({
+        id: inputId,
+        type: 'premade',
+        name: itemName,
+        price: price,
+        quantity: quantity,
+        total: price * quantity
+    });
 
     updateCartDisplay();
+    input.value = 0;
     
-    document.getElementById(inputId).value = 0;
     const card = document.querySelector(`.cookie-card[onclick*="${inputId}"]`);
     if (card) {
         card.classList.remove('active');
+        activeCard = null;
     }
+    
+    if (event) event.stopPropagation();
 }
 
 function removeFromCart(index) {
@@ -124,6 +117,7 @@ function removeFromCart(index) {
     updateCartDisplay();
 }
 
+// ----- Cart Management -----
 function updateCartDisplay() {
     const cartCount = document.getElementById('cartCount');
     const cartTotalPreview = document.getElementById('cartTotalPreview');
@@ -131,43 +125,42 @@ function updateCartDisplay() {
     const emptyCartMessage = document.getElementById('emptyCartMessage');
     const cartTotal = document.getElementById('cartTotal');
     const cartTotalAmount = document.getElementById('cartTotalAmount');
+    const cartPreview = document.getElementById('cartPreview');
 
-    // Check if elements exist before manipulating them
-    if (!cartCount || !cartTotalPreview || !cartItems || !emptyCartMessage || !cartTotal || !cartTotalAmount) {
-        console.log('Cart elements not found');
-        return;
-    }
+    if (!cartCount || !cartTotalPreview || !cartItems || !emptyCartMessage || !cartTotal || !cartTotalAmount || !cartPreview) return;
 
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
     
     cartCount.textContent = totalItems;
     cartTotalPreview.textContent = totalAmount;
+    cartTotalAmount.textContent = totalAmount;
 
     if (cart.length === 0) {
         emptyCartMessage.classList.remove('hidden');
         cartItems.innerHTML = '';
         cartTotal.classList.add('hidden');
+        cartPreview.classList.add('hidden');
     } else {
         emptyCartMessage.classList.add('hidden');
         cartTotal.classList.remove('hidden');
-        cartTotalAmount.textContent = totalAmount;
+        cartPreview.classList.remove('hidden');
 
         cartItems.innerHTML = cart.map((item, index) => `
-        <div class="cart-item">
-            <div class="flex justify-between items-start">
-            <div class="flex-1">
-                <h4 class="font-semibold">${item.name}</h4>
-                ${item.type === 'customBox' ? 
-                `<p class="text-sm text-gray-600">Box of ${item.boxSize}</p>
-                    <p class="text-sm text-gray-600">${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')}</p>` : 
-                `<p class="text-sm text-gray-600">Quantity: ${item.quantity}</p>`
-                }
-                <p class="font-semibold">₱${item.total}</p>
+            <div class="cart-modal-item p-4 rounded-lg mb-3">
+                <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                        <h4 class="font-bold text-amber-900 text-lg">${item.name}</h4>
+                        ${item.type === 'customBox' ? 
+                            `<p class="text-sm text-amber-700">Box of ${item.boxSize}</p>
+                             <p class="text-sm text-amber-600">${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')}</p>` : 
+                            `<p class="text-sm text-amber-700">Quantity: ${item.quantity}</p>`
+                        }
+                        <p class="font-bold text-amber-800 text-xl mt-2">₱${item.total}</p>
+                    </div>
+                    <button type="button" onclick="removeFromCart(${index})" class="text-red-600 hover:text-red-800 ml-4 bg-white p-2 rounded-full shadow">🗑️</button>
+                </div>
             </div>
-            <button type="button" onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 ml-2">🗑️</button>
-            </div>
-        </div>
         `).join('');
     }
 }
@@ -189,6 +182,7 @@ function closeCartModal() {
     }
 }
 
+// ----- Date Handling -----
 function generateWeekendDates(){
     const container = document.getElementById('quickDates');
     if (!container) return;
@@ -239,12 +233,13 @@ function setDateRestrictions(){
     }
 }
 
+// ----- Custom Box Modal -----
 function renderCookieList(){
     const container = document.getElementById('cookieList'); 
     if(!container) return; 
     
     container.innerHTML = '';
-    cookieFlavors.forEach((flavor, idx) => {
+    cookieFlavors.forEach((flavor) => {
         const row = document.createElement('div'); 
         row.className = 'cookie-row'; 
         row.dataset.cookie = flavor.name;
@@ -290,7 +285,6 @@ function updateCookieQty(button, delta) {
     if (v === 0) {
         const row = qtyDiv.closest('.cookie-row');
         if (row) {
-            qtyDiv.classList.add('hidden');
             row.classList.remove('active');
         }
     }
@@ -300,21 +294,16 @@ function selectBoxSize(row){
     document.querySelectorAll('.boxsize-row').forEach(r=> r.classList.remove('active')); 
     row.classList.add('active'); 
     const radio = row.querySelector('input[type="radio"]');
-    if (radio) {
-        selectedBoxSize = radio.value;
-    }
+    if (radio) selectedBoxSize = radio.value;
     
     const sizeInfo = document.getElementById('selectedSizeInfo');
     const sizeMessage = document.getElementById('sizeMessage');
     
     if (sizeInfo && sizeMessage) {
-        if (selectedBoxSize === 'others') {
-            sizeMessage.textContent = 'Please select at least 3 cookies for your custom box.';
-            sizeInfo.classList.remove('hidden');
-        } else {
-            sizeMessage.textContent = `Please select exactly ${selectedBoxSize} cookies for your box.`;
-            sizeInfo.classList.remove('hidden');
-        }
+        sizeMessage.textContent = selectedBoxSize === 'others' 
+            ? 'Please select at least 3 cookies for your custom box.'
+            : `Please select exactly ${selectedBoxSize} cookies for your box.`;
+        sizeInfo.classList.remove('hidden');
     }
 }
 
@@ -347,9 +336,7 @@ function openCustomizeModal() {
         document.querySelectorAll('.boxsize-row').forEach(r => r.classList.remove('active'));
         
         const sizeInfo = document.getElementById('selectedSizeInfo');
-        if (sizeInfo) {
-            sizeInfo.classList.add('hidden');
-        }
+        if (sizeInfo) sizeInfo.classList.add('hidden');
     }
 }
 
@@ -396,9 +383,7 @@ function addCustomBoxToCart(){
     closeCustomizeModal();
     
     const customBoxCard = document.querySelector('.cookie-card:last-child');
-    if (customBoxCard) {
-        customBoxCard.classList.remove('active');
-    }
+    if (customBoxCard) customBoxCard.classList.remove('active');
     
     selectedBoxSize = null;
     document.querySelectorAll('.boxsize-row').forEach(r => r.classList.remove('active'));
@@ -409,9 +394,86 @@ function addCustomBoxToCart(){
     });
 }
 
-// ----- Google Forms Submission -----
+// ----- Order Summary & Submission -----
+function buildOrderSummary(){
+    const form = document.getElementById('orderForm'); 
+    if (!form) return;
+    
+    const name = form.name.value.trim(); 
+    const social = form.socialHandle.value.trim(); 
+    const deliveryDate = form.deliveryDate.value || '—';
+    const deliveryMethod = form.deliveryMethod?.value || 'Not selected';
+    const contact = form.contactNumber.value.trim(); 
+    const notes = form.notes.value.trim();
+    const payment = form.payment.value;
+
+    let totalAmount = 0;
+    let html = `<strong>Name:</strong> ${escapeHtml(name)}<br>
+                <strong>Social:</strong> ${escapeHtml(social)}<br>
+                <strong>Delivery Date:</strong> ${escapeHtml(deliveryDate)}<br>
+                <strong>Delivery Method:</strong> ${escapeHtml(deliveryMethod === 'pickup' ? 'Pick Up' : 'Delivery')}<br>
+                <strong>Contact Number:</strong> ${escapeHtml(contact)}<br>
+                <strong>Payment Method:</strong> ${escapeHtml(payment)}<br><hr>`;
+    
+    html += `<strong>Order Items:</strong><br>`;
+    
+    if(cart.length > 0){
+        cart.forEach((item) => {
+            totalAmount += item.total;
+            if (item.type === 'customBox') {
+                html += `- ${item.name}: ` + 
+                        item.items.map(it => `${it.name} x ${it.qty}`).join(', ') + 
+                        ` = ₱${item.total}<br>`;
+            } else {
+                html += `- ${item.name} x ${item.quantity} = ₱${item.total}<br>`;
+            }
+        });
+    } else {
+        html += `No items in cart<br>`;
+    }
+    
+    html += `<hr><strong>Total Amount:</strong> ₱${totalAmount}<br>`;
+    html += `<hr><strong>Notes:</strong><br>${escapeHtml(notes)}<br>`;
+    
+    const summaryContent = document.getElementById('summaryContent');
+    if (summaryContent) summaryContent.innerHTML = html;
+}
+
+async function handleFormSubmit(e){ 
+    e.preventDefault(); 
+    
+    if (cart.length === 0) {
+        alert('Please add at least one item to your cart before submitting.');
+        return;
+    }
+    
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Submitting...';
+    submitBtn.classList.add('loading');
+    
+    try {
+        const formData = new FormData(document.getElementById('orderForm'));
+        await submitToGoogleForms(formData);
+        
+        alert('Order submitted successfully! Thank you for your order!');
+        
+        document.getElementById('orderForm').reset();
+        cart = [];
+        updateCartDisplay();
+        document.querySelectorAll('.cookie-card').forEach(card => card.classList.remove('active'));
+        scrollToSection(1);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error submitting your order. Please try again or contact us directly.');
+    } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.classList.remove('loading');
+    }
+}
+
 async function submitToGoogleForms(formData) {
-    // REPLACE THIS WITH YOUR ACTUAL GOOGLE FORM URL
     const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfpWgm_iikunZ44T7HxQfnbmA1KY-bB4l57fnAN0vAaFo0ZsA/formResponse';
     
     // Calculate individual cookie quantities
@@ -422,7 +484,7 @@ async function submitToGoogleForms(formData) {
                 cookieQuantities['The Usual'] = (cookieQuantities['The Usual'] || 0) + item.quantity;
                 cookieQuantities['The Red One'] = (cookieQuantities['The Red One'] || 0) + item.quantity;
                 cookieQuantities['The Burnt One'] = (cookieQuantities['The Burnt One'] || 0) + item.quantity;
-            } else if (item.name === 'Classic 6') {
+            } else if (item.name === 'The Classics') {
                 cookieQuantities['The Usual'] = (cookieQuantities['The Usual'] || 0) + item.quantity;
                 cookieQuantities['The Red One'] = (cookieQuantities['The Red One'] || 0) + item.quantity;
                 cookieQuantities['The Burnt One'] = (cookieQuantities['The Burnt One'] || 0) + item.quantity;
@@ -453,117 +515,30 @@ async function submitToGoogleForms(formData) {
 
     const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
 
-    // REPLACE THESE ENTRY IDs WITH YOUR ACTUAL GOOGLE FORM FIELD IDs
     const params = new URLSearchParams({
-        'entry.1608348325': formData.get('name') || '',             // Name
-        'entry.756795480': formData.get('socialHandle') || '',      // Social Handle
-        'entry.1868351860': formData.get('deliveryDate') || '',     // Delivery Date
-        'entry.1213945014': formData.get('deliveryMethod') || '',   // Delivery Method
-        'entry.216379063': formData.get('contactNumber') || '',     // Contact Number
-        'entry.1369240809': formData.get('payment') || '',          // Payment Method
-        'entry.564442403': formData.get('notes') || '',             // Notes
-        'entry.1344414632': orderDetails,                           // Order Details
-        'entry.950008786': cookieQuantitiesText,                    // Cookie Quantities
-        'entry.1858160446': totalAmount.toString()                  // Total Amount
+        'entry.1608348325': formData.get('name') || '',           // Name
+        'entry.756795480': formData.get('socialHandle') || '',   // Social Handle
+        'entry.1868351860': formData.get('deliveryDate') || '',   // Delivery Date
+        'entry.1213945014': formData.get('deliveryMethod') || '', // Delivery Method
+        'entry.216379063': formData.get('contactNumber') || '',  // Contact Number
+        'entry.1369240809': formData.get('payment') || '',        // Payment Method
+        'entry.564442403': formData.get('notes') || '',          // Notes
+        'entry.1344414632': orderDetails,                         // Order Details
+        'entry.950008786': cookieQuantitiesText,                 // Cookie Quantities
+        'entry.1858160446': totalAmount.toString()                // Total Amount
     });
 
-    // Submit to Google Forms using no-cors mode
     try {
         await fetch(formUrl, {
             method: 'POST',
             mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: params
         });
         return true;
     } catch (error) {
         console.log('Form submission attempted (no-cors mode)');
-        return true; // With no-cors, we can't verify success, but assume it worked
-    }
-}
-
-function buildOrderSummary(){
-    const form = document.getElementById('orderForm'); 
-    if (!form) return;
-    
-    const name = form.name.value.trim(); 
-    const social = form.socialHandle.value.trim(); 
-    const deliveryDate = form.deliveryDate.value || '—';
-    const deliveryMethod = form.deliveryMethod?.value || 'Not selected';
-    const contact = form.contactNumber.value.trim(); 
-    const notes = form.notes.value.trim();
-    const payment = form.payment.value;
-
-    let totalAmount = 0;
-    let html = `<strong>Name:</strong> ${escapeHtml(name)}<br>
-                <strong>Social:</strong> ${escapeHtml(social)}<br>
-                <strong>Delivery Date:</strong> ${escapeHtml(deliveryDate)}<br>
-                <strong>Delivery Method:</strong> ${escapeHtml(deliveryMethod === 'pickup' ? 'Pick Up' : 'Delivery')}<br>
-                <strong>Contact Number:</strong> ${escapeHtml(contact)}<br>
-                <strong>Payment Method:</strong> ${escapeHtml(payment)}<br><hr>`;
-    
-    html += `<strong>Order Items:</strong><br>`;
-    
-    if(cart.length > 0){
-        cart.forEach((item, index) => {
-            totalAmount += item.total;
-            if (item.type === 'customBox') {
-                html += `- ${item.name}: ` + 
-                        item.items.map(it => `${it.name} x ${it.qty}`).join(', ') + 
-                        ` = ₱${item.total}<br>`;
-            } else {
-                html += `- ${item.name} x ${item.quantity} = ₱${item.total}<br>`;
-            }
-        });
-    } else {
-        html += `No items in cart<br>`;
-    }
-    
-    html += `<hr><strong>Total Amount:</strong> ₱${totalAmount}<br>`;
-    html += `<hr><strong>Notes:</strong><br>${escapeHtml(notes)}<br>`;
-    
-    const summaryContent = document.getElementById('summaryContent');
-    if (summaryContent) {
-        summaryContent.innerHTML = html;
-    }
-}
-
-async function handleFormSubmit(e){ 
-    e.preventDefault(); 
-    
-    if (cart.length === 0) {
-        alert('Please add at least one item to your cart before submitting.');
-        return;
-    }
-    
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Submitting...';
-    submitBtn.classList.add('loading');
-    
-    try {
-        const formData = new FormData(document.getElementById('orderForm'));
-        
-        await submitToGoogleForms(formData);
-        
-        alert('Order submitted successfully! Thank you for your order!');
-        
-        document.getElementById('orderForm').reset();
-        cart = [];
-        updateCartDisplay();
-        document.querySelectorAll('.cookie-card').forEach(card => {
-            card.classList.remove('active');
-        });
-        scrollToSection(1);
-        
-    } catch (error) {
-        console.error('Error:', error);
-        alert('There was an error submitting your order. Please try again or contact us directly.');
-    } finally {
-        submitBtn.textContent = originalText;
-        submitBtn.classList.remove('loading');
+        return true;
     }
 }
 
@@ -572,16 +547,27 @@ function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, s=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); 
 }
 
-// ----- Init -----
+// ----- Event Listeners -----
+document.addEventListener('click', function(event) {
+    const clickedCard = event.target.closest('.cookie-card');
+    
+    if (activeCard && !clickedCard) {
+        activeCard.classList.remove('active');
+        activeCard = null;
+    } else if (clickedCard && activeCard && clickedCard !== activeCard) {
+        activeCard.classList.remove('active');
+        activeCard = clickedCard;
+        clickedCard.classList.add('active');
+    }
+});
+
 document.addEventListener('DOMContentLoaded', ()=>{
     generateWeekendDates(); 
     setDateRestrictions(); 
     renderCookieList();
     
     const orderForm = document.getElementById('orderForm');
-    if (orderForm) {
-        orderForm.addEventListener('submit', handleFormSubmit);
-    }
+    if (orderForm) orderForm.addEventListener('submit', handleFormSubmit);
     
     updateCartDisplay();
 });
