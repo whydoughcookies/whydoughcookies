@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - Why Dough</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="text-gray-800">
+    <section class="min-h-screen flex items-center justify-center bg-gradient-to-r from-amber-500 to-amber-600">
+        <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-amber-100 text-center">
+            <div class="text-6xl mb-4">🎉</div>
+            <h1 class="text-3xl font-bold mb-4 text-amber-900">Order Confirmed!</h1>
+            
+            <!-- Order ID Display -->
+            <div class="bg-amber-100 border-2 border-amber-300 p-4 rounded-lg mb-6">
+                <p class="text-sm text-amber-700 mb-1">Your Order ID:</p>
+                <div class="flex items-center justify-between bg-white p-3 rounded border border-amber-200 mb-2">
+                    <p class="text-xl font-bold text-amber-900 font-mono" id="orderIdDisplay">Loading...</p>
+                    <button 
+                        onclick="copyOrderId()" 
+                        id="copyButton"
+                        class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2"
+                    >
+                        📋 Copy
+                    </button>
+                </div>
+                <p class="text-xs text-amber-600">Click copy to save this for reference</p>
+                
+                <!-- Copy Success Message (Hidden by default) -->
+                <div id="copySuccess" class="hidden mt-2 p-2 bg-green-100 border border-green-300 rounded text-green-700 text-sm">
+                    ✅ Order ID copied to clipboard!
+                </div>
+            </div>
+            
+            <p class="text-lg text-amber-700 mb-4">
+                Thank you for your order! We've sent a confirmation email to your inbox.
+            </p>
+            
+            <div class="bg-amber-50 p-4 rounded-lg mb-6 text-left">
+                <p class="text-sm text-amber-700 mb-2">
+                    <strong>Order Details:</strong>
+                </p>
+                <ul class="text-sm text-amber-600 space-y-1" id="orderDetails">
+                    <li>• Customer: <span id="customerName">-</span></li>
+                    <li>• Total Amount: ₱<span id="orderTotal">0</span></li>
+                    <li>• Items: <span id="itemCount">0</span></li>
+                    <li>• Delivery: <span id="deliveryDate">-</span></li>
+                </ul>
+                
+                <div class="border-t border-amber-200 mt-3 pt-3">
+                    <p class="text-sm text-amber-700 mb-2">
+                        <strong>What's next?</strong>
+                    </p>
+                    <ul class="text-sm text-amber-600 list-disc list-inside space-y-1">
+                        <li>Check your email for order confirmation</li>
+                        <li>We'll contact you within 24 hours</li>
+                        <li>Prepare your payment method</li>
+                        <li>Get ready for delicious cookies! 🍪</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="flex flex-col gap-3">
+                <button onclick="window.location.href = 'index.html'" class="nav-button">
+                    Back to Home
+                </button>
+                <button onclick="takeScreenshot()" class="secondary-button">
+                    📸 Save Order Details
+                </button>
+            </div>
+            
+            <p class="text-xs text-amber-600 mt-6">
+                Having issues? Contact us at whydoughcookies@gmail.com with your Order ID
+            </p>
+        </div>
+    </section>
+
+    <script>
+        // Display order details from localStorage
+        function displayOrderDetails() {
+            const orderData = localStorage.getItem('lastOrder');
+            const orderDetails = document.getElementById('orderDetails');
+            
+            if (orderData) {
+                const order = JSON.parse(orderData);
+                
+                // Update all fields
+                document.getElementById('orderIdDisplay').textContent = order.orderId;
+                document.getElementById('customerName').textContent = order.customerName;
+                document.getElementById('orderTotal').textContent = order.totalAmount;
+                document.getElementById('itemCount').textContent = order.itemCount + ' item(s)';
+                document.getElementById('deliveryDate').textContent = order.deliveryDate;
+                
+                // Update page title with order ID
+                document.title = `Order #${order.orderId} - Why Dough`;
+                
+            } else {
+                // No order data found
+                document.getElementById('orderIdDisplay').textContent = 'Not Found';
+                document.getElementById('orderDetails').innerHTML = 
+                    '<li class="text-amber-600">Order details not available. Please check your email for confirmation.</li>';
+            }
+        }
+    
+        // Copy Order ID to clipboard
+        function copyOrderId() {
+            const orderId = document.getElementById('orderIdDisplay').textContent;
+            const copyButton = document.getElementById('copyButton');
+            const copySuccess = document.getElementById('copySuccess');
+            
+            // Use the modern Clipboard API
+            navigator.clipboard.writeText(orderId).then(function() {
+                // Show success message
+                copySuccess.classList.remove('hidden');
+                copyButton.innerHTML = '✅ Copied!';
+                copyButton.classList.remove('bg-amber-600', 'hover:bg-amber-700');
+                copyButton.classList.add('bg-green-600', 'hover:bg-green-700');
+                
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    copySuccess.classList.add('hidden');
+                    copyButton.innerHTML = '📋 Copy';
+                    copyButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    copyButton.classList.add('bg-amber-600', 'hover:bg-amber-700');
+                }, 3000);
+                
+            }).catch(function(err) {
+                // Fallback for older browsers
+                console.error('Failed to copy: ', err);
+                fallbackCopyTextToClipboard(orderId);
+            });
+        }
+    
+        // Fallback method for older browsers
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // Avoid scrolling to bottom
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+    
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+    
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    // Show success message
+                    const copySuccess = document.getElementById('copySuccess');
+                    const copyButton = document.getElementById('copyButton');
+                    
+                    copySuccess.classList.remove('hidden');
+                    copySuccess.textContent = '✅ Order ID copied to clipboard!';
+                    copyButton.innerHTML = '✅ Copied!';
+                    copyButton.classList.remove('bg-amber-600', 'hover:bg-amber-700');
+                    copyButton.classList.add('bg-green-600', 'hover:bg-green-700');
+                    
+                    setTimeout(() => {
+                        copySuccess.classList.add('hidden');
+                        copyButton.innerHTML = '📋 Copy';
+                        copyButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+                        copyButton.classList.add('bg-amber-600', 'hover:bg-amber-700');
+                    }, 3000);
+                }
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+                alert('Failed to copy Order ID. Please manually select and copy the text.');
+            }
+    
+            document.body.removeChild(textArea);
+        }
+    
+        // Simple screenshot functionality
+        function takeScreenshot() {
+            const orderId = document.getElementById('orderIdDisplay').textContent;
+            alert(`Take a screenshot of this page to save your Order ID: ${orderId}\n\nYou can also check your email for a written confirmation.`);
+        }
+    
+        // Clear cart from previous session
+        function clearPreviousCart() {
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+        }
+    
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            displayOrderDetails();
+            clearPreviousCart();
+        });
+    </script>
+</body>
+</html>

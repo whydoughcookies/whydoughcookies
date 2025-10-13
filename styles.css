@@ -370,3 +370,248 @@ body.no-scroll {
     opacity: 0.6; 
     pointer-events: none; 
 }
+
+/* Footer Container */
+.footer-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+}
+
+/* Static Cart - Fixed above footer */
+.static-cart {
+    position: fixed;
+    bottom: 60px; /* Position above footer */
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+    z-index: 45; /* Higher than footer */
+    max-width: 1200px;
+}
+
+#staticCartCount {
+    top: -.75rem;
+    right: -1rem;
+}
+
+.static-cart.hidden {
+    display: none !important;
+}
+
+.cart-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+}
+
+.cart-icon-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cart-icon {
+    font-size: 1.5em;
+}
+
+.cart-count {
+    background: white;
+    color: #d97706;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.9em;
+    min-width: 20px;
+    text-align: center;
+}
+
+.view-cart-btn {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9em;
+}
+
+.view-cart-btn:hover {
+    background: white;
+    color: #d97706;
+    transform: translateY(-1px);
+}
+
+.cart-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.order-total-text {
+    font-weight: 500;
+    font-size: 1em;
+    color: white;
+}
+
+.order-total-amount {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: white;
+}
+
+/* Footer */
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(120, 53, 15, 0.95);
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-size: 0.9em;
+    z-index: 40; /* Lower than cart */
+}
+
+/* Add padding to the last section to prevent content overlap */
+section:last-of-type {
+    padding-bottom: 120px !important; /* Extra space for cart + footer */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .static-cart {
+        bottom: 50px; /* Adjust for smaller footer */
+        margin: 0 5px;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    .cart-header {
+        padding: 15px 15px;
+    }
+    
+    .cart-footer {
+        padding: 10px 15px;
+    }
+    
+    .view-cart-btn {
+        padding: 6px 12px;
+        font-size: 0.85em;
+    }
+    
+    .cart-icon {
+        font-size: 1.3em;
+    }
+    
+    .footer {
+        padding: 10px;
+    }
+    
+    section:last-of-type {
+        padding-bottom: 100px !important;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    .static-cart {
+        bottom: 45px;
+    }
+    
+    section:last-of-type {
+        padding-bottom: 90px !important;
+    }
+}
+
+/* Ensure the cookie section has enough bottom padding */
+#section-5 {
+    padding-bottom: 140px !important; /* Extra space for cart + footer */
+}
+
+/* For the last section (summary) if it's also affected */
+#section-8 {
+    padding-bottom: 140px !important;
+}
+
+/* Mobile adjustment */
+@media (max-width: 768px) {
+    #section-5 {
+        padding-bottom: 150px !important;
+    }
+    
+    #section-8 {
+        padding-bottom: 150px !important;
+    }
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    max-width: 300px;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast.error {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.toast.warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.toast-icon {
+    font-size: 1.2em;
+}
+
+.toast-message {
+    flex: 1;
+    font-weight: 500;
+}
+
+/* Mobile responsiveness for toasts */
+@media (max-width: 768px) {
+    .toast-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+    
+    .toast {
+        max-width: none;
+    }
+}
