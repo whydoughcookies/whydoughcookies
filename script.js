@@ -1,4 +1,3 @@
-// ----- State -----
 let selectedBoxSize = null;
 let activeCard = null;
 let cart = [];
@@ -16,13 +15,22 @@ const cookieFlavors = [
     { name: "Berry match", price: 120 }
 ];
 
-// ----- Navigation -----
+const ORDER_LIMITS = {
+    premade: {
+        ogSet: 9,
+        classic6: 9,
+        samplers: 9
+    },
+    custom: {
+        perCookie: 20
+    }
+};
+
 function scrollToSection(id){ 
     const element = document.getElementById('section-'+id);
     if (element) element.scrollIntoView({behavior:'smooth'});
 }
 
-// ----- Form Sections -----
 function openDateInput(){ 
     const input = document.getElementById('deliveryDateInput');
     if (input) input.classList.remove('hidden'); 
@@ -35,7 +43,6 @@ function selectDeliveryMethod(element, method) {
     if (radio) radio.checked = true;
 }
 
-// ----- Cookie Cards -----
 function toggleCookieCard(card, inputId) {
     const isActive = card.classList.contains('active');
     
@@ -71,14 +78,12 @@ function toggleCustomBoxCard(card) {
     }
 }
 
-// ----- Enhanced updateCardCount with limits -----
 function updateCardCount(inputId, delta) {
     const input = document.getElementById(inputId);
     if (input) {
         let value = parseInt(input.value) || 0;
         const newValue = value + delta;
         
-        // Check limits for premade sets
         if (delta > 0 && ORDER_LIMITS.premade[inputId] && newValue > ORDER_LIMITS.premade[inputId]) {
             showToast(`Maximum ${ORDER_LIMITS.premade[inputId]} sets allowed per order`, 'warning');
             return;
@@ -89,19 +94,6 @@ function updateCardCount(inputId, delta) {
     event.stopPropagation();
 }
 
-// ----- Configuration -----
-const ORDER_LIMITS = {
-    premade: {
-        ogSet: 9,
-        classic6: 9,
-        samplers: 9
-    },
-    custom: {
-        perCookie: 20
-    }
-};
-
-// ----- Enhanced addToCart with limits -----
 function addToCart(inputId, itemName, price) {
     const input = document.getElementById(inputId);
     const quantity = parseInt(input.value) || 0;
@@ -111,7 +103,6 @@ function addToCart(inputId, itemName, price) {
         return;
     }
 
-    // Check premade set limits
     if (ORDER_LIMITS.premade[inputId] && quantity > ORDER_LIMITS.premade[inputId]) {
         showToast(`Maximum ${ORDER_LIMITS.premade[inputId]} ${itemName} allowed per order`, 'warning');
         return;
@@ -142,7 +133,6 @@ function addToCart(inputId, itemName, price) {
     if (event) event.stopPropagation();
 }
 
-// Enhanced remove from cart with toast
 function removeFromCartWithToast(index) {
     const removedItem = cart[index];
     cart.splice(index, 1);
@@ -150,15 +140,12 @@ function removeFromCartWithToast(index) {
     showToast(`Removed ${removedItem.name} from cart`, 'warning');
 }
 
-// ----- Cart Management -----
 function updateCartDisplay() {
-    const cartCount = document.getElementById('cartCount');
     const cartItems = document.getElementById('cartItems');
     const emptyCartMessage = document.getElementById('emptyCartMessage');
     const cartTotal = document.getElementById('cartTotal');
     const cartTotalAmount = document.getElementById('cartTotalAmount');
     
-    // Static cart elements
     const staticCart = document.getElementById('staticCart');
     const staticCartCount = document.getElementById('staticCartCount');
     const staticCartTotal = document.getElementById('staticCartTotal');
@@ -168,22 +155,17 @@ function updateCartDisplay() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
 
-    // Update main cart modal
-    if (cartCount) cartCount.textContent = totalItems;
     if (cartTotalAmount) cartTotalAmount.textContent = totalAmount;
 
-    // Update static cart in footer
     if (staticCartCount) staticCartCount.textContent = totalItems;
     if (staticCartTotal) staticCartTotal.textContent = totalAmount;
 
-    // Show/hide static cart based on items
     if (totalItems > 0) {
         staticCart.classList.remove('hidden');
     } else {
         staticCart.classList.add('hidden');
     }
 
-    // Update cart modal content
     if (cartItems && emptyCartMessage && cartTotal) {
         if (cart.length === 0) {
             emptyCartMessage.classList.remove('hidden');
@@ -213,7 +195,6 @@ function updateCartDisplay() {
     }
 }
 
-// Toast Notification Functions
 function showToast(message, type = 'success') {
     const toastContainer = document.getElementById('toastContainer');
     if (!toastContainer) return;
@@ -234,10 +215,8 @@ function showToast(message, type = 'success') {
     
     toastContainer.appendChild(toast);
     
-    // Animate in
     setTimeout(() => toast.classList.add('show'), 100);
     
-    // Auto remove after 3 seconds
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => {
@@ -265,20 +244,19 @@ function closeCartModal() {
     }
 }
 
-// Simplified date generation
 function generateWeekendDates(){
     const container = document.getElementById('quickDates');
     if (!container) return;
     
     const today = new Date();
-    let count = 0, dayOffset = 1; // Start from tomorrow
+    let count = 0, dayOffset = 1;
     container.innerHTML = '';
     
     while(count < 6){
         const future = new Date(); 
         future.setDate(today.getDate() + dayOffset);
         const day = future.getDay();
-        if([5,6,0].includes(day)){ // Fri, Sat, Sun
+        if([5,6,0].includes(day)){
             const dateStr = future.toISOString().split('T')[0];
             const displayDate = `${String(future.getMonth()+1).padStart(2,'0')}/${String(future.getDate()).padStart(2,'0')}`;
             
@@ -315,7 +293,6 @@ function setDateRestrictions(){
     }
 }
 
-// ----- Custom Box Modal -----
 function renderCookieList(){
     const container = document.getElementById('cookieList'); 
     if(!container) return; 
@@ -353,7 +330,6 @@ function toggleCookieSelection(row) {
     }
 }
 
-// ----- Enhanced updateCookieQty with limits -----
 function updateCookieQty(button, delta) {
     const qtyDiv = button.closest('.quantity-control');
     if (!qtyDiv) return;
@@ -364,7 +340,6 @@ function updateCookieQty(button, delta) {
     let v = parseInt(inputEl.value, 10) || 0;
     const newValue = v + delta;
     
-    // Check custom cookie limits
     if (delta > 0 && newValue > ORDER_LIMITS.custom.perCookie) {
         showToast(`Maximum ${ORDER_LIMITS.custom.perCookie} per cookie flavor allowed`, 'warning');
         return;
@@ -439,7 +414,6 @@ function closeCustomizeModal() {
     }
 }
 
-// ----- Social Media Platform Toggle -----
 function toggleSocialPlatformSelection(input) {
     const platformSelection = document.getElementById('socialPlatformSelection');
     if (!platformSelection) return;
@@ -448,7 +422,6 @@ function toggleSocialPlatformSelection(input) {
         platformSelection.classList.remove('hidden');
     } else {
         platformSelection.classList.add('hidden');
-        // Clear any selected platform when input is empty
         clearSocialPlatformSelection();
     }
 }
@@ -457,7 +430,6 @@ function checkSocialHandleFocus(input) {
     const platformSelection = document.getElementById('socialPlatformSelection');
     if (!platformSelection) return;
     
-    // Show platform selection if there's text in the input when focused
     if (input.value.trim().length > 0) {
         platformSelection.classList.remove('hidden');
     }
@@ -472,7 +444,6 @@ function clearSocialPlatformSelection() {
     });
 }
 
-// ----- Social Platform Selection -----
 function selectSocialPlatform(element) {
     const options = document.querySelectorAll('.social-platform-option');
     options.forEach(opt => {
@@ -486,7 +457,6 @@ function selectSocialPlatform(element) {
     if (radio) radio.checked = true;
 }
 
-// ----- Enhanced addCustomBoxToCart with validation -----
 function addCustomBoxToCart(){
     if(!selectedBoxSize){ 
         showToast('Please select a box size first', 'warning'); 
@@ -500,7 +470,6 @@ function addCustomBoxToCart(){
     
     const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
     
-    // Validate box size requirements
     if (selectedBoxSize === 'others') {
         if (totalQty < 3) {
             showToast(`Please select at least 3 cookies for your custom box. Currently selected: ${totalQty}`, 'warning');
@@ -513,7 +482,6 @@ function addCustomBoxToCart(){
         }
     }
     
-    // Check individual cookie limits
     const overLimitCookies = items.filter(item => item.qty > ORDER_LIMITS.custom.perCookie);
     if (overLimitCookies.length > 0) {
         showToast(`Maximum ${ORDER_LIMITS.custom.perCookie} per cookie flavor allowed`, 'warning');
@@ -549,18 +517,16 @@ function addCustomBoxToCart(){
     });
 }
 
-// Enhanced form validation
 function validateForm() {
     if (cart.length === 0) {
         showToast('Please add at least one item to your cart before submitting.', 'warning');
         return false;
     }
     
-    // Check if payment method is selected
     const paymentSelect = document.querySelector('select[name="payment"]');
     if (paymentSelect && !paymentSelect.value) {
         showToast('Please select a payment method.', 'warning');
-        scrollToSection(6); // Scroll to payment section
+        scrollToSection(6);
         return false;
     }
     
@@ -575,7 +541,6 @@ function buildOrderSummary(){
     const socialPlatform = form.socialPlatform?.value || '';
     const socialHandle = form.socialHandle.value.trim(); 
     
-    // Handle social media display (optional field)
     let socialDisplay = 'Not provided';
     if (socialHandle && socialPlatform) {
         socialDisplay = `${socialHandle} - ${socialPlatform}`;
@@ -628,16 +593,13 @@ function clearCartAfterSubmission() {
     updateCartDisplay();
 }
 
-// NEW: Simplified Order ID Generation
 function generateOrderId(name) {
     const now = new Date();
     
-    // Format: WD + Month + Day + Year + Initials + Sequence
     const month = (now.getMonth() + 1).toString().padStart(2, '0');
     const day = now.getDate().toString().padStart(2, '0');
     const year = now.getFullYear().toString().slice(-2);
     
-    // Get customer initials (first 2 letters of first name + first letter of last name)
     let initials = 'XX';
     if (name && name.trim()) {
         const nameParts = name.trim().split(' ');
@@ -648,13 +610,11 @@ function generateOrderId(name) {
         }
     }
     
-    // Generate sequence number (from localStorage)
     const sequenceKey = `orderSequence_${month}${day}${year}`;
     let sequence = parseInt(localStorage.getItem(sequenceKey)) || 1;
     
     const orderId = `WD${month}${day}${year}${initials}${sequence.toString().padStart(3, '0')}`;
     
-    // Increment sequence for next order
     localStorage.setItem(sequenceKey, sequence + 1);
     
     return orderId;
@@ -662,46 +622,51 @@ function generateOrderId(name) {
 
 function prepareFormSubmitData() {
     const form = document.getElementById('orderForm');
-    if (!form) return;
-
-    const name = form.name.value.trim();
-    const orderId = generateOrderId(name);
-    const email = form.email.value.trim();
-    const socialPlatform = form.socialPlatform?.value || '';
-    const socialHandle = form.socialHandle.value.trim();
-    
-    // Handle social media data (optional field)
-    let social = 'Not provided';
-    if (socialHandle && socialPlatform) {
-        social = `${socialHandle} - ${socialPlatform}`;
-    } else if (socialHandle) {
-        social = `${socialHandle} (platform not selected)`;
-    } else if (socialPlatform) {
-        social = `${socialPlatform} (no username)`;
+    if (!form) {
+        return null;
     }
-    
-    const contactNumber = form.contactNumber.value.trim();
-    const deliveryDate = form.deliveryDate.value || 'Not selected';
-    const deliveryMethod = form.deliveryMethod?.value || 'Not selected';
-    const payment = form.payment.value;
-    const notes = form.notes.value.trim();
-    
-    // Build order details for both services
-    const orderDetails = cart.map(item => {
-        if (item.type === 'customBox') {
-            return `${item.name}: ${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')} = ₱${item.total}`;
-        } else {
-            return `${item.name} x ${item.quantity} = ₱${item.total}`;
-        }
-    }).join('\n');
-    
-    const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
-    const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-    // Calculate individual cookie quantities for Google Forms
-    const cookieQuantities = calculateCookieQuantities();
-    
-    const businessOrderSummary = `
+    try {
+        const name = form.name.value.trim();
+        
+        if (!name) {
+            return null;
+        }
+
+        const orderId = generateOrderId(name);
+        const email = form.email.value.trim();
+        const socialPlatform = form.socialPlatform?.value || '';
+        const socialHandle = form.socialHandle.value.trim();
+        
+        let social = 'Not provided';
+        if (socialHandle && socialPlatform) {
+            social = `${socialHandle} - ${socialPlatform}`;
+        } else if (socialHandle) {
+            social = `${socialHandle} (platform not selected)`;
+        } else if (socialPlatform) {
+            social = `${socialPlatform} (no username)`;
+        }
+        
+        const contactNumber = form.contactNumber.value.trim();
+        const deliveryDate = form.deliveryDate.value || 'Not selected';
+        const deliveryMethod = form.deliveryMethod?.value || 'Not selected';
+        const payment = form.payment.value;
+        const notes = form.notes.value.trim();
+        
+        const orderDetails = cart.map(item => {
+            if (item.type === 'customBox') {
+                return `${item.name}: ${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')} = ₱${item.total}`;
+            } else {
+                return `${item.name} x ${item.quantity} = ₱${item.total}`;
+            }
+        }).join('\n');
+        
+        const totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
+        const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+        const cookieQuantities = calculateCookieQuantities();
+        
+        const businessOrderSummary = `
 🚨 NEW COOKIE ORDER - ACTION REQUIRED 🚨
 =========================================
 ORDER ID: ${orderId}
@@ -738,38 +703,46 @@ CONTACT OPTIONS:
 📱 Social: ${social}
 
 Order received: ${new Date().toLocaleString()}
-    `.trim();
-    
-    // 🎯 SET UP FORMSUBMIT.CO DATA
-    document.getElementById('customerEmailField').value = email;
-    document.getElementById('autoResponseField').value = businessOrderSummary;
-    document.getElementById('orderSummaryField').value = businessOrderSummary;
-    document.getElementById('customerNameField').value = name;
-    document.getElementById('customerContactField').value = `${social} | ${contactNumber}`;
-    document.getElementById('deliveryInfoField').value = `${deliveryDate} - ${deliveryMethod === 'pickup' ? 'Pick Up' : 'Delivery'}`;
-    document.getElementById('totalAmountField').value = `₱${totalAmount}`;
-    document.getElementById('orderIdField').value = orderId;
-    
-    const subjectField = document.querySelector('input[name="_subject"]');
-    if (subjectField) {
-        subjectField.value = `Why Dough Order #${orderId} - ${name} - ${itemCount} item(s) - ₱${totalAmount}`;
+        `.trim();
+        
+        document.getElementById('customerEmailField').value = email;
+        document.getElementById('autoResponseField').value = businessOrderSummary;
+        document.getElementById('orderSummaryField').value = businessOrderSummary;
+        document.getElementById('customerNameField').value = name;
+        document.getElementById('customerContactField').value = `${socialHandle} | ${contactNumber}`;
+        document.getElementById('deliveryInfoField').value = `${deliveryDate} - ${deliveryMethod === 'pickup' ? 'Pick Up' : 'Delivery'}`;
+        document.getElementById('totalAmountField').value = `₱${totalAmount}`;
+        document.getElementById('orderIdField').value = orderId;
+        
+        const subjectField = document.querySelector('input[name="_subject"]');
+        if (subjectField) {
+            subjectField.value = `Why Dough Order #${orderId} - ${name} - ${itemCount} item(s) - ₱${totalAmount}`;
+        }
+        
+        setupGoogleFormsData(orderId, name, email, socialHandle, contactNumber, deliveryDate, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount);
+        
+        const orderData = {
+            orderId: orderId,
+            customerName: name,
+            totalAmount: totalAmount,
+            itemCount: itemCount,
+            deliveryDate: deliveryDate,
+            timestamp: new Date().toISOString(),
+            email: email,
+            contactNumber: contactNumber,
+            social: social,
+            deliveryMethod: deliveryMethod,
+            payment: payment,
+            notes: notes
+        };
+        
+        return orderData;
+        
+    } catch (error) {
+        return null;
     }
-    
-    // 🎯 SET UP GOOGLE FORMS DATA
-    setupGoogleFormsData(orderId, name, email, social, contactNumber, deliveryDate, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount);
-    
-    const orderData = {
-        orderId: orderId,
-        customerName: name,
-        totalAmount: totalAmount,
-        itemCount: itemCount,
-        deliveryDate: deliveryDate,
-        timestamp: new Date().toISOString()
-    };
-    localStorage.setItem('lastOrder', JSON.stringify(orderData));
 }
 
-// Function to calculate individual cookie quantities for Google Forms
 function calculateCookieQuantities() {
     const quantities = {};
     
@@ -799,9 +772,7 @@ function calculateCookieQuantities() {
     return quantities;
 }
 
-// Function to set up Google Forms hidden fields
 function setupGoogleFormsData(orderId, name, email, social, contactNumber, deliveryDate, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount) {
-    // Create hidden fields for Google Forms if they don't exist
     let googleForm = document.getElementById('googleForm');
     if (!googleForm) {
         googleForm = document.createElement('form');
@@ -812,42 +783,44 @@ function setupGoogleFormsData(orderId, name, email, social, contactNumber, deliv
         document.body.appendChild(googleForm);
     }
     
-    // Clear previous Google Forms fields
     googleForm.innerHTML = '';
     
-    // Map your Google Form field IDs here
-    // You need to replace these with your actual Google Form field IDs
     const fieldMapping = {
         'entry.1702384608': orderId,
         'entry.884438646': name,
         'entry.945933971': email,
-        'entry.1424096514': socialHandle,
+        'entry.1424096514': social,
         'entry.2010027852': contactNumber,
         'entry.376530706': deliveryDate,
         'entry.57353341': deliveryMethod,
         'entry.603581341': payment,
         'entry.658455856': notes,
         'entry.1597602789': orderDetails,
-        'entry.1560348506': Object.entries(cookieQuantities).map(([cookie, qty]) => `${cookie}: ${qty}`).join('; '),
+        'entry.1560348506': formatCookieQuantities(cookieQuantities),
         'entry.891879407': `₱${totalAmount}`,
-        'entry.984840806': `₱${totalAmount}`
     };
     
-    // Create hidden inputs for Google Forms
     Object.entries(fieldMapping).forEach(([fieldId, value]) => {
         const input = document.createElement('input');
         input.type = 'hidden';
         input.name = fieldId;
-        input.value = value;
+        input.value = value || '';
         googleForm.appendChild(input);
     });
 }
 
-// Enhanced order submission
+function formatCookieQuantities(cookieQuantities) {
+    return Object.entries(cookieQuantities)
+        .map(([cookie, qty]) => `${cookie}: ${qty}`)
+        .join('; ');
+}
+
 async function handleFormSubmit(e){ 
     e.preventDefault(); 
     
-    if (!validateForm()) return;
+    if (!validateForm()) {
+        return;
+    }
 
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
@@ -855,11 +828,35 @@ async function handleFormSubmit(e){
     submitBtn.disabled = true;
     
     try {
-        prepareFormSubmitData();
+        const orderData = prepareFormSubmitData();
+        
+        if (!orderData || !orderData.orderId) {
+            throw new Error('Failed to prepare order data');
+        }
+        
+        try {
+            sessionStorage.setItem('lastOrder', JSON.stringify(orderData));
+            localStorage.setItem('lastOrder', JSON.stringify(orderData));
+        } catch (storageError) {
+        }
+        
+        showToast('Processing your order...', 'success');
+        
+        const submissionTimeout = 10000;
         
         const [googleSuccess, emailSuccess] = await Promise.allSettled([
-            submitToGoogleForms(),
-            submitToFormSubmit()
+            Promise.race([
+                submitToGoogleForms(),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Google Forms timeout')), submissionTimeout)
+                )
+            ]),
+            Promise.race([
+                submitToFormSubmit(),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('FormSubmit timeout')), submissionTimeout)
+                )
+            ])
         ]);
         
         const googleOk = googleSuccess.status === 'fulfilled' && googleSuccess.value;
@@ -872,70 +869,75 @@ async function handleFormSubmit(e){
         } else if (emailOk) {
             showToast('Order submitted via email! (Tracking failed)', 'warning');
         } else {
-            showToast('Order received! Please contact us to confirm.', 'warning');
+            showToast('Order received offline! We\'ll contact you soon.', 'warning');
         }
         
+        clearCartAfterSubmission();
+        
         setTimeout(() => {
             window.location.href = 'thank-you.html';
         }, 2000);
-        
-        clearCartAfterSubmission();
 
     } catch (error) {
-        console.error('Submission error:', error);
-        showToast('Order submitted! Please contact us if you dont hear back.', 'warning');
+        try {
+            const currentOrderData = prepareFormSubmitData();
+            if (currentOrderData) {
+                sessionStorage.setItem('lastOrder', JSON.stringify(currentOrderData));
+                localStorage.setItem('lastOrder', JSON.stringify(currentOrderData));
+            }
+        } catch (backupError) {
+        }
+        
+        showToast('Order received! Please contact us if you don\'t hear back.', 'warning');
+        
+        clearCartAfterSubmission();
         
         setTimeout(() => {
             window.location.href = 'thank-you.html';
         }, 2000);
         
-        clearCartAfterSubmission();
     } finally {
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
     }
 }
 
-// Function to submit to Google Forms
 async function submitToGoogleForms() {
     const googleForm = document.getElementById('googleForm');
     if (!googleForm) {
-        console.error('Google Form not found');
         return false;
     }
     
-    // Create a copy of the form data to avoid CORS issues
-    const formData = new URLSearchParams();
-    const inputs = googleForm.querySelectorAll('input');
-    
-    inputs.forEach(input => {
-        if (input.name && input.value) {
-            formData.append(input.name, input.value);
-        }
-    });
-    
     try {
-        // Submit to Google Forms
-        const response = await fetch(googleForm.action, {
+        const formData = new URLSearchParams();
+        const inputs = googleForm.querySelectorAll('input');
+        
+        if (inputs.length === 0) {
+            return false;
+        }
+        
+        inputs.forEach(input => {
+            if (input.name && input.value) {
+                formData.append(input.name, input.value);
+            }
+        });
+        
+        await fetch(googleForm.action, {
             method: 'POST',
-            mode: 'no-cors', // Important for Google Forms
+            mode: 'no-cors',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: formData
         });
         
-        // With no-cors mode, we can't read the response but submission should work
-        console.log('Google Forms submission completed');
         return true;
         
     } catch (error) {
-        console.error('Error submitting to Google Forms:', error);
         return false;
     }
 }
 
-// Function to submit to FormSubmit.co for emails
 async function submitToFormSubmit() {
     const form = document.getElementById('orderForm');
     const formData = new FormData(form);
@@ -949,15 +951,12 @@ async function submitToFormSubmit() {
         const result = await response.json();
         
         if (result.success) {
-            console.log('✅ Email sent successfully via FormSubmit.co');
             return true;
         } else {
-            console.log('⚠️ FormSubmit.co email failed');
             return false;
         }
         
     } catch (error) {
-        console.error('Error submitting to FormSubmit.co:', error);
         return false;
     }
 }
@@ -967,7 +966,6 @@ function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, s=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); 
 }
 
-// ----- Event Listeners -----
 document.addEventListener('click', function(event) {
     const clickedCard = event.target.closest('.cookie-card');
     
@@ -980,7 +978,6 @@ document.addEventListener('click', function(event) {
         clickedCard.classList.add('active');
     }
     
-    // Handle social platform selection
     const socialOption = event.target.closest('.social-platform-option');
     if (socialOption) {
         selectSocialPlatform(socialOption);

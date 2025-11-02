@@ -63,7 +63,7 @@
             </div>
             
             <div class="flex flex-col gap-3">
-                <button onclick="window.location.href = 'index.html'" class="nav-button">
+                <button onclick="clearStorageAndGoHome()" class="nav-button">
                     Back to Home
                 </button>
                 <button onclick="takeScreenshot()" class="secondary-button">
@@ -78,47 +78,71 @@
     </section>
 
     <script>
-        // Display order details from localStorage
         function displayOrderDetails() {
-            const orderData = localStorage.getItem('lastOrder');
-            const orderDetails = document.getElementById('orderDetails');
+            const orderData = getOrderData();
             
-            if (orderData) {
-                const order = JSON.parse(orderData);
+            if (orderData && orderData.orderId) {
+                document.getElementById('orderIdDisplay').textContent = orderData.orderId;
+                document.getElementById('customerName').textContent = orderData.customerName || '-';
+                document.getElementById('orderTotal').textContent = orderData.totalAmount || '0';
+                document.getElementById('itemCount').textContent = (orderData.itemCount || 0) + ' item(s)';
+                document.getElementById('deliveryDate').textContent = orderData.deliveryDate || '-';
                 
-                // Update all fields
-                document.getElementById('orderIdDisplay').textContent = order.orderId;
-                document.getElementById('customerName').textContent = order.customerName;
-                document.getElementById('orderTotal').textContent = order.totalAmount;
-                document.getElementById('itemCount').textContent = order.itemCount + ' item(s)';
-                document.getElementById('deliveryDate').textContent = order.deliveryDate;
-                
-                // Update page title with order ID
-                document.title = `Order #${order.orderId} - Why Dough`;
-                
+                document.title = `Order #${orderData.orderId} - Why Dough`;
             } else {
-                // No order data found
                 document.getElementById('orderIdDisplay').textContent = 'Not Found';
                 document.getElementById('orderDetails').innerHTML = 
                     '<li class="text-amber-600">Order details not available. Please check your email for confirmation.</li>';
+                
+                showToast('Order details not found. Please check your email for confirmation.', 'warning');
             }
         }
     
-        // Copy Order ID to clipboard
+        function getOrderData() {
+            let orderData = sessionStorage.getItem('lastOrder');
+            
+            if (!orderData) {
+                orderData = localStorage.getItem('lastOrder');
+            }
+            
+            if (!orderData) {
+                return null;
+            }
+            
+            try {
+                return JSON.parse(orderData);
+            } catch (e) {
+                return null;
+            }
+        }
+    
+        function clearStorageAndGoHome() {
+            sessionStorage.removeItem('lastOrder');
+            localStorage.removeItem('lastOrder');
+            localStorage.removeItem('cart');
+            sessionStorage.removeItem('cart');
+            
+            sessionStorage.setItem('comingFromThankYou', 'true');
+            
+            window.location.href = 'index.html';
+        }
+    
         function copyOrderId() {
             const orderId = document.getElementById('orderIdDisplay').textContent;
             const copyButton = document.getElementById('copyButton');
             const copySuccess = document.getElementById('copySuccess');
             
-            // Use the modern Clipboard API
+            if (orderId === 'Loading...' || orderId === 'Not Found') {
+                showToast('Order ID not available yet', 'warning');
+                return;
+            }
+            
             navigator.clipboard.writeText(orderId).then(function() {
-                // Show success message
                 copySuccess.classList.remove('hidden');
                 copyButton.innerHTML = '✅ Copied!';
                 copyButton.classList.remove('bg-amber-600', 'hover:bg-amber-700');
                 copyButton.classList.add('bg-green-600', 'hover:bg-green-700');
                 
-                // Reset button after 3 seconds
                 setTimeout(() => {
                     copySuccess.classList.add('hidden');
                     copyButton.innerHTML = '📋 Copy';
@@ -127,18 +151,14 @@
                 }, 3000);
                 
             }).catch(function(err) {
-                // Fallback for older browsers
-                console.error('Failed to copy: ', err);
                 fallbackCopyTextToClipboard(orderId);
             });
         }
     
-        // Fallback method for older browsers
         function fallbackCopyTextToClipboard(text) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
             
-            // Avoid scrolling to bottom
             textArea.style.top = "0";
             textArea.style.left = "0";
             textArea.style.position = "fixed";
@@ -150,7 +170,6 @@
             try {
                 const successful = document.execCommand('copy');
                 if (successful) {
-                    // Show success message
                     const copySuccess = document.getElementById('copySuccess');
                     const copyButton = document.getElementById('copyButton');
                     
@@ -168,30 +187,54 @@
                     }, 3000);
                 }
             } catch (err) {
-                console.error('Fallback: Oops, unable to copy', err);
                 alert('Failed to copy Order ID. Please manually select and copy the text.');
             }
     
             document.body.removeChild(textArea);
         }
     
-        // Simple screenshot functionality
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+                type === 'warning' ? 'bg-yellow-500 text-white' : 
+                type === 'error' ? 'bg-red-500 text-white' : 
+                'bg-green-500 text-white'
+            }`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 3000);
+        }
+    
         function takeScreenshot() {
             const orderId = document.getElementById('orderIdDisplay').textContent;
+            if (orderId === 'Loading...' || orderId === 'Not Found') {
+                showToast('Please wait for order details to load', 'warning');
+                return;
+            }
             alert(`Take a screenshot of this page to save your Order ID: ${orderId}\n\nYou can also check your email for a written confirmation.`);
         }
     
-        // Clear cart from previous session
         function clearPreviousCart() {
-            if (window.history && window.history.replaceState) {
-                window.history.replaceState(null, null, window.location.href);
-            }
+            localStorage.removeItem('cart');
+            sessionStorage.removeItem('cart');
         }
     
-        // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             displayOrderDetails();
             clearPreviousCart();
+            
+            setTimeout(() => {
+                const orderId = document.getElementById('orderIdDisplay').textContent;
+                if (orderId === 'Loading...' || orderId === 'Not Found') {
+                    displayOrderDetails();
+                }
+            }, 2000);
         });
     </script>
 </body>

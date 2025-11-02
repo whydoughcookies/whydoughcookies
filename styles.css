@@ -9,7 +9,6 @@ body {
     scroll-snap-type: y mandatory; 
 }
 
-/* Background */
 section { 
     min-height: 100vh; 
     display:flex; 
@@ -34,7 +33,6 @@ section::before {
     z-index:-1; 
 }
 
-/* Cookie Card Styles */
 .cookie-card { 
     cursor: pointer; 
     transition: all 0.3s ease; 
@@ -59,7 +57,6 @@ section::before {
     box-shadow: 0 4px 15px rgba(120, 53, 15, 0.2);
 }
 
-/* Quantity Section */
 .cookie-card .quantity-section {
     display: none !important;
     width: 100%;
@@ -70,7 +67,6 @@ section::before {
     display: flex !important;
 }
 
-/* Modal Styles */
 body.no-scroll { 
     overflow: hidden; 
 }
@@ -119,7 +115,6 @@ body.no-scroll {
     padding: 1rem; 
 }
 
-/* List Styles */
 .boxsize-list, .cookie-list { 
     display:flex; 
     flex-direction:column; 
@@ -181,7 +176,6 @@ body.no-scroll {
     cursor:pointer; 
 }
 
-/* Delivery Options */
 .delivery-option {
     border: 2px solid #e5e7eb;
     border-radius: 8px;
@@ -202,7 +196,6 @@ body.no-scroll {
     background: #fffbeb;
 }
 
-/* Cart Styles */
 .cart-total {
     font-size: 1.2em;
     font-weight: bold;
@@ -217,7 +210,6 @@ body.no-scroll {
     background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
 }
 
-/* Button Styles */
 .nav-button {
     background: #78350f;
     color: white;
@@ -298,7 +290,6 @@ body.no-scroll {
     text-decoration: underline;
 }
 
-/* Footer */
 .footer {
     position: fixed;
     bottom: 0;
@@ -312,7 +303,6 @@ body.no-scroll {
     z-index: 40;
 }
 
-/* Cart Badge */
 #cartCount {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border: 2px solid #f59e0b;
@@ -320,7 +310,6 @@ body.no-scroll {
     right: -1rem;
 }
 
-/* Mobile Styles */
 @media (max-width: 768px) {
     section{ 
         padding:1rem; 
@@ -353,7 +342,6 @@ body.no-scroll {
     }
 }
 
-/* Desktop Styles */
 @media (min-width: 769px) {
     .cookie-card .quantity-section {
         flex-direction: row;
@@ -366,12 +354,6 @@ body.no-scroll {
     }
 }
 
-.loading { 
-    opacity: 0.6; 
-    pointer-events: none; 
-}
-
-/* Footer Container */
 .footer-container {
     position: fixed;
     bottom: 0;
@@ -380,21 +362,19 @@ body.no-scroll {
     z-index: 40;
 }
 
-/* Static Cart - Fixed above footer */
 .static-cart {
     position: fixed;
     bottom: 50px;
     left: 49.66%;
     transform: translateX(-50%);
     width: 90%;
-    max-width: 896px; /* Matches section-5 max-width */
+    max-width: 896px;
     background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
     z-index: 45;
     border-radius: 12px 12px 0 0;
 }
 
-/* Ensure sections have consistent max-width */
 #section-1 .bg-white,
 #section-2 .bg-white,
 #section-3 .bg-white,
@@ -486,26 +466,10 @@ body.no-scroll {
     color: white;
 }
 
-/* Footer */
-.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(120, 53, 15, 0.95);
-    color: white;
-    padding: 12px;
-    text-align: center;
-    font-size: 0.9em;
-    z-index: 40; /* Lower than cart */
-}
-
-/* Add padding to the last section to prevent content overlap */
 section:last-of-type {
-    padding-bottom: 120px !important; /* Extra space for cart + footer */
+    padding-bottom: 120px !important;
 }
 
-/* Mobile responsiveness */
 @media (max-width: 768px) {
     .static-cart {
         width: 95%;
@@ -540,7 +504,6 @@ section:last-of-type {
     }
 }
 
-/* For very small screens */
 @media (max-width: 480px) {
     .static-cart {
         bottom: 45px;
@@ -551,17 +514,14 @@ section:last-of-type {
     }
 }
 
-/* Ensure the cookie section has enough bottom padding */
 #section-5 {
-    padding-bottom: 140px !important; /* Extra space for cart + footer */
+    padding-bottom: 140px !important;
 }
 
-/* For the last section (summary) if it's also affected */
 #section-8 {
     padding-bottom: 140px !important;
 }
 
-/* Mobile adjustment */
 @media (max-width: 768px) {
     #section-5 {
         padding-bottom: 150px !important;
@@ -572,7 +532,6 @@ section:last-of-type {
     }
 }
 
-/* Toast Notifications */
 .toast-container {
     position: fixed;
     top: 20px;
@@ -618,7 +577,6 @@ section:last-of-type {
     font-weight: 500;
 }
 
-/* Mobile responsiveness for toasts */
 @media (max-width: 768px) {
     .toast-container {
         top: 10px;
@@ -631,7 +589,6 @@ section:last-of-type {
     }
 }
 
-/* Social Media Platform Options */
 .social-platform-option {
     padding: 10px 16px;
     border: 2px solid #e5e7eb;
@@ -658,7 +615,6 @@ section:last-of-type {
     display: flex;
   }
   
-/* Social Media Platform Selection with Transition */
 #socialPlatformSelection {
     transition: all 0.3s ease-in-out;
     opacity: 0;

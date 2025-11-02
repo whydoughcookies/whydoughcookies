@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="text-gray-800">
-
   <!-- Welcome Section -->
   <section id="section-1" class="relative justify-center">
     <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-2xl w-full border border-amber-100 mb-16">
@@ -45,44 +44,12 @@
     </div>
   </section>
 
-<!-- Footer -->
-<div class="footer-container">
-  <!-- Static Cart - Positioned above footer -->
-  <div id="staticCart" class="static-cart hidden">
-    <div class="cart-content">
-        <div class="cart-header">
-            <div class="cart-icon-section relative">
-                <span class="cart-icon">🛒</span>
-                <span class="absolute -top-2 -right-2 bg-white text-amber-700 px-2 py-1 rounded-full text-xs font-bold min-w-[20px] text-center" id="staticCartCount">0</span>
-            </div>
-            <button type="button" onclick="openCartModal()" class="view-cart-btn">
-                View Cart Details
-            </button>
-        </div>
-        <div class="cart-footer">
-            <span class="order-total-text">Order Total:</span>
-            <span class="order-total-amount">₱<span id="staticCartTotal">0</span></span>
-        </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <div class="footer">
-    #WhyNotWhyDough  |  #WhyDoughItBetter
-  </div>
-</div>
-
   <form id="orderForm">
     <!-- FormSubmit.co Configuration -->
     <input type="hidden" name="_subject" id="emailSubject" value="Why Dough Order">
     <input type="hidden" name="_captcha" value="false">
     <input type="hidden" name="_replyto" id="customerEmailField">
-    <!-- 🎯 AUTO-RESPONSE MESSAGE (Customer receives this) -->
     <input type="hidden" name="_autoresponse" id="autoResponseField">
-
-    <!--
-    <input type="hidden" name="_next" value="https://whydoughcookies.github.io/whydoughcookies/thank-you.html">
-    -->
     
     <!-- Hidden fields for order data -->
     <input type="hidden" name="order_summary" id="orderSummaryField">
@@ -92,7 +59,6 @@
     <input type="hidden" name="total_amount" id="totalAmountField">
     <input type="hidden" name="order_id" id="orderIdField">
 
-
     <!-- Name Section -->
     <section id="section-2" class="relative">
       <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-amber-100">
@@ -101,7 +67,6 @@
         
         <label class="text-lg font-semibold mb-4 block text-amber-800">Social Media Handle <span class="text-gray-500 text-sm">(Optional)</span></label>
         
-        <!-- Social Media Handle Input -->
         <input 
           name="socialHandle" 
           type="text" 
@@ -111,7 +76,6 @@
           onfocus="checkSocialHandleFocus(this)"
         />
         
-        <!-- Social Media Platform Selection (Initially Hidden) -->
         <div id="socialPlatformSelection" class="hidden mt-4">
           <p class="text-sm text-amber-700 mb-3">Select platform:</p>
           <div class="flex gap-3 mb-3">
@@ -184,7 +148,6 @@
       <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-amber-100">
         <label class="text-2xl font-bold mb-6 block text-amber-900">Contact Details</label>
         
-        <!-- Add Email Field -->
         <label class="block font-semibold mb-3 text-amber-800">Email Address</label>
         <input name="email" required type="email" placeholder="your.email@example.com" class="w-full border border-amber-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-amber-500 focus:border-transparent" />
         
@@ -270,21 +233,6 @@
           </div>
         </div>
 
-        <!-- Cart Preview 
-        <div id="cartPreview" class="bg-gradient-to-r from-amber-500 to-amber-600 p-6 rounded-2xl border border-amber-300 shadow-lg mt-8 hidden">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-3 relative">
-              <h3 class="text-xl font-bold text-white">🛒</h3>
-              <span class="absolute -top-2 -right-2 bg-white text-amber-700 px-2 py-1 rounded-full text-xs font-bold min-w-[20px] text-center" id="cartCount">0</span>
-            </div>
-            <button type="button" onclick="openCartModal()" class="text-white font-semibold underline hover:text-amber-100">View Cart Details</button>
-          </div>
-          <div class="flex justify-between items-center mt-3">
-            <p class="text-amber-100 font-medium">Order Total:</p>
-            <p class="text-2xl font-bold text-white">₱<span id="cartTotalPreview">0</span></p>
-          </div>
-        </div>-->
-
         <div class="flex justify-between items-center mt-8">
           <button type="button" onclick="scrollToSection(4)" class="arrow-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -358,6 +306,33 @@
     </section>
 
   </form>
+
+  <!-- Footer -->
+  <div class="footer-container">
+    <!-- Static Cart - Positioned above footer -->
+    <div id="staticCart" class="static-cart hidden">
+      <div class="cart-content">
+          <div class="cart-header">
+              <div class="cart-icon-section relative">
+                  <span class="cart-icon">🛒</span>
+                  <span class="absolute -top-2 -right-2 bg-white text-amber-700 px-2 py-1 rounded-full text-xs font-bold min-w-[20px] text-center" id="staticCartCount">0</span>
+              </div>
+              <button type="button" onclick="openCartModal()" class="view-cart-btn">
+                  View Cart Details
+              </button>
+          </div>
+          <div class="cart-footer">
+              <span class="order-total-text">Order Total:</span>
+              <span class="order-total-amount">₱<span id="staticCartTotal">0</span></span>
+          </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      #WhyNotWhyDough  |  #WhyDoughItBetter
+    </div>
+  </div>
 
   <!-- Cart Modal -->
   <div id="cartModal" class="modal">
