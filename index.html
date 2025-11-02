@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="text-gray-800">
-
   <!-- Welcome Section -->
   <section id="section-1" class="relative justify-center">
     <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-2xl w-full border border-amber-100 mb-16">
@@ -45,20 +44,58 @@
     </div>
   </section>
 
-  <!-- Footer -->
-  <div class="footer">
-    #WhyNotWhyDough  |  #WhyDoughItBetter
-  </div>
-
   <form id="orderForm">
+    <!-- FormSubmit.co Configuration -->
+    <input type="hidden" name="_subject" id="emailSubject" value="Why Dough Order">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_replyto" id="customerEmailField">
+    <input type="hidden" name="_autoresponse" id="autoResponseField">
+    
+    <!-- Hidden fields for order data -->
+    <input type="hidden" name="order_summary" id="orderSummaryField">
+    <input type="hidden" name="customer_name" id="customerNameField">
+    <input type="hidden" name="customer_contact" id="customerContactField">
+    <input type="hidden" name="delivery_info" id="deliveryInfoField">
+    <input type="hidden" name="total_amount" id="totalAmountField">
+    <input type="hidden" name="order_id" id="orderIdField">
+
     <!-- Name Section -->
     <section id="section-2" class="relative">
       <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-amber-100">
-        <label class="text-2xl font-bold mb-4 block text-amber-900">What's your name?</label>
-        <input name="name" required type="text" class="w-full border border-amber-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-amber-500 focus:border-transparent" placeholder="Your full name" />
+        <label class="text-2xl font-bold mb-4 block text-amber-900">What's your name? <span class="text-red-500">*</span></label>
+        <input name="name" required type="text" class="w-full border border-amber-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-amber-500 focus:border-transparent" placeholder="Your name" />
         
-        <label class="text-lg font-semibold mb-4 block text-amber-800">Facebook or Instagram Name</label>
-        <input name="socialHandle" required type="text" placeholder="Enter FB or IG name" class="w-full border border-amber-200 p-4 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent" />
+        <label class="text-lg font-semibold mb-4 block text-amber-800">Social Media Handle <span class="text-gray-500 text-sm">(Optional)</span></label>
+        
+        <input 
+          name="socialHandle" 
+          type="text" 
+          placeholder="Enter your username (optional)" 
+          class="w-full border border-amber-200 p-4 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent" 
+          oninput="toggleSocialPlatformSelection(this)"
+          onfocus="checkSocialHandleFocus(this)"
+        />
+        
+        <div id="socialPlatformSelection" class="hidden mt-4">
+          <p class="text-sm text-amber-700 mb-3">Select platform:</p>
+          <div class="flex gap-3 mb-3">
+            <label class="social-platform-option flex items-center gap-2 cursor-pointer" onclick="selectSocialPlatform(this)">
+              <input type="radio" name="socialPlatform" value="Facebook" class="hidden">
+              <div class="w-5 h-5 border-2 border-amber-500 rounded-full flex items-center justify-center">
+                <div class="w-3 h-3 bg-amber-600 rounded-full hidden"></div>
+              </div>
+              <span class="text-amber-900">Facebook</span>
+            </label>
+            
+            <label class="social-platform-option flex items-center gap-2 cursor-pointer" onclick="selectSocialPlatform(this)">
+              <input type="radio" name="socialPlatform" value="Instagram" class="hidden">
+              <div class="w-5 h-5 border-2 border-amber-500 rounded-full flex items-center justify-center">
+                <div class="w-3 h-3 bg-amber-600 rounded-full hidden"></div>
+              </div>
+              <span class="text-amber-900">Instagram</span>
+            </label>
+          </div>
+        </div>
         
         <div class="flex justify-between items-center mt-8">
           <button type="button" onclick="scrollToSection(1)" class="arrow-btn">
@@ -111,6 +148,9 @@
       <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-amber-100">
         <label class="text-2xl font-bold mb-6 block text-amber-900">Contact Details</label>
         
+        <label class="block font-semibold mb-3 text-amber-800">Email Address</label>
+        <input name="email" required type="email" placeholder="your.email@example.com" class="w-full border border-amber-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-amber-500 focus:border-transparent" />
+        
         <label class="block font-semibold mb-3 text-amber-800">Contact Number</label>
         <input name="contactNumber" required type="tel" pattern="[0-9]{11}" title="Please enter an 11-digit number (e.g., 09123456789)" placeholder="e.g. 09XXXXXXXXX" class="w-full border border-amber-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-amber-500 focus:border-transparent" />
         
@@ -141,12 +181,12 @@
             <p class="font-bold text-amber-700 mb-4 text-xl">₱320</p>
             
             <div class="quantity-section flex flex-col items-center space-y-3 w-full" onclick="event.stopPropagation()">
-              <div class="flex items-center space-x-3">
-                <button type="button" onclick="updateCardCount('ogSet', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
-                <input type="number" id="ogSet" name="ogSet" value="0" min="0" class="w-16 text-center border border-amber-300 rounded-lg py-2">
-                <button type="button" onclick="updateCardCount('ogSet', 1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">+</button>
-              </div>
-              <button type="button" onclick="addToCart('ogSet', 'OG Set', 320)" class="add-to-cart-btn bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold w-full">Add to Cart</button>
+                <div class="flex items-center space-x-3">
+                    <button type="button" onclick="updateCardCount('ogSet', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
+                    <input type="number" id="ogSet" name="ogSet" value="0" min="0" max="9" class="w-16 text-center border border-amber-300 rounded-lg py-2">
+                    <button type="button" onclick="updateCardCount('ogSet', 1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">+</button>
+                </div>
+                <button type="button" onclick="addToCart('ogSet', 'OG Set', 320)" class="add-to-cart-btn bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold w-full">Add to Cart</button>
             </div>
           </div>
 
@@ -157,12 +197,12 @@
             <p class="font-bold text-amber-700 mb-4 text-xl">₱660</p>
             
             <div class="quantity-section flex flex-col items-center space-y-3 w-full" onclick="event.stopPropagation()">
-              <div class="flex items-center space-x-3">
-                <button type="button" onclick="updateCardCount('classic6', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
-                <input type="number" id="classic6" name="classic6" value="0" min="0" class="w-16 text-center border border-amber-300 rounded-lg py-2">
-                <button type="button" onclick="updateCardCount('classic6', 1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">+</button>
-              </div>
-              <button type="button" onclick="addToCart('classic6', 'The Classics', 660)" class="add-to-cart-btn bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold w-full">Add to Cart</button>
+                <div class="flex items-center space-x-3">
+                    <button type="button" onclick="updateCardCount('classic6', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
+                    <input type="number" id="classic6" name="classic6" value="0" min="0" max="9" class="w-16 text-center border border-amber-300 rounded-lg py-2">
+                    <button type="button" onclick="updateCardCount('classic6', 1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">+</button>
+                </div>
+                <button type="button" onclick="addToCart('classic6', 'The Classics', 660)" class="add-to-cart-btn bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold w-full">Add to Cart</button>
             </div>
           </div>
 
@@ -173,12 +213,12 @@
             <p class="font-bold text-amber-700 mb-4 text-xl">₱320</p>
             
             <div class="quantity-section flex flex-col items-center space-y-3 w-full" onclick="event.stopPropagation()">
-              <div class="flex items-center space-x-3">
-                <button type="button" onclick="updateCardCount('samplers', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
-                <input type="number" id="samplers" name="samplers" value="0" min="0" class="w-16 text-center border border-amber-300 rounded-lg py-2">
-                <button type="button" onclick="updateCardCount('samplers', 1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">+</button>
-              </div>
-              <button type="button" onclick="addToCart('samplers', 'Samplers', 320)" class="add-to-cart-btn bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold w-full">Add to Cart</button>
+                <div class="flex items-center space-x-3">
+                    <button type="button" onclick="updateCardCount('samplers', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
+                    <input type="number" id="samplers" name="samplers" value="0" min="0" max="9" class="w-16 text-center border border-amber-300 rounded-lg py-2">
+                    <button type="button" onclick="updateCardCount('samplers', 1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">+</button>
+                </div>
+                <button type="button" onclick="addToCart('samplers', 'Samplers', 320)" class="add-to-cart-btn bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold w-full">Add to Cart</button>
             </div>
           </div>
 
@@ -190,21 +230,6 @@
             <div class="quantity-section items-center" onclick="event.stopPropagation()">
               <span class="text-sm text-amber-600">Click to customize</span>
             </div>
-          </div>
-        </div>
-
-        <!-- Cart Preview -->
-        <div id="cartPreview" class="bg-gradient-to-r from-amber-500 to-amber-600 p-6 rounded-2xl border border-amber-300 shadow-lg mt-8 hidden">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-3 relative">
-              <h3 class="text-xl font-bold text-white">🛒</h3>
-              <span class="absolute -top-2 -right-2 bg-white text-amber-700 px-2 py-1 rounded-full text-xs font-bold min-w-[20px] text-center" id="cartCount">0</span>
-            </div>
-            <button type="button" onclick="openCartModal()" class="text-white font-semibold underline hover:text-amber-100">View Cart Details</button>
-          </div>
-          <div class="flex justify-between items-center mt-3">
-            <p class="text-amber-100 font-medium">Order Total:</p>
-            <p class="text-2xl font-bold text-white">₱<span id="cartTotalPreview">0</span></p>
           </div>
         </div>
 
@@ -224,11 +249,12 @@
     <!-- Payment -->
     <section id="section-6" class="relative">
       <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-amber-100">
-        <label class="text-2xl font-bold mb-4 block text-amber-900">Payment Method</label>
-        <select name="payment" class="w-full border border-amber-200 p-4 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent">
-          <option value="COD">Cash on Delivery</option>
+        <label class="text-2xl font-bold mb-4 block text-amber-900">Payment Method <span class="text-red-500">*</span></label>
+        <select name="payment" required class="w-full border border-amber-200 p-4 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+          <option value="" disabled selected>Select payment method</option>
           <option value="GCash">GCash</option>
           <option value="Bank Transfer">Bank Transfer</option>
+          <option value="COD">Cash on Delivery</option>
         </select>
         <div class="flex justify-between items-center mt-8">
           <button type="button" onclick="scrollToSection(5)" class="arrow-btn">
@@ -280,6 +306,33 @@
     </section>
 
   </form>
+
+  <!-- Footer -->
+  <div class="footer-container">
+    <!-- Static Cart - Positioned above footer -->
+    <div id="staticCart" class="static-cart hidden">
+      <div class="cart-content">
+          <div class="cart-header">
+              <div class="cart-icon-section relative">
+                  <span class="cart-icon">🛒</span>
+                  <span class="absolute -top-2 -right-2 bg-white text-amber-700 px-2 py-1 rounded-full text-xs font-bold min-w-[20px] text-center" id="staticCartCount">0</span>
+              </div>
+              <button type="button" onclick="openCartModal()" class="view-cart-btn">
+                  View Cart Details
+              </button>
+          </div>
+          <div class="cart-footer">
+              <span class="order-total-text">Order Total:</span>
+              <span class="order-total-amount">₱<span id="staticCartTotal">0</span></span>
+          </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      #WhyNotWhyDough  |  #WhyDoughItBetter
+    </div>
+  </div>
 
   <!-- Cart Modal -->
   <div id="cartModal" class="modal">
@@ -336,6 +389,10 @@
       </div>
     </div>
   </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
   <script src="script.js"></script>
 </body>
 </html>
