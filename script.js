@@ -71,22 +71,49 @@ function toggleCustomBoxCard(card) {
     }
 }
 
+// ----- Enhanced updateCardCount with limits -----
 function updateCardCount(inputId, delta) {
     const input = document.getElementById(inputId);
     if (input) {
         let value = parseInt(input.value) || 0;
-        input.value = Math.max(0, value + delta);
+        const newValue = value + delta;
+        
+        // Check limits for premade sets
+        if (delta > 0 && ORDER_LIMITS.premade[inputId] && newValue > ORDER_LIMITS.premade[inputId]) {
+            showToast(`Maximum ${ORDER_LIMITS.premade[inputId]} sets allowed per order`, 'warning');
+            return;
+        }
+        
+        input.value = Math.max(0, newValue);
     }
     event.stopPropagation();
 }
 
-// Enhanced add to cart with toast
+// ----- Configuration -----
+const ORDER_LIMITS = {
+    premade: {
+        ogSet: 9,
+        classic6: 9,
+        samplers: 9
+    },
+    custom: {
+        perCookie: 20
+    }
+};
+
+// ----- Enhanced addToCart with limits -----
 function addToCart(inputId, itemName, price) {
     const input = document.getElementById(inputId);
     const quantity = parseInt(input.value) || 0;
     
     if (quantity <= 0) {
         showToast('Please select at least 1 quantity', 'warning');
+        return;
+    }
+
+    // Check premade set limits
+    if (ORDER_LIMITS.premade[inputId] && quantity > ORDER_LIMITS.premade[inputId]) {
+        showToast(`Maximum ${ORDER_LIMITS.premade[inputId]} ${itemName} allowed per order`, 'warning');
         return;
     }
 
@@ -110,7 +137,6 @@ function addToCart(inputId, itemName, price) {
         activeCard = null;
     }
     
-    // Show success toast
     showToast(`Added ${quantity} ${itemName} to cart!`);
     
     if (event) event.stopPropagation();
@@ -239,33 +265,32 @@ function closeCartModal() {
     }
 }
 
-// ----- Date Handling -----
+// Simplified date generation
 function generateWeekendDates(){
     const container = document.getElementById('quickDates');
     if (!container) return;
     
     const today = new Date();
-    let count = 0, dayOffset = 0; 
+    let count = 0, dayOffset = 1; // Start from tomorrow
     container.innerHTML = '';
     
     while(count < 6){
         const future = new Date(); 
         future.setDate(today.getDate() + dayOffset);
         const day = future.getDay();
-        if([5,6,0].includes(day)){
-            const yyyy = future.getFullYear(); 
-            const mm = String(future.getMonth()+1).padStart(2,'0'); 
-            const dd = String(future.getDate()).padStart(2,'0');
-            const dateStr = `${yyyy}-${mm}-${dd}`;
+        if([5,6,0].includes(day)){ // Fri, Sat, Sun
+            const dateStr = future.toISOString().split('T')[0];
+            const displayDate = `${String(future.getMonth()+1).padStart(2,'0')}/${String(future.getDate()).padStart(2,'0')}`;
+            
             const btn = document.createElement('button'); 
             btn.type='button'; 
-            btn.textContent = `${mm}/${dd}`;
-            btn.className = 'bg-yellow-300 px-3 py-2 rounded text-sm';
+            btn.textContent = displayDate;
+            btn.className = 'bg-amber-300 hover:bg-amber-400 px-3 py-2 rounded-lg text-sm font-medium transition-colors';
             btn.onclick = ()=>{ 
                 const input = document.getElementById('deliveryDateInput'); 
                 if (input) {
-                input.value = dateStr; 
-                input.classList.remove('hidden'); 
+                    input.value = dateStr; 
+                    input.classList.remove('hidden'); 
                 }
             };
             container.appendChild(btn); 
@@ -328,6 +353,7 @@ function toggleCookieSelection(row) {
     }
 }
 
+// ----- Enhanced updateCookieQty with limits -----
 function updateCookieQty(button, delta) {
     const qtyDiv = button.closest('.quantity-control');
     if (!qtyDiv) return;
@@ -336,7 +362,15 @@ function updateCookieQty(button, delta) {
     if (!inputEl) return;
     
     let v = parseInt(inputEl.value, 10) || 0;
-    v = Math.max(0, v + delta);
+    const newValue = v + delta;
+    
+    // Check custom cookie limits
+    if (delta > 0 && newValue > ORDER_LIMITS.custom.perCookie) {
+        showToast(`Maximum ${ORDER_LIMITS.custom.perCookie} per cookie flavor allowed`, 'warning');
+        return;
+    }
+    
+    v = Math.max(0, newValue);
     inputEl.value = v;
     
     if (v === 0) {
@@ -405,7 +439,54 @@ function closeCustomizeModal() {
     }
 }
 
-// Enhanced custom box add to cart with toast
+// ----- Social Media Platform Toggle -----
+function toggleSocialPlatformSelection(input) {
+    const platformSelection = document.getElementById('socialPlatformSelection');
+    if (!platformSelection) return;
+    
+    if (input.value.trim().length > 0) {
+        platformSelection.classList.remove('hidden');
+    } else {
+        platformSelection.classList.add('hidden');
+        // Clear any selected platform when input is empty
+        clearSocialPlatformSelection();
+    }
+}
+
+function checkSocialHandleFocus(input) {
+    const platformSelection = document.getElementById('socialPlatformSelection');
+    if (!platformSelection) return;
+    
+    // Show platform selection if there's text in the input when focused
+    if (input.value.trim().length > 0) {
+        platformSelection.classList.remove('hidden');
+    }
+}
+
+function clearSocialPlatformSelection() {
+    const options = document.querySelectorAll('.social-platform-option');
+    options.forEach(opt => {
+        opt.classList.remove('active');
+        const radio = opt.querySelector('input[type="radio"]');
+        if (radio) radio.checked = false;
+    });
+}
+
+// ----- Social Platform Selection -----
+function selectSocialPlatform(element) {
+    const options = document.querySelectorAll('.social-platform-option');
+    options.forEach(opt => {
+        opt.classList.remove('active');
+        const radio = opt.querySelector('input[type="radio"]');
+        if (radio) radio.checked = false;
+    });
+    
+    element.classList.add('active');
+    const radio = element.querySelector('input[type="radio"]');
+    if (radio) radio.checked = true;
+}
+
+// ----- Enhanced addCustomBoxToCart with validation -----
 function addCustomBoxToCart(){
     if(!selectedBoxSize){ 
         showToast('Please select a box size first', 'warning'); 
@@ -419,6 +500,7 @@ function addCustomBoxToCart(){
     
     const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
     
+    // Validate box size requirements
     if (selectedBoxSize === 'others') {
         if (totalQty < 3) {
             showToast(`Please select at least 3 cookies for your custom box. Currently selected: ${totalQty}`, 'warning');
@@ -429,6 +511,13 @@ function addCustomBoxToCart(){
             showToast(`Please select exactly ${selectedBoxSize} cookies for your box. Currently selected: ${totalQty}`, 'warning');
             return;
         }
+    }
+    
+    // Check individual cookie limits
+    const overLimitCookies = items.filter(item => item.qty > ORDER_LIMITS.custom.perCookie);
+    if (overLimitCookies.length > 0) {
+        showToast(`Maximum ${ORDER_LIMITS.custom.perCookie} per cookie flavor allowed`, 'warning');
+        return;
     }
     
     const totalPrice = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
@@ -449,7 +538,6 @@ function addCustomBoxToCart(){
     const customBoxCard = document.querySelector('.cookie-card:last-child');
     if (customBoxCard) customBoxCard.classList.remove('active');
     
-    // Show success toast
     showToast(`Added custom cookie box to cart!`);
     
     selectedBoxSize = null;
@@ -461,13 +549,42 @@ function addCustomBoxToCart(){
     });
 }
 
-// ----- Order Summary & Submission -----
+// Enhanced form validation
+function validateForm() {
+    if (cart.length === 0) {
+        showToast('Please add at least one item to your cart before submitting.', 'warning');
+        return false;
+    }
+    
+    // Check if payment method is selected
+    const paymentSelect = document.querySelector('select[name="payment"]');
+    if (paymentSelect && !paymentSelect.value) {
+        showToast('Please select a payment method.', 'warning');
+        scrollToSection(6); // Scroll to payment section
+        return false;
+    }
+    
+    return true;
+}
+
 function buildOrderSummary(){
     const form = document.getElementById('orderForm'); 
     if (!form) return;
     
     const name = form.name.value.trim(); 
-    const social = form.socialHandle.value.trim(); 
+    const socialPlatform = form.socialPlatform?.value || '';
+    const socialHandle = form.socialHandle.value.trim(); 
+    
+    // Handle social media display (optional field)
+    let socialDisplay = 'Not provided';
+    if (socialHandle && socialPlatform) {
+        socialDisplay = `${socialHandle} - ${socialPlatform}`;
+    } else if (socialHandle) {
+        socialDisplay = `${socialHandle} (platform not selected)`;
+    } else if (socialPlatform) {
+        socialDisplay = `${socialPlatform} (no username)`;
+    }
+    
     const deliveryDate = form.deliveryDate.value || '—';
     const deliveryMethod = form.deliveryMethod?.value || 'Not selected';
     const contact = form.contactNumber.value.trim(); 
@@ -476,7 +593,7 @@ function buildOrderSummary(){
 
     let totalAmount = 0;
     let html = `<strong>Name:</strong> ${escapeHtml(name)}<br>
-                <strong>Social:</strong> ${escapeHtml(social)}<br>
+                <strong>Social:</strong> ${escapeHtml(socialDisplay)}<br>
                 <strong>Delivery Date:</strong> ${escapeHtml(deliveryDate)}<br>
                 <strong>Delivery Method:</strong> ${escapeHtml(deliveryMethod === 'pickup' ? 'Pick Up' : 'Delivery')}<br>
                 <strong>Contact Number:</strong> ${escapeHtml(contact)}<br>
@@ -511,20 +628,58 @@ function clearCartAfterSubmission() {
     updateCartDisplay();
 }
 
-function generateOrderId() {
-    const timestamp = Date.now().toString(36);
-    const randomStr = Math.random().toString(36).substr(2, 6).toUpperCase();
-    return `WD${timestamp}${randomStr}`;
+// NEW: Simplified Order ID Generation
+function generateOrderId(name) {
+    const now = new Date();
+    
+    // Format: WD + Month + Day + Year + Initials + Sequence
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    const year = now.getFullYear().toString().slice(-2);
+    
+    // Get customer initials (first 2 letters of first name + first letter of last name)
+    let initials = 'XX';
+    if (name && name.trim()) {
+        const nameParts = name.trim().split(' ');
+        if (nameParts.length >= 2) {
+            initials = (nameParts[0].substring(0, 2) + nameParts[1].substring(0, 1)).toUpperCase();
+        } else {
+            initials = nameParts[0].substring(0, 3).toUpperCase();
+        }
+    }
+    
+    // Generate sequence number (from localStorage)
+    const sequenceKey = `orderSequence_${month}${day}${year}`;
+    let sequence = parseInt(localStorage.getItem(sequenceKey)) || 1;
+    
+    const orderId = `WD${month}${day}${year}${initials}${sequence.toString().padStart(3, '0')}`;
+    
+    // Increment sequence for next order
+    localStorage.setItem(sequenceKey, sequence + 1);
+    
+    return orderId;
 }
 
 function prepareFormSubmitData() {
     const form = document.getElementById('orderForm');
     if (!form) return;
 
-    const orderId = generateOrderId();
     const name = form.name.value.trim();
+    const orderId = generateOrderId(name);
     const email = form.email.value.trim();
+    const socialPlatform = form.socialPlatform?.value || '';
     const socialHandle = form.socialHandle.value.trim();
+    
+    // Handle social media data (optional field)
+    let social = 'Not provided';
+    if (socialHandle && socialPlatform) {
+        social = `${socialHandle} - ${socialPlatform}`;
+    } else if (socialHandle) {
+        social = `${socialHandle} (platform not selected)`;
+    } else if (socialPlatform) {
+        social = `${socialPlatform} (no username)`;
+    }
+    
     const contactNumber = form.contactNumber.value.trim();
     const deliveryDate = form.deliveryDate.value || 'Not selected';
     const deliveryMethod = form.deliveryMethod?.value || 'Not selected';
@@ -555,7 +710,7 @@ STATUS: AWAITING CONFIRMATION
 CUSTOMER INFORMATION:
 • Name: ${name}
 • Email: ${email}
-• Social: ${socialHandle}
+• Social: ${social}
 • Contact: ${contactNumber}
 
 DELIVERY INFORMATION:
@@ -580,7 +735,7 @@ ${notes || 'No special notes'}
 CONTACT OPTIONS:
 📧 Email: ${email}
 📱 Contact: ${contactNumber}
-📱 Social: ${socialHandle}
+📱 Social: ${social}
 
 Order received: ${new Date().toLocaleString()}
     `.trim();
@@ -590,7 +745,7 @@ Order received: ${new Date().toLocaleString()}
     document.getElementById('autoResponseField').value = businessOrderSummary;
     document.getElementById('orderSummaryField').value = businessOrderSummary;
     document.getElementById('customerNameField').value = name;
-    document.getElementById('customerContactField').value = `${socialHandle} | ${contactNumber}`;
+    document.getElementById('customerContactField').value = `${social} | ${contactNumber}`;
     document.getElementById('deliveryInfoField').value = `${deliveryDate} - ${deliveryMethod === 'pickup' ? 'Pick Up' : 'Delivery'}`;
     document.getElementById('totalAmountField').value = `₱${totalAmount}`;
     document.getElementById('orderIdField').value = orderId;
@@ -601,7 +756,7 @@ Order received: ${new Date().toLocaleString()}
     }
     
     // 🎯 SET UP GOOGLE FORMS DATA
-    setupGoogleFormsData(orderId, name, email, socialHandle, contactNumber, deliveryDate, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount);
+    setupGoogleFormsData(orderId, name, email, social, contactNumber, deliveryDate, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount);
     
     const orderData = {
         orderId: orderId,
@@ -645,7 +800,7 @@ function calculateCookieQuantities() {
 }
 
 // Function to set up Google Forms hidden fields
-function setupGoogleFormsData(orderId, name, email, socialHandle, contactNumber, deliveryDate, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount) {
+function setupGoogleFormsData(orderId, name, email, social, contactNumber, deliveryDate, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount) {
     // Create hidden fields for Google Forms if they don't exist
     let googleForm = document.getElementById('googleForm');
     if (!googleForm) {
@@ -688,34 +843,27 @@ function setupGoogleFormsData(orderId, name, email, socialHandle, contactNumber,
     });
 }
 
+// Enhanced order submission
 async function handleFormSubmit(e){ 
     e.preventDefault(); 
     
-    if (cart.length === 0) {
-        alert('Please add at least one item to your cart before submitting.');
-        return;
-    }
+    if (!validateForm()) return;
 
-    prepareFormSubmitData();
-    
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Submitting...';
     submitBtn.disabled = true;
     
     try {
-        // 🎯 SUBMIT TO BOTH SERVICES SIMULTANEOUSLY
+        prepareFormSubmitData();
+        
         const [googleSuccess, emailSuccess] = await Promise.allSettled([
             submitToGoogleForms(),
             submitToFormSubmit()
         ]);
         
-        // Check results
         const googleOk = googleSuccess.status === 'fulfilled' && googleSuccess.value;
         const emailOk = emailSuccess.status === 'fulfilled' && emailSuccess.value;
-        
-        console.log('Google Forms result:', googleOk);
-        console.log('Email result:', emailOk);
         
         if (googleOk && emailOk) {
             showToast('Order submitted successfully! 📧📊', 'success');
@@ -727,24 +875,24 @@ async function handleFormSubmit(e){
             showToast('Order received! Please contact us to confirm.', 'warning');
         }
         
-        // 🎯 REDIRECT TO THANK YOU PAGE
         setTimeout(() => {
             window.location.href = 'thank-you.html';
         }, 2000);
         
-        // Clear cart
         clearCartAfterSubmission();
 
     } catch (error) {
         console.error('Submission error:', error);
         showToast('Order submitted! Please contact us if you dont hear back.', 'warning');
         
-        // Still redirect to thank you page
         setTimeout(() => {
             window.location.href = 'thank-you.html';
         }, 2000);
         
         clearCartAfterSubmission();
+    } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
     }
 }
 
@@ -830,6 +978,12 @@ document.addEventListener('click', function(event) {
         activeCard.classList.remove('active');
         activeCard = clickedCard;
         clickedCard.classList.add('active');
+    }
+    
+    // Handle social platform selection
+    const socialOption = event.target.closest('.social-platform-option');
+    if (socialOption) {
+        selectSocialPlatform(socialOption);
     }
 });
 
