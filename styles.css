@@ -626,3 +626,19 @@ section:last-of-type {
     opacity: 1;
     max-height: 100px;
 }
+
+/* Loading overlay styles */
+#loadingOverlay {
+    backdrop-filter: blur(4px);
+}
+
+/* Spinner animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}

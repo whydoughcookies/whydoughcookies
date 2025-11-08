@@ -414,15 +414,39 @@ function closeCustomizeModal() {
     }
 }
 
+// Enhanced social media validation
+function validateSocialMedia() {
+    const socialHandle = document.getElementById('socialHandleInput').value.trim();
+    const facebookChecked = document.getElementById('platformFacebook').checked;
+    const instagramChecked = document.getElementById('platformInstagram').checked;
+    
+    if (socialHandle && !facebookChecked && !instagramChecked) {
+        showToast('Please select a social media platform since you provided a username', 'warning');
+        scrollToSection(2);
+        return false;
+    }
+    
+    return true;
+}
+
+// Update the toggle function
 function toggleSocialPlatformSelection(input) {
     const platformSelection = document.getElementById('socialPlatformSelection');
     if (!platformSelection) return;
     
     if (input.value.trim().length > 0) {
         platformSelection.classList.remove('hidden');
+        // Add required attribute to radio buttons
+        document.querySelectorAll('input[name="socialPlatform"]').forEach(radio => {
+            radio.required = true;
+        });
     } else {
         platformSelection.classList.add('hidden');
         clearSocialPlatformSelection();
+        // Remove required attribute
+        document.querySelectorAll('input[name="socialPlatform"]').forEach(radio => {
+            radio.required = false;
+        });
     }
 }
 
@@ -517,16 +541,66 @@ function addCustomBoxToCart(){
     });
 }
 
+// Comprehensive form validation
 function validateForm() {
+    // Cart validation
     if (cart.length === 0) {
         showToast('Please add at least one item to your cart before submitting.', 'warning');
         return false;
     }
     
+    // Payment method validation
     const paymentSelect = document.querySelector('select[name="payment"]');
     if (paymentSelect && !paymentSelect.value) {
         showToast('Please select a payment method.', 'warning');
         scrollToSection(6);
+        return false;
+    }
+    
+    // Email validation
+    const email = document.querySelector('input[name="email"]').value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showToast('Please enter a valid email address.', 'warning');
+        scrollToSection(4);
+        return false;
+    }
+    
+    // Phone number validation (Philippines format)
+    const contactNumber = document.querySelector('input[name="contactNumber"]').value.trim();
+    const phoneRegex = /^(09|\+639)\d{9}$/;
+    if (!phoneRegex.test(contactNumber)) {
+        showToast('Please enter a valid Philippine phone number (e.g., 09123456789).', 'warning');
+        scrollToSection(4);
+        return false;
+    }
+    
+    // Name validation
+    const name = document.querySelector('input[name="name"]').value.trim();
+    if (name.length < 2) {
+        showToast('Please enter your full name.', 'warning');
+        scrollToSection(2);
+        return false;
+    }
+    
+    // Delivery method validation
+    const deliveryMethod = document.querySelector('input[name="deliveryMethod"]:checked');
+    if (!deliveryMethod) {
+        showToast('Please select a delivery method.', 'warning');
+        scrollToSection(3);
+        return false;
+    }
+    
+    // Delivery date validation
+    const deliveryDate = document.querySelector('input[name="deliveryDate"]').value;
+    if (!deliveryDate) {
+        showToast('Please select a delivery date.', 'warning');
+        scrollToSection(3);
+        return false;
+    }
+    
+    // Social media validation
+    if (!validateSocialMedia()) {
         return false;
     }
     
@@ -818,31 +892,54 @@ function formatCookieQuantities(cookieQuantities) {
 async function handleFormSubmit(e){ 
     e.preventDefault(); 
     
+    console.log('Form submission started...');
+    
     if (!validateForm()) {
+        console.log('Form validation failed');
         return;
     }
 
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
+    
+    // Show loading overlay
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if (loadingOverlay) {
+        loadingOverlay.classList.remove('hidden');
+    }
+    
     submitBtn.textContent = 'Submitting...';
     submitBtn.disabled = true;
     
     try {
+        console.log('Preparing form data...');
+        
+        // Prepare and store order data FIRST
         const orderData = prepareFormSubmitData();
         
         if (!orderData || !orderData.orderId) {
             throw new Error('Failed to prepare order data');
         }
         
+        console.log('Order prepared with ID:', orderData.orderId);
+        
+        // Store order data in both storage methods for redundancy
         try {
             sessionStorage.setItem('lastOrder', JSON.stringify(orderData));
             localStorage.setItem('lastOrder', JSON.stringify(orderData));
+            console.log('Order data stored successfully');
         } catch (storageError) {
+            console.error('Storage error:', storageError);
+            // Continue even if storage fails
         }
         
+        // Show immediate success feedback
         showToast('Processing your order...', 'success');
         
-        const submissionTimeout = 10000;
+        console.log('Submitting to services...');
+        
+        // Submit to both services with timeout protection
+        const submissionTimeout = 10000; // 10 seconds
         
         const [googleSuccess, emailSuccess] = await Promise.allSettled([
             Promise.race([
@@ -859,6 +956,11 @@ async function handleFormSubmit(e){
             ])
         ]);
         
+        console.log('Submission results:', {
+            google: googleSuccess,
+            email: emailSuccess
+        });
+        
         const googleOk = googleSuccess.status === 'fulfilled' && googleSuccess.value;
         const emailOk = emailSuccess.status === 'fulfilled' && emailSuccess.value;
         
@@ -872,13 +974,34 @@ async function handleFormSubmit(e){
             showToast('Order received offline! We\'ll contact you soon.', 'warning');
         }
         
+        // Clear cart but NOT order data
         clearCartAfterSubmission();
         
+        console.log('Final storage check before redirect:', {
+            sessionStorage: sessionStorage.getItem('lastOrder'),
+            localStorage: localStorage.getItem('lastOrder')
+        });
+        
+        // Hide loading overlay
+        if (loadingOverlay) {
+            loadingOverlay.classList.add('hidden');
+        }
+        
+        // Redirect to thank you page
         setTimeout(() => {
+            console.log('Redirecting to thank you page...');
             window.location.href = 'thank-you.html';
         }, 2000);
 
     } catch (error) {
+        console.error('Submission error:', error);
+        
+        // Hide loading overlay on error
+        if (loadingOverlay) {
+            loadingOverlay.classList.add('hidden');
+        }
+        
+        // Even if there's an error, try to preserve order data and redirect
         try {
             const currentOrderData = prepareFormSubmitData();
             if (currentOrderData) {
@@ -886,10 +1009,12 @@ async function handleFormSubmit(e){
                 localStorage.setItem('lastOrder', JSON.stringify(currentOrderData));
             }
         } catch (backupError) {
+            console.error('Backup storage failed:', backupError);
         }
         
         showToast('Order received! Please contact us if you don\'t hear back.', 'warning');
         
+        // Clear cart and redirect
         clearCartAfterSubmission();
         
         setTimeout(() => {
