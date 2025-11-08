@@ -11,18 +11,19 @@ body {
 
 section { 
     min-height: 100vh; 
-    display:flex; 
-    align-items:center; 
-    justify-content:center; 
-    padding:2rem; 
-    flex-direction:column; 
-    text-align:center; 
-    scroll-snap-align:start; 
-    background-attachment:fixed; 
-    background-size:cover; 
-    background-position:center; 
-    position:relative; 
+    display: flex; 
+    align-items: center; /* Keep centered vertically */
+    justify-content: center; 
+    padding: 2rem; 
+    flex-direction: column; 
+    text-align: center; 
+    scroll-snap-align: start; 
+    background-attachment: fixed; 
+    background-size: cover; 
+    background-position: center; 
+    position: relative; 
     background: linear-gradient(135deg, #f5e8d5 0%, #f8f4e9 50%, #fefaf0 100%);
+    padding-bottom: 90px !important;
 }
 
 section::before { 
@@ -313,7 +314,15 @@ body.no-scroll {
 @media (max-width: 768px) {
     section{ 
         padding:1rem; 
-        background-attachment:scroll; 
+        transform: translateY(-5%);
+        padding-bottom: 90px !important;
+        /*background-attachment:scroll; */
+    }
+
+    /* Adjust the last sections to have more bottom padding for footer */
+    #section-5,
+    #section-8 {
+        padding-bottom: 140px !important;
     }
 
     .cookie-card {
@@ -505,12 +514,14 @@ section:last-of-type {
 }
 
 @media (max-width: 480px) {
+    section {
+        transform: translateY(-3%); /* Slightly less shift on very small screens */
+        padding: 0.75rem;
+        padding-bottom: 90px !important;
+    }
+
     .static-cart {
         bottom: 45px;
-    }
-    
-    section:last-of-type {
-        padding-bottom: 90px !important;
     }
 }
 
