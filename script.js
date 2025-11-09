@@ -33,21 +33,21 @@ const productData = {
         name: "The OG Set",
         description: "A perfect introduction to Why Dough! Includes 3 of our signature cookies: The Usual (our classic chocolate chip), The Red One (rich red velvet), and The Burnt One (deep, caramelized flavors). Each cookie is 100g of pure delight.",
         price: 320,
-        image: "/image/og-set.png",
+        image: "images/og-set.PNG",
         id: "ogSet"
     },
     classic6: {
         name: "The Classics",
         description: "Our complete collection! Get all 6 of our classic flavors: The Usual, The Red One, The Burnt One, The Milky One (white chocolate dream), Pistash (pistachio perfection), and The Bizz (unique flavor rotation). Perfect for sharing or treating yourself!",
         price: 660,
-        image: "/image/classics.png",
+        image: "images/classics.PNG",
         id: "classic6"
     },
     samplers: {
         name: "Samplers",
         description: "Can't decide? Try them all! This sampler includes 6 cookies (50g each) - one of each classic flavor. Perfect for first-timers or when you want a little taste of everything. Discover your new favorite!",
         price: 320,
-        image: "/image/samplers.png",
+        image: "images/samplers.PNG",
         id: "samplers"
     }
 };
@@ -68,52 +68,52 @@ function initializeFlavorsCarousel() {
     {
       name: "The Usual",
       description: "Your klassic ooey gooey bittersweet combo.",
-      image: "/images/the-usual.PNG"
+      image: "images/the-usual.PNG"
     },
     {
       name: "The Red One",
       description: "Rich red velvet with white chocolate chunks",
-      image: "/images/the-red-one.PNG"
+      image: "images/the-red-one.PNG"
     },
     {
       name: "The Burnt One", 
       description: "Deep, caramelized flavors with a perfect crisp",
-      image: "/images/the-burnt-one.PNG"
+      image: "images/the-burnt-one.PNG"
     },
     {
       name: "The Bizz",
       description: "Our rotating special flavor - always a surprise!",
-      image: "/images/the-bizz.PNG"
+      image: "images/the-bizz.PNG"
     },
     {
       name: "The Milky One",
       description: "Creamy white chocolate and macadamia nuts", 
-      image: "/images/milky-one.PNG"
+      image: "images/milky-one.PNG"
     },
     {
       name: "Pistash",
       description: "Buttery pistachio with dark chocolate chunks",
-      image: "/images/pistash.PNG"
+      image: "images/pistash.PNG"
     },
     {
       name: "Nut-so-Carrot",
       description: "Carrot cake inspired with nuts and spices",
-      image: "/images/nut-so-carrot.PNG"
+      image: "images/nut-so-carrot.PNG"
     },
     {
       name: "The OT",
       description: "Oatmeal treat with raisins and cinnamon",
-      image: "/images/the-ot.PNG"
+      image: "images/the-ot.PNG"
     },
     {
       name: "Espress-oh",
       description: "Coffee infused with chocolate chunks", 
-      image: "/images/espressoh.PNG"
+      image: "images/espressoh.PNG"
     },
     {
       name: "Berry Match",
       description: "Mixed berries with white chocolate",
-      image: "/images/berry-match.PNG"
+      image: "images/berry-match.PNG"
     },
   ];
 
@@ -1376,7 +1376,7 @@ async function handleFormSubmit(e){
         // Redirect to thank you page
         setTimeout(() => {
             console.log('Redirecting to thank you page...');
-            window.location.href = 'thank-you.html';
+            window.location.href = 'thank-you';
         }, 2000);
 
     } catch (error) {
@@ -1404,7 +1404,7 @@ async function handleFormSubmit(e){
         clearCartAfterSubmission();
         
         setTimeout(() => {
-            window.location.href = 'thank-you.html';
+            window.location.href = 'thank-you';
         }, 2000);
         
     } finally {
@@ -1524,7 +1524,7 @@ function clearStorageAndGoHome() {
     
     sessionStorage.setItem('comingFromThankYou', 'true');
     
-    window.location.href = 'home.html';
+    window.location.href = 'home';
 }
 
 function copyOrderId() {

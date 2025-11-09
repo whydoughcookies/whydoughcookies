@@ -75,7 +75,7 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
+    padding: 1.3rem;
     flex-direction: column;
     text-align: center;
     background-attachment: fixed;
