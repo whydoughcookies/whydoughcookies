@@ -1,3 +1,4 @@
+// Global variables
 let selectedBoxSize = null;
 let activeCard = null;
 let cart = [];
@@ -32,21 +33,21 @@ const productData = {
         name: "The OG Set",
         description: "A perfect introduction to Why Dough! Includes 3 of our signature cookies: The Usual (our classic chocolate chip), The Red One (rich red velvet), and The Burnt One (deep, caramelized flavors). Each cookie is 100g of pure delight.",
         price: 320,
-        image: "", // Add image URL later
+        image: "/image/og-set.png",
         id: "ogSet"
     },
     classic6: {
         name: "The Classics",
         description: "Our complete collection! Get all 6 of our classic flavors: The Usual, The Red One, The Burnt One, The Milky One (white chocolate dream), Pistash (pistachio perfection), and The Bizz (unique flavor rotation). Perfect for sharing or treating yourself!",
         price: 660,
-        image: "", // Add image URL later
+        image: "/image/classics.png",
         id: "classic6"
     },
     samplers: {
         name: "Samplers",
         description: "Can't decide? Try them all! This sampler includes 6 cookies (50g each) - one of each classic flavor. Perfect for first-timers or when you want a little taste of everything. Discover your new favorite!",
         price: 320,
-        image: "", // Add image URL later
+        image: "/image/samplers.png",
         id: "samplers"
     }
 };
@@ -54,112 +55,258 @@ const productData = {
 let currentProduct = null;
 let currentQuantity = 1;
 
-// Open product modal
-function openProductModal(productId) {
-    const product = productData[productId];
-    if (!product) return;
-    
-    currentProduct = product;
-    currentQuantity = 1;
-    
-    // Update modal content
-    document.getElementById('productModalTitle').textContent = product.name;
-    document.getElementById('productName').textContent = product.name;
-    document.getElementById('productDescription').textContent = product.description;
-    document.getElementById('productPrice').textContent = `₱${product.price}`;
-    document.getElementById('productQuantity').textContent = currentQuantity;
-    
-    // Show image if available, otherwise show placeholder
-    const productImage = document.getElementById('productImage');
-    const placeholder = document.getElementById('productImagePlaceholder');
-    
-    if (product.image) {
-        productImage.src = product.image;
-        productImage.classList.remove('hidden');
-        placeholder.classList.add('hidden');
-    } else {
-        productImage.classList.add('hidden');
-        placeholder.classList.remove('hidden');
-    }
-    
-    // Show modal
-    const modal = document.getElementById("productModal");
-    if (modal) {
-        modal.classList.add("active");
-        document.body.classList.add("no-scroll");
-    }
+// Homepage specific functionality
+function initializeHomepage() {
+  initializeFlavorsCarousel();
+  setupTestimonialSlider();
+  setupSmoothScrolling();
 }
 
-// Close product modal
-function closeProductModal() {
-    const modal = document.getElementById("productModal");
-    if (modal) {
-        modal.classList.remove("active");
-        document.body.classList.remove("no-scroll");
+// Flavors Carousel Functionality
+function initializeFlavorsCarousel() {
+  const flavors = [
+    {
+      name: "The Usual",
+      description: "Your klassic ooey gooey bittersweet combo.",
+      image: "/images/the-usual.PNG"
+    },
+    {
+      name: "The Red One",
+      description: "Rich red velvet with white chocolate chunks",
+      image: "/images/the-red-one.PNG"
+    },
+    {
+      name: "The Burnt One", 
+      description: "Deep, caramelized flavors with a perfect crisp",
+      image: "/images/the-burnt-one.PNG"
+    },
+    {
+      name: "The Bizz",
+      description: "Our rotating special flavor - always a surprise!",
+      image: "/images/the-bizz.PNG"
+    },
+    {
+      name: "The Milky One",
+      description: "Creamy white chocolate and macadamia nuts", 
+      image: "/images/milky-one.PNG"
+    },
+    {
+      name: "Pistash",
+      description: "Buttery pistachio with dark chocolate chunks",
+      image: "/images/pistash.PNG"
+    },
+    {
+      name: "Nut-so-Carrot",
+      description: "Carrot cake inspired with nuts and spices",
+      image: "/images/nut-so-carrot.PNG"
+    },
+    {
+      name: "The OT",
+      description: "Oatmeal treat with raisins and cinnamon",
+      image: "/images/the-ot.PNG"
+    },
+    {
+      name: "Espress-oh",
+      description: "Coffee infused with chocolate chunks", 
+      image: "/images/espressoh.PNG"
+    },
+    {
+      name: "Berry Match",
+      description: "Mixed berries with white chocolate",
+      image: "/images/berry-match.PNG"
+    },
+  ];
+
+  const track = document.getElementById('flavorsCarouselTrack');
+  const indicators = document.getElementById('flavorsCarouselIndicators');
+  
+  if (!track || !indicators) return;
+  
+  // Clear existing content
+  track.innerHTML = '';
+  indicators.innerHTML = '';
+  
+  // Create carousel items
+  flavors.forEach((flavor, index) => {
+    // Create carousel item
+    const item = document.createElement('div');
+    item.className = 'flavor-carousel-item';
+    item.innerHTML = `
+      <div class="flavor-carousel-image">
+        <img src="${flavor.image}" alt="${flavor.name}" class="w-full h-full object-cover rounded-full">
+      </div>
+      <h3 class="flavor-carousel-name">${flavor.name}</h3>
+      <p class="flavor-carousel-description">${flavor.description}</p>
+    `;
+    track.appendChild(item);
+    
+    // Create indicator
+    const indicator = document.createElement('button');
+    indicator.className = `flavor-carousel-indicator ${index === 0 ? 'active' : ''}`;
+    indicator.setAttribute('data-index', index);
+    indicator.addEventListener('click', () => goToSlide(index));
+    indicators.appendChild(indicator);
+  });
+  
+  // Initialize carousel state
+  let currentSlide = 0;
+  const slideCount = flavors.length;
+  
+  // Update carousel position
+  function updateCarousel() {
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    // Update indicators
+    document.querySelectorAll('.flavor-carousel-indicator').forEach((indicator, i) => {
+      indicator.classList.toggle('active', i === currentSlide);
+    });
+  }
+  
+  // Navigation functions
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slideCount;
+    updateCarousel();
+  }
+  
+  function prevSlide() {
+    currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+    updateCarousel();
+  }
+  
+  function goToSlide(index) {
+    currentSlide = index;
+    updateCarousel();
+  }
+  
+  // Add event listeners to navigation buttons
+  document.querySelector('.flavor-carousel-prev').addEventListener('click', prevSlide);
+  document.querySelector('.flavor-carousel-next').addEventListener('click', nextSlide);
+  
+  // Auto-advance carousel
+  let autoAdvance = setInterval(nextSlide, 4000);
+  
+  // Pause auto-advance on hover
+  const carouselContainer = document.querySelector('.flavors-carousel-container');
+  if (carouselContainer) {
+    carouselContainer.addEventListener('mouseenter', () => clearInterval(autoAdvance));
+    carouselContainer.addEventListener('mouseleave', () => {
+      autoAdvance = setInterval(nextSlide, 4000);
+    });
+  }
+  
+  // Touch/swipe support for mobile
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
+  
+  track.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+    clearInterval(autoAdvance);
+  });
+  
+  track.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    currentX = e.touches[0].clientX;
+  });
+  
+  track.addEventListener('touchend', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    
+    const diff = startX - currentX;
+    const threshold = 50;
+    
+    if (diff > threshold) {
+      nextSlide();
+    } else if (diff < -threshold) {
+      prevSlide();
     }
-    currentProduct = null;
-    currentQuantity = 1;
+    
+    // Resume auto-advance
+    autoAdvance = setInterval(nextSlide, 4000);
+  });
 }
 
-// Update product quantity
-function updateProductQuantity(delta) {
-    const newQuantity = currentQuantity + delta;
-    
-    // Check order limits
-    if (newQuantity < 1) return;
-    if (newQuantity > ORDER_LIMITS.premade[currentProduct.id]) {
-        showToast(`Maximum ${ORDER_LIMITS.premade[currentProduct.id]} sets allowed per order`, 'warning');
-        return;
+// Testimonial Slider Functionality
+function setupTestimonialSlider() {
+  const testimonials = [
+    {
+      text: "The best cookies I've ever had! The OG Set is perfect for trying their signature flavors. The Burnt One is absolutely incredible - don't let the name fool you!",
+      author: "Sarah M.",
+      role: "Regular Customer"
+    },
+    {
+      text: "I ordered the Samplers for my office and they were gone in minutes! Everyone loved the variety and the perfect texture - chewy but not too soft.",
+      author: "Michael T.",
+      role: "First-time Customer"
+    },
+    {
+      text: "Why Dough has become our family's weekend treat. The Classics box has something for everyone. The Red One is my personal favorite!",
+      author: "The Reyes Family", 
+      role: "Loyal Customers"
     }
+  ];
+  
+  let currentTestimonial = 0;
+  
+  window.changeTestimonial = function(index) {
+    currentTestimonial = index;
+    const slider = document.getElementById('testimonialSlider');
+    const dots = document.querySelectorAll('#testimonials button');
     
-    currentQuantity = newQuantity;
-    document.getElementById('productQuantity').textContent = currentQuantity;
+    if (!slider) return;
+    
+    slider.innerHTML = `
+      <div class="testimonial-slide text-center">
+        <p class="text-lg mb-6 italic">${testimonials[index].text}</p>
+        <div class="flex items-center justify-center space-x-3">
+          <div class="w-12 h-12 bg-brown/20 rounded-full flex items-center justify-center">
+            <span class="font-bold">${testimonials[index].author.split(' ').map(n => n[0]).join('')}</span>
+          </div>
+          <div class="text-left">
+            <p class="font-bold">${testimonials[index].author}</p>
+            <p class="text-sm text-brown/70">${testimonials[index].role}</p>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Update dots
+    dots.forEach((dot, i) => {
+      if (i === index) {
+        dot.classList.remove('bg-brown/30');
+        dot.classList.add('btn-primary');
+      } else {
+        dot.classList.remove('btn-primary');
+        dot.classList.add('bg-brown/30');
+      }
+    });
+  };
+  
+  // Auto-rotate testimonials
+  setInterval(() => {
+    currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+    changeTestimonial(currentTestimonial);
+  }, 5000);
 }
 
-// Add product to cart from modal
-// Fixed Add product to cart from modal
-function addProductToCart() {
-    if (!currentProduct) {
-        console.error('No product selected');
-        showToast('Please select a product first', 'error');
-        return;
-    }
-    
-    try {
-        // Remove existing item with same ID
-        cart = cart.filter(item => item.id !== currentProduct.id);
-        
-        // Add new item
-        cart.push({
-            id: currentProduct.id,
-            type: 'premade',
-            name: currentProduct.name,
-            price: currentProduct.price,
-            quantity: currentQuantity,
-            total: currentProduct.price * currentQuantity
+function setupSmoothScrolling() {
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
         });
-        
-        // Update cart display
-        updateCartDisplay();
-        
-        // Show success message
-        showToast(`Added ${currentQuantity} ${currentProduct.name} to cart! 🍪`);
-        
-        // Close modal
-        closeProductModal();
-        
-        // Close any active cookie card
-        if (activeCard) {
-            activeCard.classList.remove('active');
-            activeCard = null;
-        }
-        
-    } catch (error) {
-        console.error('Error adding product to cart:', error);
-        showToast('Error adding product to cart. Please try again.', 'error');
-    }
+      }
+    });
+  });
 }
 
+// Order page functionality
 function scrollToSection(id){ 
     const element = document.getElementById('section-'+id);
     if (element) element.scrollIntoView({behavior:'smooth'});
@@ -313,13 +460,13 @@ function updateCartDisplay() {
                 <div class="cart-modal-item p-4 rounded-lg mb-3">
                     <div class="flex justify-between items-center">
                         <div class="flex-1">
-                            <h4 class="font-bold text-amber-900 text-lg">${item.name}</h4>
+                            <h4 class="font-bold text-brown text-lg">${item.name}</h4>
                             ${item.type === 'customBox' ? 
-                                `<p class="text-sm text-amber-700">Box of ${item.boxSize}</p>
-                                 <p class="text-sm text-amber-600">${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')}</p>` : 
-                                `<p class="text-sm text-amber-700">Quantity: ${item.quantity}</p>`
+                                `<p class="text-sm text-brown-700">Box of ${item.boxSize}</p>
+                                 <p class="text-sm text-brown-600">${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')}</p>` : 
+                                `<p class="text-sm text-brown-700">Quantity: ${item.quantity}</p>`
                             }
-                            <p class="font-bold text-amber-800 text-xl mt-2">₱${item.total}</p>
+                            <p class="font-bold text-brown-800 text-xl mt-2">₱${item.total}</p>
                         </div>
                         <button type="button" onclick="removeFromCartWithToast(${index})" class="text-red-600 hover:text-red-800 ml-4 bg-white p-2 rounded-full shadow transition-colors">🗑️</button>
                     </div>
@@ -397,7 +544,7 @@ function generateWeekendDates(){
             const btn = document.createElement('button'); 
             btn.type='button'; 
             btn.textContent = displayDate;
-            btn.className = 'bg-amber-300 hover:bg-amber-400 px-3 py-2 rounded-lg text-sm font-medium transition-colors';
+            btn.className = 'bg-brown-300 hover:bg-brown-400 px-3 py-2 rounded-lg text-sm font-medium transition-colors';
             btn.onclick = ()=>{ 
                 const input = document.getElementById('deliveryDateInput'); 
                 if (input) {
@@ -673,6 +820,111 @@ function addCustomBoxToCart(){
         const qtyInput = r.querySelector('.cookie-qty-input');
         if (qtyInput) qtyInput.value = 1;
     });
+}
+
+// Product Modal Functions
+function openProductModal(productId) {
+    const product = productData[productId];
+    if (!product) return;
+    
+    currentProduct = product;
+    currentQuantity = 1;
+    
+    // Update modal content
+    document.getElementById('productModalTitle').textContent = product.name;
+    document.getElementById('productName').textContent = product.name;
+    document.getElementById('productDescription').textContent = product.description;
+    document.getElementById('productPrice').textContent = `₱${product.price}`;
+    document.getElementById('productQuantity').textContent = currentQuantity;
+    
+    // Show image if available, otherwise show placeholder
+    const productImage = document.getElementById('productImage');
+    const placeholder = document.getElementById('productImagePlaceholder');
+    
+    if (product.image) {
+        productImage.src = product.image;
+        productImage.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+    } else {
+        productImage.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+    }
+    
+    // Show modal
+    const modal = document.getElementById("productModal");
+    if (modal) {
+        modal.classList.add("active");
+        document.body.classList.add("no-scroll");
+    }
+}
+
+// Close product modal
+function closeProductModal() {
+    const modal = document.getElementById("productModal");
+    if (modal) {
+        modal.classList.remove("active");
+        document.body.classList.remove("no-scroll");
+    }
+    currentProduct = null;
+    currentQuantity = 1;
+}
+
+// Update product quantity
+function updateProductQuantity(delta) {
+    const newQuantity = currentQuantity + delta;
+    
+    // Check order limits
+    if (newQuantity < 1) return;
+    if (newQuantity > ORDER_LIMITS.premade[currentProduct.id]) {
+        showToast(`Maximum ${ORDER_LIMITS.premade[currentProduct.id]} sets allowed per order`, 'warning');
+        return;
+    }
+    
+    currentQuantity = newQuantity;
+    document.getElementById('productQuantity').textContent = currentQuantity;
+}
+
+// Add product to cart from modal
+function addProductToCart() {
+    if (!currentProduct) {
+        console.error('No product selected');
+        showToast('Please select a product first', 'error');
+        return;
+    }
+    
+    try {
+        // Remove existing item with same ID
+        cart = cart.filter(item => item.id !== currentProduct.id);
+        
+        // Add new item
+        cart.push({
+            id: currentProduct.id,
+            type: 'premade',
+            name: currentProduct.name,
+            price: currentProduct.price,
+            quantity: currentQuantity,
+            total: currentProduct.price * currentQuantity
+        });
+        
+        // Update cart display
+        updateCartDisplay();
+        
+        // Show success message
+        showToast(`Added ${currentQuantity} ${currentProduct.name} to cart! 🍪`);
+        
+        // Close modal
+        closeProductModal();
+        
+        // Close any active cookie card
+        if (activeCard) {
+            activeCard.classList.remove('active');
+            activeCard = null;
+        }
+        
+    } catch (error) {
+        console.error('Error adding product to cart:', error);
+        showToast('Error adding product to cart. Please try again.', 'error');
+    }
 }
 
 // Comprehensive form validation
@@ -1225,6 +1477,137 @@ function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, s=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); 
 }
 
+// Thank you page functions
+function displayOrderDetails() {
+    const orderData = getOrderData();
+    
+    if (orderData && orderData.orderId) {
+        document.getElementById('orderIdDisplay').textContent = orderData.orderId;
+        document.getElementById('customerName').textContent = orderData.customerName || '-';
+        document.getElementById('orderTotal').textContent = orderData.totalAmount || '0';
+        document.getElementById('itemCount').textContent = (orderData.itemCount || 0) + ' item(s)';
+        document.getElementById('deliveryDate').textContent = orderData.deliveryDate || '-';
+        
+        document.title = `Order #${orderData.orderId} - Why Dough`;
+    } else {
+        document.getElementById('orderIdDisplay').textContent = 'Not Found';
+        document.getElementById('orderDetails').innerHTML = 
+            '<li class="text-brown-600">Order details not available. Please check your email for confirmation.</li>';
+        
+        showToast('Order details not found. Please check your email for confirmation.', 'warning');
+    }
+}
+
+function getOrderData() {
+    let orderData = sessionStorage.getItem('lastOrder');
+    
+    if (!orderData) {
+        orderData = localStorage.getItem('lastOrder');
+    }
+    
+    if (!orderData) {
+        return null;
+    }
+    
+    try {
+        return JSON.parse(orderData);
+    } catch (e) {
+        return null;
+    }
+}
+
+function clearStorageAndGoHome() {
+    sessionStorage.removeItem('lastOrder');
+    localStorage.removeItem('lastOrder');
+    localStorage.removeItem('cart');
+    sessionStorage.removeItem('cart');
+    
+    sessionStorage.setItem('comingFromThankYou', 'true');
+    
+    window.location.href = 'home.html';
+}
+
+function copyOrderId() {
+    const orderId = document.getElementById('orderIdDisplay').textContent;
+    const copyButton = document.getElementById('copyButton');
+    const copySuccess = document.getElementById('copySuccess');
+    
+    if (orderId === 'Loading...' || orderId === 'Not Found') {
+        showToast('Order ID not available yet', 'warning');
+        return;
+    }
+    
+    navigator.clipboard.writeText(orderId).then(function() {
+        copySuccess.classList.remove('hidden');
+        copyButton.innerHTML = '✅ Copied!';
+        copyButton.classList.remove('bg-accent', 'hover:bg-brown-700');
+        copyButton.classList.add('bg-green-600', 'hover:bg-green-700');
+        
+        setTimeout(() => {
+            copySuccess.classList.add('hidden');
+            copyButton.innerHTML = '📋 Copy';
+            copyButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+            copyButton.classList.add('bg-accent', 'hover:bg-brown-700');
+        }, 3000);
+        
+    }).catch(function(err) {
+        fallbackCopyTextToClipboard(orderId);
+    });
+}
+
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            const copySuccess = document.getElementById('copySuccess');
+            const copyButton = document.getElementById('copyButton');
+            
+            copySuccess.classList.remove('hidden');
+            copySuccess.textContent = '✅ Order ID copied to clipboard!';
+            copyButton.innerHTML = '✅ Copied!';
+            copyButton.classList.remove('bg-accent', 'hover:bg-brown-700');
+            copyButton.classList.add('bg-green-600', 'hover:bg-green-700');
+            
+            setTimeout(() => {
+                copySuccess.classList.add('hidden');
+                copyButton.innerHTML = '📋 Copy';
+                copyButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+                copyButton.classList.add('bg-accent', 'hover:bg-brown-700');
+            }, 3000);
+        }
+    } catch (err) {
+        alert('Failed to copy Order ID. Please manually select and copy the text.');
+    }
+
+    document.body.removeChild(textArea);
+}
+
+function takeScreenshot() {
+    const orderId = document.getElementById('orderIdDisplay').textContent;
+    if (orderId === 'Loading...' || orderId === 'Not Found') {
+        showToast('Please wait for order details to load', 'warning');
+        return;
+    }
+    alert(`Take a screenshot of this page to save your Order ID: ${orderId}\n\nYou can also check your email for a written confirmation.`);
+}
+
+function clearPreviousCart() {
+    localStorage.removeItem('cart');
+    sessionStorage.removeItem('cart');
+}
+
+// Event Listeners
 document.addEventListener('click', function(event) {
     const clickedCard = event.target.closest('.cookie-card');
     
@@ -1243,7 +1626,27 @@ document.addEventListener('click', function(event) {
     }
 });
 
-document.addEventListener('DOMContentLoaded', ()=>{
+// Initialize based on current page
+document.addEventListener('DOMContentLoaded', function() {
+  // Check if we're on homepage by looking for the carousel
+  if (document.querySelector('#flavorsCarouselTrack')) {
+    console.log('Initializing homepage...');
+    initializeHomepage();
+  } 
+  // Check if we're on thank you page
+  else if (document.getElementById('orderIdDisplay')) {
+    displayOrderDetails();
+    clearPreviousCart();
+    
+    setTimeout(() => {
+      const orderId = document.getElementById('orderIdDisplay').textContent;
+      if (orderId === 'Loading...' || orderId === 'Not Found') {
+        displayOrderDetails();
+      }
+    }, 2000);
+  }
+  // Otherwise, we're on the order page
+  else {
     generateWeekendDates(); 
     setDateRestrictions(); 
     renderCookieList();
@@ -1252,4 +1655,5 @@ document.addEventListener('DOMContentLoaded', ()=>{
     if (orderForm) orderForm.addEventListener('submit', handleFormSubmit);
     
     updateCartDisplay();
+  }
 });
