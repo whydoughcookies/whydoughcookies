@@ -26,6 +26,140 @@ const ORDER_LIMITS = {
     }
 };
 
+// Product data for the modal
+const productData = {
+    ogSet: {
+        name: "The OG Set",
+        description: "A perfect introduction to Why Dough! Includes 3 of our signature cookies: The Usual (our classic chocolate chip), The Red One (rich red velvet), and The Burnt One (deep, caramelized flavors). Each cookie is 100g of pure delight.",
+        price: 320,
+        image: "", // Add image URL later
+        id: "ogSet"
+    },
+    classic6: {
+        name: "The Classics",
+        description: "Our complete collection! Get all 6 of our classic flavors: The Usual, The Red One, The Burnt One, The Milky One (white chocolate dream), Pistash (pistachio perfection), and The Bizz (unique flavor rotation). Perfect for sharing or treating yourself!",
+        price: 660,
+        image: "", // Add image URL later
+        id: "classic6"
+    },
+    samplers: {
+        name: "Samplers",
+        description: "Can't decide? Try them all! This sampler includes 6 cookies (50g each) - one of each classic flavor. Perfect for first-timers or when you want a little taste of everything. Discover your new favorite!",
+        price: 320,
+        image: "", // Add image URL later
+        id: "samplers"
+    }
+};
+
+let currentProduct = null;
+let currentQuantity = 1;
+
+// Open product modal
+function openProductModal(productId) {
+    const product = productData[productId];
+    if (!product) return;
+    
+    currentProduct = product;
+    currentQuantity = 1;
+    
+    // Update modal content
+    document.getElementById('productModalTitle').textContent = product.name;
+    document.getElementById('productName').textContent = product.name;
+    document.getElementById('productDescription').textContent = product.description;
+    document.getElementById('productPrice').textContent = `₱${product.price}`;
+    document.getElementById('productQuantity').textContent = currentQuantity;
+    
+    // Show image if available, otherwise show placeholder
+    const productImage = document.getElementById('productImage');
+    const placeholder = document.getElementById('productImagePlaceholder');
+    
+    if (product.image) {
+        productImage.src = product.image;
+        productImage.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+    } else {
+        productImage.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+    }
+    
+    // Show modal
+    const modal = document.getElementById("productModal");
+    if (modal) {
+        modal.classList.add("active");
+        document.body.classList.add("no-scroll");
+    }
+}
+
+// Close product modal
+function closeProductModal() {
+    const modal = document.getElementById("productModal");
+    if (modal) {
+        modal.classList.remove("active");
+        document.body.classList.remove("no-scroll");
+    }
+    currentProduct = null;
+    currentQuantity = 1;
+}
+
+// Update product quantity
+function updateProductQuantity(delta) {
+    const newQuantity = currentQuantity + delta;
+    
+    // Check order limits
+    if (newQuantity < 1) return;
+    if (newQuantity > ORDER_LIMITS.premade[currentProduct.id]) {
+        showToast(`Maximum ${ORDER_LIMITS.premade[currentProduct.id]} sets allowed per order`, 'warning');
+        return;
+    }
+    
+    currentQuantity = newQuantity;
+    document.getElementById('productQuantity').textContent = currentQuantity;
+}
+
+// Add product to cart from modal
+// Fixed Add product to cart from modal
+function addProductToCart() {
+    if (!currentProduct) {
+        console.error('No product selected');
+        showToast('Please select a product first', 'error');
+        return;
+    }
+    
+    try {
+        // Remove existing item with same ID
+        cart = cart.filter(item => item.id !== currentProduct.id);
+        
+        // Add new item
+        cart.push({
+            id: currentProduct.id,
+            type: 'premade',
+            name: currentProduct.name,
+            price: currentProduct.price,
+            quantity: currentQuantity,
+            total: currentProduct.price * currentQuantity
+        });
+        
+        // Update cart display
+        updateCartDisplay();
+        
+        // Show success message
+        showToast(`Added ${currentQuantity} ${currentProduct.name} to cart! 🍪`);
+        
+        // Close modal
+        closeProductModal();
+        
+        // Close any active cookie card
+        if (activeCard) {
+            activeCard.classList.remove('active');
+            activeCard = null;
+        }
+        
+    } catch (error) {
+        console.error('Error adding product to cart:', error);
+        showToast('Error adding product to cart. Please try again.', 'error');
+    }
+}
+
 function scrollToSection(id){ 
     const element = document.getElementById('section-'+id);
     if (element) element.scrollIntoView({behavior:'smooth'});

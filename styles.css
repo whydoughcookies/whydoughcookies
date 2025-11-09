@@ -653,3 +653,34 @@ section:last-of-type {
 .animate-spin {
     animation: spin 1s linear infinite;
 }
+
+/* Product Modal Styles */
+#productModal .modal-content {
+    max-width: 420px;
+}
+
+/* Product image placeholder */
+#productImagePlaceholder {
+    font-size: 3rem;
+}
+
+/* Quantity buttons */
+.quantity-btn {
+    transition: all 0.2s ease;
+}
+
+.quantity-btn:active {
+    transform: scale(0.95);
+}
+
+/* Mobile optimizations for product modal */
+@media (max-width: 480px) {
+    #productModal .modal-content {
+        margin: 1rem;
+        width: calc(100% - 2rem);
+    }
+    
+    #productImage {
+        height: 200px;
+    }
+}

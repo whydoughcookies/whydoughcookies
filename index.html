@@ -185,6 +185,7 @@
       </div>
     </section>
 
+
     <!-- Cookie selection -->
     <section id="section-5" class="relative">
       <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-4xl w-full space-y-8 border border-amber-100">
@@ -193,61 +194,34 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
 
           <!-- OG Set Card -->
-          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center cursor-pointer" onclick="toggleCookieCard(this, 'ogSet')">
+          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center cursor-pointer bg-amber-50" onclick="openProductModal('ogSet')">
             <p class="font-semibold text-xl mb-2 text-amber-900">The OG Set</p>
             <p class="text-sm text-amber-600 mb-4">(3 cookies: The Usual, The Red One, The Burnt One) <span class="font-bold text-amber-700">100g</span></p>
             <p class="font-bold text-amber-700 mb-4 text-xl">₱320</p>
-            
-            <div class="quantity-section flex flex-col items-center space-y-3 w-full" onclick="event.stopPropagation()">
-                <div class="flex items-center space-x-3">
-                    <button type="button" onclick="updateCardCount('ogSet', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
-                    <input type="number" id="ogSet" name="ogSet" value="0" min="0" max="9" class="w-16 text-center border border-amber-300 rounded-lg py-2">
-                    <button type="button" onclick="updateCardCount('ogSet', 1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">+</button>
-                </div>
-                <button type="button" onclick="addToCart('ogSet', 'OG Set', 320)" class="add-to-cart-btn bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold w-full">Add to Cart</button>
-            </div>
+            <div class="text-sm text-amber-600 mt-2">Click to view details</div>
           </div>
 
           <!-- The Classics Card -->
-          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center cursor-pointer" onclick="toggleCookieCard(this, 'classic6')">
+          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center cursor-pointer bg-amber-50" onclick="openProductModal('classic6')">
             <p class="font-semibold text-xl mb-2 text-amber-900">The Classics</p>
             <p class="text-sm text-amber-600 mb-4">(6 cookies: Usual, Red, Burnt, Milky, Pistash, Bizz) <span class="font-bold text-amber-700">100g</span></p>
             <p class="font-bold text-amber-700 mb-4 text-xl">₱660</p>
-            
-            <div class="quantity-section flex flex-col items-center space-y-3 w-full" onclick="event.stopPropagation()">
-                <div class="flex items-center space-x-3">
-                    <button type="button" onclick="updateCardCount('classic6', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
-                    <input type="number" id="classic6" name="classic6" value="0" min="0" max="9" class="w-16 text-center border border-amber-300 rounded-lg py-2">
-                    <button type="button" onclick="updateCardCount('classic6', 1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">+</button>
-                </div>
-                <button type="button" onclick="addToCart('classic6', 'The Classics', 660)" class="add-to-cart-btn bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold w-full">Add to Cart</button>
-            </div>
+            <div class="text-sm text-amber-600 mt-2">Click to view details</div>
           </div>
 
           <!-- Samplers Card -->
-          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center cursor-pointer" onclick="toggleCookieCard(this, 'samplers')">
+          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center cursor-pointer bg-amber-50" onclick="openProductModal('samplers')">
             <p class="font-semibold text-xl mb-2 text-amber-900">Samplers</p>
             <p class="text-sm text-amber-600 mb-4">(6 pcs of Classics, 50g each)</p>
             <p class="font-bold text-amber-700 mb-4 text-xl">₱320</p>
-            
-            <div class="quantity-section flex flex-col items-center space-y-3 w-full" onclick="event.stopPropagation()">
-                <div class="flex items-center space-x-3">
-                    <button type="button" onclick="updateCardCount('samplers', -1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">-</button>
-                    <input type="number" id="samplers" name="samplers" value="0" min="0" max="9" class="w-16 text-center border border-amber-300 rounded-lg py-2">
-                    <button type="button" onclick="updateCardCount('samplers', 1)" class="px-4 py-2 bg-amber-200 rounded-lg hover:bg-amber-300">+</button>
-                </div>
-                <button type="button" onclick="addToCart('samplers', 'Samplers', 320)" class="add-to-cart-btn bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold w-full">Add to Cart</button>
-            </div>
+            <div class="text-sm text-amber-600 mt-2">Click to view details</div>
           </div>
 
           <!-- Customize Your Cookie Box Card -->
           <div class="cookie-card p-8 rounded-2xl flex flex-col items-center cursor-pointer bg-amber-50" onclick="toggleCustomBoxCard(this)">
             <p class="font-semibold text-xl mb-4 text-amber-900">🍪 Customize Your Cookie Box</p>
             <p class="text-sm text-amber-600 mb-4">Create your own cookie selection</p>
-            
-            <div class="quantity-section items-center" onclick="event.stopPropagation()">
-              <span class="text-sm text-amber-600">Click to customize</span>
-            </div>
+            <div class="text-sm text-amber-600 mt-2">Click to customize</div>
           </div>
         </div>
 
@@ -402,6 +376,50 @@
 
       <div class="modal-footer">
         <button type="button" onclick="addCustomBoxToCart()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-lg transition-all duration-300">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Detail Modal -->
+  <div id="productModal" class="modal">
+    <div class="modal-content max-w-md">
+      <div class="modal-header flex justify-between items-center">
+        <h3 class="text-lg font-semibold text-amber-900" id="productModalTitle">Product Details</h3>
+        <button type="button" onclick="closeProductModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Product Image -->
+        <div class="mb-4">
+          <img id="productImage" src="" alt="Product Image" class="w-full h-48 object-cover rounded-lg bg-amber-100">
+          <div class="text-center text-amber-600 text-sm mt-2" id="productImagePlaceholder">
+            <!-- We'll add actual images later -->
+            🍪 Image coming soon!
+          </div>
+        </div>
+        
+        <!-- Product Name -->
+        <h4 class="text-xl font-bold text-amber-900 mb-2" id="productName"></h4>
+        
+        <!-- Product Description -->
+        <p class="text-amber-700 mb-4 text-sm" id="productDescription"></p>
+        
+        <!-- Product Price -->
+        <p class="text-2xl font-bold text-amber-900 mb-6" id="productPrice"></p>
+        
+        <!-- Quantity Selector -->
+        <div class="flex items-center justify-between mb-6">
+          <span class="text-amber-900 font-semibold">Quantity:</span>
+          <div class="flex items-center space-x-3">
+            <button type="button" onclick="updateProductQuantity(-1)" class="w-10 h-10 bg-amber-200 rounded-full flex items-center justify-center hover:bg-amber-300 text-amber-900 font-bold">-</button>
+            <span id="productQuantity" class="text-xl font-bold text-amber-900 w-8 text-center">1</span>
+            <button type="button" onclick="updateProductQuantity(1)" class="w-10 h-10 bg-amber-200 rounded-full flex items-center justify-center hover:bg-amber-300 text-amber-900 font-bold">+</button>
+          </div>
+        </div>
+        
+        <!-- Add to Cart Button -->
+        <button onclick="addProductToCart()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 rounded-lg transition-all duration-300 text-lg">
           Add to Cart
         </button>
       </div>
