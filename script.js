@@ -1376,7 +1376,7 @@ async function handleFormSubmit(e){
         // Redirect to thank you page
         setTimeout(() => {
             console.log('Redirecting to thank you page...');
-            window.location.href = 'thank-you';
+            window.location.href = '/thank-you';
         }, 2000);
 
     } catch (error) {
@@ -1404,7 +1404,7 @@ async function handleFormSubmit(e){
         clearCartAfterSubmission();
         
         setTimeout(() => {
-            window.location.href = 'thank-you';
+            window.location.href = '/thank-you';
         }, 2000);
         
     } finally {
@@ -1524,7 +1524,7 @@ function clearStorageAndGoHome() {
     
     sessionStorage.setItem('comingFromThankYou', 'true');
     
-    window.location.href = 'home';
+    window.location.href = '/';
 }
 
 function copyOrderId() {

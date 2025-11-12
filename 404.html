@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirecting...</title>
+    <script>
+        // Simple router for GitHub Pages
+        const path = window.location.pathname;
+        
+        const routes = {
+            '/': 'index.html',
+            '/order': 'order.html',
+            '/thank-you': 'thank-you.html'
+        };
+
+        if (routes[path]) {
+            window.location.href = routes[path];
+        } else {
+            // Handle 404 - redirect to home
+            window.location.href = '/';
+        }
+    </script>
+</head>
+<body>
+    <p>Redirecting...</p>
+</body>
+</html>

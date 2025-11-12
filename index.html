@@ -6,410 +6,289 @@
   <title>Why Dough Cookies</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="text-brown">
-  <header class="simple-header">
-    <div class="container mx-auto px-6">
-      <a href="home.html" class="logo-link">
-        <img src="images/logo.PNG" alt="Why Dough Logo" class="h-8 mr-2">
-      </a>
-    </div>
-  </header>
-
-  <form id="orderForm">
-    <!-- FormSubmit.co Configuration -->
-    <input type="hidden" name="_subject" id="emailSubject" value="Why Dough Order">
-    <input type="hidden" name="_captcha" value="false">
-    <input type="hidden" name="_replyto" id="customerEmailField">
-    <input type="hidden" name="_autoresponse" id="autoResponseField">
-    
-    <!-- Hidden fields for order data -->
-    <input type="hidden" name="order_summary" id="orderSummaryField">
-    <input type="hidden" name="customer_name" id="customerNameField">
-    <input type="hidden" name="customer_contact" id="customerContactField">
-    <input type="hidden" name="delivery_info" id="deliveryInfoField">
-    <input type="hidden" name="total_amount" id="totalAmountField">
-    <input type="hidden" name="order_id" id="orderIdField">
-
-    <!-- Name Section -->
-    <section id="section-2" class="relative">
-      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-brown-200">
-        <label class="text-2xl font-bold mb-4 block text-brown">What's your name? <span class="text-red-500">*</span></label>
-        <input name="name" required type="text" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Your name" />
-        
-        <label class="text-lg font-semibold mb-4 block text-brown-800">Social Media Handle <span class="text-gray-500 text-sm">(Optional)</span></label>
-        
-        <!-- Social Media Handle Input -->
-        <input 
-          name="socialHandle" 
-          type="text" 
-          placeholder="Enter your FB or IG" 
-          class="w-full border border-brown-200 p-4 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent" 
-          oninput="toggleSocialPlatformSelection(this)"
-          onfocus="checkSocialHandleFocus(this)"
-          id="socialHandleInput"
-        />
-
-        <!-- Social Media Platform Selection (Initially Hidden) -->
-        <div id="socialPlatformSelection" class="hidden mt-4">
-          <p class="text-sm text-brown-700 mb-3">Select platform: <span class="text-red-500">*</span></p>
-          <div class="flex gap-3 mb-3">
-            <label class="social-platform-option flex items-center gap-2 cursor-pointer" onclick="selectSocialPlatform(this)">
-              <input type="radio" name="socialPlatform" value="Facebook" class="hidden" id="platformFacebook">
-              <div class="w-5 h-5 border-2 border-accent rounded-full flex items-center justify-center">
-                <div class="w-3 h-3 bg-accent rounded-full hidden"></div>
-              </div>
-              <span class="text-brown">Facebook</span>
-            </label>
-            
-            <label class="social-platform-option flex items-center gap-2 cursor-pointer" onclick="selectSocialPlatform(this)">
-              <input type="radio" name="socialPlatform" value="Instagram" class="hidden" id="platformInstagram">
-              <div class="w-5 h-5 border-2 border-accent rounded-full flex items-center justify-center">
-                <div class="w-3 h-3 bg-accent rounded-full hidden"></div>
-              </div>
-              <span class="text-brown">Instagram</span>
-            </label>
-          </div>
+<body class="text-brown homepage-body">
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full bg-white bg-opacity-90 backdrop-blur-sm z-50 shadow-sm">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+          <a href="/" class="logo-link">
+            <img src="images/logo.PNG" alt="Why Dough Logo" class="h-8 mr-2">
+          </a>
         </div>
         
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(1)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
+        <div class="hidden md:flex space-x-8">
+          <a href="#home" class="font-medium hover:text-brown/80 transition">Home</a>
+          <a href="#about" class="font-medium hover:text-brown/80 transition">About</a>
+          <a href="#products" class="font-medium hover:text-brown/80 transition">Products</a>
+          <a href="#flavors" class="font-medium hover:text-brown/80 transition">Flavors</a>
+          <a href="#testimonials" class="font-medium hover:text-brown/80 transition">Reviews</a>
+        </div>
+        
+        <a href="/order" class="btn-primary px-6 py-2 rounded-full font-semibold transition">
+          Order Now
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero-section flex items-center justify-center text-white pt-20">
+    <div class="container mx-auto px-6 text-center">
+      <div class="floating-cookie text-6xl mb-6">🍪</div>
+      <h1 class="text-5xl md:text-7xl font-bold mb-6">Why Dough?</h1>
+      <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto leading-relaxed">
+        Soft. Chewy. Honest. We dough it better. Artisan cookies baked with passion and the finest ingredients.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="index.html" class="bg-white text-brown px-8 py-4 rounded-full font-bold text-lg hover:bg-cream transition transform hover:scale-105">
+          Order Cookies Now
+        </a>
+        <a href="#products" class="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-brown transition">
+          Explore Flavors
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Introduction Section -->
+  <section id="about" class="section-padding bg-cream">
+    <div class="container mx-auto px-6">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl font-bold mb-8">Why Choose Why Dough?</h2>
+        <p class="text-lg mb-12 leading-relaxed">
+          At Why Dough, we believe that great cookies start with honest ingredients and a whole lot of love. 
+          Each cookie is handcrafted using premium ingredients, baked to perfection, and delivered with a smile. 
+          From our classic favorites to creative seasonal specials, every bite tells our story of passion for the perfect cookie.
+        </p>
+        
+        <div class="grid md:grid-cols-3 gap-8 mt-12">
+          <div class="text-center">
+            <div class="w-16 h-16 btn-primary rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="text-2xl text-white">🥚</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Fresh Ingredients</h3>
+            <p>We use only the finest, freshest ingredients in every batch</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 btn-primary rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="text-2xl text-white">👩‍🍳</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Handcrafted</h3>
+            <p>Each cookie is carefully made with attention to detail</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 btn-primary rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="text-2xl text-white">💝</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Made with Love</h3>
+            <p>Baked with passion and delivered with genuine care</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Showcase -->
+  <section id="products" class="section-padding bg-white">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-4">Our Cookie Collections</h2>
+      <p class="text-lg text-center mb-12 max-w-2xl mx-auto">
+        Discover our range of delicious cookie sets, perfect for treating yourself or sharing with loved ones.
+      </p>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- OG Set -->
+        <div class="flavor-card bg-cream rounded-2xl p-8 text-center">
+          <div class="w-32 h-32 bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-4xl">🍪</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">The OG Set</h3>
+          <p class="mb-4">3 signature cookies: The Usual, The Red One, The Burnt One</p>
+          <p class="text-2xl font-bold mb-6">₱320</p>
+          <button onclick="location.href='/order'" class="btn-primary text-white px-6 py-3 rounded-full font-semibold transition w-full">
+            Add to Cart
           </button>
-          <button type="button" onclick="scrollToSection(3)" class="nav-button">
-            Next
+        </div>
+        
+        <!-- The Classics -->
+        <div class="flavor-card bg-cream rounded-2xl p-8 text-center">
+          <div class="w-32 h-32 bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-4xl">🍪🍪</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">The Classics</h3>
+          <p class="mb-4">6 cookies: All our classic flavors in one box</p>
+          <p class="text-2xl font-bold mb-6">₱660</p>
+          <button onclick="location.href='/order'" class="btn-primary text-white px-6 py-3 rounded-full font-semibold transition w-full">
+            Add to Cart
+          </button>
+        </div>
+        
+        <!-- Samplers -->
+        <div class="flavor-card bg-cream rounded-2xl p-8 text-center">
+          <div class="w-32 h-32 bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-4xl">🎁</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">Samplers</h3>
+          <p class="mb-4">6 smaller cookies to try all our classic flavors</p>
+          <p class="text-2xl font-bold mb-6">₱320</p>
+          <button onclick="location.href='/order'" class="btn-primary text-white px-6 py-3 rounded-full font-semibold transition w-full">
+            Add to Cart
           </button>
         </div>
       </div>
-    </section>
+      
+      <div class="text-center mt-12">
+        <a href="index.html" class="btn-primary text-white px-8 py-4 rounded-full font-bold text-lg transition inline-block">
+          View All Products & Customize Your Box
+        </a>
+      </div>
+    </div>
+  </section>
 
-    <!-- Delivery date & method -->
-    <section id="section-3" class="relative">
-      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-brown-200">
-        <label class="text-2xl font-bold mb-4 block text-brown">Delivery Date</label>
+  <!-- About Us Section -->
+  <section id="about" class="section-padding bg-cream parallax-section" style="background-image: linear-gradient(rgba(253, 244, 213, 0.9), rgba(253, 244, 213, 0.9)), url('https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-4.0.3')">
+    <div class="container mx-auto px-6">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl font-bold mb-8">Our Story</h2>
+        <div class="bg-white/80 rounded-2xl p-8 md:p-12">
+          <p class="text-lg mb-6 leading-relaxed">
+            Why Dough began as a simple passion project in a home kitchen, fueled by late-night cookie cravings and the belief that everyone deserves a truly exceptional cookie experience.
+          </p>
+          <p class="text-lg mb-6 leading-relaxed">
+            What started as sharing cookies with friends and family quickly grew into something more. The name "Why Dough?" reflects our philosophy: why settle for ordinary when you can have extraordinary? Why not indulge in something made with care, creativity, and the finest ingredients?
+          </p>
+          <p class="text-lg leading-relaxed">
+            Today, we continue to dough it better—one perfectly baked, soft, chewy cookie at a time. Each batch is still made with the same love and attention that started it all.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Meet the Doughs - Cookie Flavors -->
+  <section id="flavors" class="section-padding bg-white">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold mb-4">Meet the Doughs</h2>
+        <p class="text-lg max-w-2xl mx-auto">
+          Introducing some of our Bestselling Why dough flavors—baked to perfection for your enjoyment.
+        </p>
+      </div>
+      
+      <!-- Flavors Carousel -->
+      <div class="flavors-carousel-container">
+        <div class="flavors-carousel-track" id="flavorsCarouselTrack">
+          <!-- Carousel items will be populated by JavaScript -->
+        </div>
         
-        <!-- Responsive Delivery Disclaimer -->
-        <div class="bg-cream border border-brown-200 rounded-lg p-3 mb-4 md:p-4 md:mb-6">
-          <div class="flex items-start space-x-2 md:space-x-3">
-            <div class="flex-1">
-              <p class="text-sm md:text-base text-brown-700 font-semibold mb-1">
-                Weekend Delivery Only
+        <!-- Navigation Buttons -->
+        <button class="flavor-carousel-nav flavor-carousel-prev">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="flavor-carousel-nav flavor-carousel-next">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <!-- Indicators -->
+        <div class="flavor-carousel-indicators" id="flavorsCarouselIndicators">
+          <!-- Indicators will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Slider -->
+  <section id="testimonials" class="section-padding bg-cream parallax-section" style="background-image: linear-gradient(rgba(253, 244, 213, 0.9), rgba(253, 244, 213, 0.9)), url('https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-4.0.3')">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-4">What Our Customers Say</h2>
+      <p class="text-lg text-center mb-12 max-w-2xl mx-auto">
+        Don't just take our word for it - hear from our happy cookie lovers!
+      </p>
+      
+      <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 relative">
+          <div class="text-brown/60 text-5xl mb-4">"</div>
+          
+          <div id="testimonialSlider">
+            <!-- Testimonial 1 -->
+            <div class="testimonial-slide text-center">
+              <p class="text-lg mb-6 italic">
+                "The best cookies I've ever had! The OG Set is perfect for trying their signature flavors. 
+                The Burnt One is absolutely incredible - don't let the name fool you!"
               </p>
-              <p class="text-xs md:text-sm text-brown-600 leading-tight">
-                Orders are delivered Friday to Sunday only. Please select a weekend date.
-              </p>
+              <div class="flex items-center justify-center space-x-3">
+                <div class="w-12 h-12 bg-brown/20 rounded-full flex items-center justify-center">
+                  <span class="font-bold">SM</span>
+                </div>
+                <div class="text-left">
+                  <p class="font-bold">Sarah M.</p>
+                  <p class="text-sm text-brown/70">Regular Customer</p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        
-        <div id="quickDates" class="grid grid-cols-3 gap-3 mb-6"></div>
-        <a href="#" onclick="openDateInput();return false;" class="text-link block mb-4">Pick another date</a>
-        <input name="deliveryDate" id="deliveryDateInput" required type="date" class="w-full border border-brown-200 p-4 rounded-xl hidden focus:ring-2 focus:ring-accent focus:border-transparent" />
-        
-        <label class="text-2xl font-bold mb-4 block mt-8 text-brown">Delivery Method</label>
-        <div class="space-y-3">
-          <div class="delivery-option" onclick="selectDeliveryMethod(this, 'pickup')">
-            <input type="radio" name="deliveryMethod" value="pickup" class="hidden">
-            <span class="font-semibold text-brown">🛵 Pick Up</span>
-          </div>
-          <div class="delivery-option" onclick="selectDeliveryMethod(this, 'delivery')">
-            <input type="radio" name="deliveryMethod" value="delivery" class="hidden">
-            <span class="font-semibold text-brown">🚚 Delivery</span>
+          
+          <div class="flex justify-center space-x-2 mt-8">
+            <button onclick="changeTestimonial(0)" class="w-3 h-3 btn-primary rounded-full"></button>
+            <button onclick="changeTestimonial(1)" class="w-3 h-3 bg-brown/30 rounded-full"></button>
+            <button onclick="changeTestimonial(2)" class="w-3 h-3 bg-brown/30 rounded-full"></button>
           </div>
         </div>
-        
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(2)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="button" onclick="scrollToSection(4)" class="nav-button">
-            Next
-          </button>
-        </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Contact details -->
-    <section id="section-4" class="relative">
-      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-brown-200">
-        <label class="text-2xl font-bold mb-6 block text-brown">Contact Details</label>
-        
-        <label class="block font-semibold mb-3 text-brown-800">Email Address</label>
-        <input name="email" required type="email" placeholder="your.email@example.com" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" />
-        
-        <label class="block font-semibold mb-3 text-brown-800">Contact Number</label>
-        <input name="contactNumber" required type="tel" pattern="[0-9]{11}" title="Please enter an 11-digit number (e.g., 09123456789)" placeholder="e.g. 09XXXXXXXXX" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" />
-        
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(3)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="button" onclick="scrollToSection(5)" class="nav-button">
-            Next
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Cookie selection -->
-    <section id="section-5" class="relative">
-      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-4xl w-full space-y-8 border border-brown-200">
-        <h2 class="text-3xl font-bold text-brown text-center">Choose your cookies</h2>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-
-          <!-- OG Set Card -->
-          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center cursor-pointer bg-cream" onclick="openProductModal('ogSet')">
-            <p class="font-semibold text-xl mb-2 text-brown">The OG Set</p>
-            <p class="text-sm text-brown-600 mb-4">(3 cookies: The Usual, The Red One, The Burnt One) <span class="font-bold text-brown-700">100g</span></p>
-            <p class="font-bold text-brown-700 mb-4 text-xl">₱320</p>
-            <div class="text-sm text-brown-600 mt-2">Click to view details</div>
-          </div>
-
-          <!-- The Classics Card -->
-          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center cursor-pointer bg-cream" onclick="openProductModal('classic6')">
-            <p class="font-semibold text-xl mb-2 text-brown">The Classics</p>
-            <p class="text-sm text-brown-600 mb-4">(6 cookies: Usual, Red, Burnt, Milky, Pistash, Bizz) <span class="font-bold text-brown-700">100g</span></p>
-            <p class="font-bold text-brown-700 mb-4 text-xl">₱660</p>
-            <div class="text-sm text-brown-600 mt-2">Click to view details</div>
-          </div>
-
-          <!-- Samplers Card -->
-          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center cursor-pointer bg-cream" onclick="openProductModal('samplers')">
-            <p class="font-semibold text-xl mb-2 text-brown">Samplers</p>
-            <p class="text-sm text-brown-600 mb-4">(6 pcs of Classics, 50g each)</p>
-            <p class="font-bold text-brown-700 mb-4 text-xl">₱320</p>
-            <div class="text-sm text-brown-600 mt-2">Click to view details</div>
-          </div>
-
-          <!-- Customize Your Cookie Box Card -->
-          <div class="cookie-card p-8 rounded-2xl flex flex-col items-center cursor-pointer bg-cream" onclick="toggleCustomBoxCard(this)">
-            <p class="font-semibold text-xl mb-4 text-brown">🍪 Customize Your Cookie Box</p>
-            <p class="text-sm text-brown-600 mb-4">Create your own cookie selection</p>
-            <div class="text-sm text-brown-600 mt-2">Click to customize</div>
-          </div>
-        </div>
-
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(4)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="button" onclick="scrollToSection(6)" class="nav-button">
-            Next
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Payment -->
-    <section id="section-6" class="relative">
-      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-brown-200">
-        <label class="text-2xl font-bold mb-4 block text-brown">Payment Method <span class="text-red-500">*</span></label>
-        <select name="payment" required class="w-full border border-brown-200 p-4 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent">
-          <option value="" disabled selected>Select payment method</option>
-          <option value="GCash">GCash</option>
-          <option value="Bank Transfer">Bank Transfer</option>
-          <option value="COD">Cash on Delivery</option>
-        </select>
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(5)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="button" onclick="scrollToSection(7)" class="nav-button">
-            Next
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Notes -->
-    <section id="section-7" class="relative">
-      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-brown-200">
-        <label class="text-2xl font-bold mb-4 block text-brown">Notes (Optional)</label>
-        <textarea name="notes" class="w-full border border-brown-200 p-4 rounded-xl h-32 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Any special requests or instructions..."></textarea>
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(6)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(8);" class="nav-button">
-            Next
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Summary -->
-    <section id="section-8" class="relative">
-      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-lg w-full border border-brown-200">
-        <h2 class="text-2xl font-bold mb-6 text-brown">Order Summary</h2>
-        <div id="summaryContent" class="text-left space-y-3 text-brown-800"></div>
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(7)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="submit" class="nav-button bg-green-600 hover:bg-green-700">
-            Submit Order ✅
-          </button>
-        </div>
-      </div>
-    </section>
-
-  </form>
+  <!-- CTA Section -->
+  <section class="section-padding bg-white cta-light">
+    <div class="container mx-auto px-6 text-center">
+      <h2 class="text-4xl font-bold mb-6" style="color: #5d4a27;">Ready to Taste the Difference?</h2>
+      <p class="text-xl mb-8 max-w-2xl mx-auto" style="color: #5d4a27;">
+        Experience why our cookies keep people coming back for more. Place your order today!
+      </p>
+      <a href="/order" class="btn-primary text-white px-8 py-4 rounded-full font-bold text-lg transition transform hover:scale-105 inline-block">
+        Order Now 🍪
+      </a>
+    </div>
+  </section>
 
   <!-- Footer -->
-  <div class="footer-container">
-    <!-- Static Cart - Positioned above footer -->
-    <div id="staticCart" class="static-cart hidden">
-      <div class="cart-content">
-          <div class="cart-header">
-              <div class="cart-icon-section relative">
-                  <span class="cart-icon">🛒</span>
-                  <span class="absolute -top-2 -right-2 bg-white text-brown-700 px-2 py-1 rounded-full text-xs font-bold min-w-[20px] text-center" id="staticCartCount">0</span>
-              </div>
-              <button type="button" onclick="openCartModal()" class="view-cart-btn">
-                  View Cart Details
-              </button>
+  <footer class="py-12 footer-dark">
+    <div class="container mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-6 md:mb-0">
+          <div class="flex items-center space-x-2 mb-4">
+            <img src="images/logo.PNG" alt="Why Dough Logo" class="h-8">
+            <span class="text-xl font-bold text-white">Why Dough?</span>
           </div>
-          <div class="cart-footer">
-              <span class="order-total-text">Order Total:</span>
-              <span class="order-total-amount">₱<span id="staticCartTotal">0</span></span>
-          </div>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-      #WhyNotWhyDough  |  #WhyDoughItBetter
-    </div>
-  </div>
-
-  <!-- Cart Modal -->
-  <div id="cartModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header flex justify-between items-center">
-        <h3 class="text-lg font-semibold text-brown">🛒 Your Cart</h3>
-        <button type="button" onclick="closeCartModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div id="cartItems" class="space-y-3"></div>
-        <div id="emptyCartMessage" class="text-center text-brown-600 py-8">
-          Your cart is empty
-        </div>
-        <div id="cartTotal" class="cart-total mt-4 hidden">
-          Total: ₱<span id="cartTotalAmount">0</span>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" onclick="closeCartModal()" class="w-full bg-accent hover:bg-brown-700 text-white font-semibold py-3 rounded-lg transition-all duration-300">
-          Continue Shopping
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Customize modal -->
-  <div id="customizeModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header flex justify-between items-center">
-        <h3 class="text-lg font-semibold text-brown">Customize Your Cookie Box</h3>
-        <button type="button" onclick="closeCustomizeModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p class="font-semibold mb-2 text-brown">Select Box Size:</p>
-        <div class="boxsize-list">
-          <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="4" class="hidden"><span class="text-brown">Pack of 4</span></label>
-          <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="6" class="hidden"><span class="text-brown">Box of 6</span></label>
-          <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="12" class="hidden"><span class="text-brown">Box of 12</span></label>
-          <label class="boxsize-row" onclick="selectBoxSize(this)"><input type="radio" name="boxSize" value="others" class="hidden"><span class="text-brown">Others (Minimum 3 cookies)</span></label>
-        </div>
-
-        <div id="selectedSizeInfo" class="mt-4 p-3 bg-cream rounded-lg hidden border border-brown-200">
-          <p class="text-sm text-brown-800" id="sizeMessage"></p>
-        </div>
-
-        <p class="font-semibold mt-6 mb-2 text-brown">Select Cookies:</p>
-        <div id="cookieList" class="cookie-list"></div>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" onclick="addCustomBoxToCart()" class="w-full bg-accent hover:bg-brown-700 text-white font-semibold py-3 rounded-lg transition-all duration-300">
-          Add to Cart
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Product Detail Modal -->
-  <div id="productModal" class="modal">
-    <div class="modal-content max-w-md">
-      <div class="modal-header flex justify-between items-center">
-        <h3 class="text-lg font-semibold text-brown" id="productModalTitle">Product Details</h3>
-        <button type="button" onclick="closeProductModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
-      </div>
-      <div class="modal-body">
-        <!-- Product Image -->
-        <div class="mb-4">
-          <img id="productImage" src="" alt="Product Image" class="w-full h-48 object-cover rounded-lg bg-cream">
-          <div class="text-center text-brown-600 text-sm mt-2" id="productImagePlaceholder">
-            <!-- We'll add actual images later -->
-            🍪 Image coming soon!
-          </div>
+          <p class="text-white/80">Soft. Chewy. Honest. We dough it better.</p>
         </div>
         
-        <!-- Product Name -->
-        <h4 class="text-xl font-bold text-brown mb-2" id="productName"></h4>
-        
-        <!-- Product Description -->
-        <p class="text-brown-700 mb-4 text-sm" id="productDescription"></p>
-        
-        <!-- Product Price -->
-        <p class="text-2xl font-bold text-brown mb-6" id="productPrice"></p>
-        
-        <!-- Quantity Selector -->
-        <div class="flex items-center justify-between mb-6">
-          <span class="text-brown font-semibold">Quantity:</span>
-          <div class="flex items-center space-x-3">
-            <button type="button" onclick="updateProductQuantity(-1)" class="w-10 h-10 bg-brown-200 rounded-full flex items-center justify-center hover:bg-brown-300 text-brown font-bold">-</button>
-            <span id="productQuantity" class="text-xl font-bold text-brown w-8 text-center">1</span>
-            <button type="button" onclick="updateProductQuantity(1)" class="w-10 h-10 bg-brown-200 rounded-full flex items-center justify-center hover:bg-brown-300 text-brown font-bold">+</button>
-          </div>
+        <div class="flex space-x-6">
+          <a href="#" class="text-white/80 hover:text-white transition">
+            <i class="fab fa-facebook text-2xl"></i>
+          </a>
+          <a href="#" class="text-white/80 hover:text-white transition">
+            <i class="fab fa-instagram text-2xl"></i>
+          </a>
+          <a href="#" class="text-white/80 hover:text-white transition">
+            <i class="fab fa-tiktok text-2xl"></i>
+          </a>
         </div>
-        
-        <!-- Add to Cart Button -->
-        <button onclick="addProductToCart()" class="w-full bg-accent hover:bg-brown-700 text-white font-semibold py-4 rounded-lg transition-all duration-300 text-lg">
-          Add to Cart
-        </button>
+      </div>
+      
+      <div class="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
+        <p>© 2025 Why Dough Cookies. All rights reserved.</p>
+        <p class="mt-2">#WhyNotWhyDough | #WhyDoughItBetter</p>
       </div>
     </div>
-  </div>
+  </footer>
 
-  <!-- Toast Notification Container -->
-  <div id="toastContainer" class="toast-container"></div>
-
-  <!-- Loading Overlay -->
-  <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] hidden">
-    <div class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
-        <h3 class="text-xl font-bold text-brown mb-2">Processing Your Order</h3>
-        <p class="text-brown-700">Please wait while we submit your order...</p>
-        <p class="text-sm text-brown-600 mt-2">This may take a few seconds</p>
-    </div>
-  </div>
   <script src="script.js"></script>
 </body>
 </html>
