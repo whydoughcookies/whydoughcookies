@@ -6,13 +6,14 @@
   <title>Why Dough Cookies</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="text-brown">
   <header class="simple-header">
     <div class="container mx-auto px-6">
       <a href="/" class="logo-link">
-        <img src="images/logo.PNG" alt="Why Dough Logo" class="h-8 mr-2">
+        <img src="images/logo.PNG" alt="Why Dough Logo" class="h-11 mr-2">
       </a>
     </div>
   </header>
@@ -31,6 +32,7 @@
     <input type="hidden" name="delivery_info" id="deliveryInfoField">
     <input type="hidden" name="total_amount" id="totalAmountField">
     <input type="hidden" name="order_id" id="orderIdField">
+    <input type="hidden" name="time_slot" id="timeSlotField">
 
     <!-- Name Section -->
     <section id="section-2" class="relative">
@@ -38,47 +40,7 @@
         <label class="text-2xl font-bold mb-4 block text-brown">What's your name? <span class="text-red-500">*</span></label>
         <input name="name" required type="text" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Your name" />
         
-        <label class="text-lg font-semibold mb-4 block text-brown-800">Social Media Handle <span class="text-gray-500 text-sm">(Optional)</span></label>
-        
-        <!-- Social Media Handle Input -->
-        <input 
-          name="socialHandle" 
-          type="text" 
-          placeholder="Enter your FB or IG" 
-          class="w-full border border-brown-200 p-4 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent" 
-          oninput="toggleSocialPlatformSelection(this)"
-          onfocus="checkSocialHandleFocus(this)"
-          id="socialHandleInput"
-        />
-
-        <!-- Social Media Platform Selection (Initially Hidden) -->
-        <div id="socialPlatformSelection" class="hidden mt-4">
-          <p class="text-sm text-brown-700 mb-3">Select platform: <span class="text-red-500">*</span></p>
-          <div class="flex gap-3 mb-3">
-            <label class="social-platform-option flex items-center gap-2 cursor-pointer" onclick="selectSocialPlatform(this)">
-              <input type="radio" name="socialPlatform" value="Facebook" class="hidden" id="platformFacebook">
-              <div class="w-5 h-5 border-2 border-accent rounded-full flex items-center justify-center">
-                <div class="w-3 h-3 bg-accent rounded-full hidden"></div>
-              </div>
-              <span class="text-brown">Facebook</span>
-            </label>
-            
-            <label class="social-platform-option flex items-center gap-2 cursor-pointer" onclick="selectSocialPlatform(this)">
-              <input type="radio" name="socialPlatform" value="Instagram" class="hidden" id="platformInstagram">
-              <div class="w-5 h-5 border-2 border-accent rounded-full flex items-center justify-center">
-                <div class="w-3 h-3 bg-accent rounded-full hidden"></div>
-              </div>
-              <span class="text-brown">Instagram</span>
-            </label>
-          </div>
-        </div>
-        
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(1)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
+        <div class="flex justify-end items-center mt-8">
           <button type="button" onclick="scrollToSection(3)" class="nav-button">
             Next
           </button>
@@ -96,28 +58,45 @@
           <div class="flex items-start space-x-2 md:space-x-3">
             <div class="flex-1">
               <p class="text-sm md:text-base text-brown-700 font-semibold mb-1">
-                Weekend Delivery Only
+                Thursday to Sunday Delivery Only
               </p>
               <p class="text-xs md:text-sm text-brown-600 leading-tight">
-                Orders are delivered Friday to Sunday only. Please select a weekend date.
+                Orders are delivered Thursday to Sunday only. Please select a valid date.
               </p>
             </div>
           </div>
         </div>
         
-        <div id="quickDates" class="grid grid-cols-3 gap-3 mb-6"></div>
-        <a href="#" onclick="openDateInput();return false;" class="text-link block mb-4">Pick another date</a>
-        <input name="deliveryDate" id="deliveryDateInput" required type="date" class="w-full border border-brown-200 p-4 rounded-xl hidden focus:ring-2 focus:ring-accent focus:border-transparent" />
+        <div id="quickDates" class="grid grid-cols-4 gap-3 mb-6"></div>
         
-        <label class="text-2xl font-bold mb-4 block mt-8 text-brown">Delivery Method</label>
-        <div class="space-y-3">
-          <div class="delivery-option" onclick="selectDeliveryMethod(this, 'pickup')">
-            <input type="radio" name="deliveryMethod" value="pickup" class="hidden">
-            <span class="font-semibold text-brown">🛵 Pick Up</span>
+        <!-- Date picker field -->
+        <div class="mb-6">
+          <input 
+            name="deliveryDate" 
+            id="deliveryDateInput" 
+            required 
+            type="text" 
+            placeholder="Select Preferred Date" 
+            onfocus="this.type='date'; this.focus();" 
+            onblur="if(!this.value) this.type='text'" 
+            class="w-full border border-brown-200 p-4 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent date-input-placeholder" 
+          />
+        </div>
+
+        <!-- Time Slot Selection -->
+        <label class="text-2xl font-bold mb-4 block text-brown">Preferred Time Slot</label>
+        <div class="grid grid-cols-3 gap-3 mb-6">
+          <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '9AM-12PM')">
+            <input type="radio" name="timeSlot" value="9AM-12PM" class="hidden">
+            <span class="font-semibold text-brown text-sm">9AM - 12PM</span>
           </div>
-          <div class="delivery-option" onclick="selectDeliveryMethod(this, 'delivery')">
-            <input type="radio" name="deliveryMethod" value="delivery" class="hidden">
-            <span class="font-semibold text-brown">🚚 Delivery</span>
+          <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '1PM-3PM')">
+            <input type="radio" name="timeSlot" value="1PM-3PM" class="hidden">
+            <span class="font-semibold text-brown text-sm">1PM - 3PM</span>
+          </div>
+          <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '4PM-6PM')">
+            <input type="radio" name="timeSlot" value="4PM-6PM" class="hidden">
+            <span class="font-semibold text-brown text-sm">4PM - 6PM</span>
           </div>
         </div>
         
@@ -134,16 +113,30 @@
       </div>
     </section>
 
-    <!-- Contact details -->
+    <!-- Delivery Method Section (NEW) -->
     <section id="section-4" class="relative">
       <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-brown-200">
-        <label class="text-2xl font-bold mb-6 block text-brown">Contact Details</label>
-        
-        <label class="block font-semibold mb-3 text-brown-800">Email Address</label>
-        <input name="email" required type="email" placeholder="your.email@example.com" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" />
-        
-        <label class="block font-semibold mb-3 text-brown-800">Contact Number</label>
-        <input name="contactNumber" required type="tel" pattern="[0-9]{11}" title="Please enter an 11-digit number (e.g., 09123456789)" placeholder="e.g. 09XXXXXXXXX" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" />
+        <label class="text-2xl font-bold mb-4 block text-brown">Delivery Method</label>
+        <div class="space-y-4">
+          <div class="delivery-option" onclick="selectDeliveryMethod(this, 'pickup')">
+            <input type="radio" name="deliveryMethod" value="pickup" class="hidden">
+            <span class="font-semibold text-brown text-lg">🛵 Pick Up</span>
+          </div>
+          <div id="pickupDetails" class="hidden mt-2 p-4 bg-cream rounded-lg border border-brown-200">
+            <p class="text-sm text-brown-700 mb-2"><strong>Pickup Location:</strong> 123 Cookie Street, Metro Manila</p>
+            <p class="text-sm text-brown-600">Please bring your order confirmation. We'll have your cookies ready!</p>
+          </div>
+          
+          <div class="delivery-option" onclick="selectDeliveryMethod(this, 'delivery')">
+            <input type="radio" name="deliveryMethod" value="delivery" class="hidden">
+            <span class="font-semibold text-brown text-lg">🚚 Delivery</span>
+          </div>
+          <div id="deliveryDetails" class="hidden mt-2 p-4 bg-cream rounded-lg border border-brown-200">
+            <p class="text-sm text-brown-700 mb-2"><strong>Delivery Areas:</strong> Metro Manila only</p>
+            <p class="text-sm text-brown-600 mb-2"><strong>Fee:</strong> ₱50 within 5km, ₱100 beyond</p>
+            <p class="text-sm text-brown-600">Please ensure someone is available to receive your order.</p>
+          </div>
+        </div>
         
         <div class="flex justify-between items-center mt-8">
           <button type="button" onclick="scrollToSection(3)" class="arrow-btn">
@@ -210,16 +203,50 @@
       </div>
     </section>
 
-    <!-- Payment -->
+    <!-- Contact details -->
     <section id="section-6" class="relative">
       <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-brown-200">
-        <label class="text-2xl font-bold mb-4 block text-brown">Payment Method <span class="text-red-500">*</span></label>
-        <select name="payment" required class="w-full border border-brown-200 p-4 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent">
-          <option value="" disabled selected>Select payment method</option>
-          <option value="GCash">GCash</option>
-          <option value="Bank Transfer">Bank Transfer</option>
-          <option value="COD">Cash on Delivery</option>
-        </select>
+        <label class="text-2xl font-bold mb-6 block text-brown">Contact Details</label>
+        
+        <label class="block font-semibold mb-3 text-brown-800">Contact Number</label>
+        <input name="contactNumber" required type="tel" pattern="[0-9]{11}" title="Please enter an 11-digit number (e.g., 09123456789)" placeholder="e.g. 09XXXXXXXXX" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" />
+        
+        <!-- Social Media Handle Input -->
+        <label class="block font-semibold mb-3 text-brown-800">Social Media Handle <span class="text-gray-500 text-sm">(Optional)</span></label>
+        <input 
+          name="socialHandle" 
+          type="text" 
+          placeholder="Enter your FB or IG or Tiktok" 
+          class="w-full border border-brown-200 p-4 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent" 
+          oninput="toggleSocialPlatformSelection(this)"
+          onfocus="checkSocialHandleFocus(this)"
+          id="socialHandleInput"
+        />
+
+        <!-- Social Media Platform Selection (Initially Hidden) -->
+        <div id="socialPlatformSelection" class="hidden mt-4">
+          <p class="text-sm text-brown-700 mb-3">Select platform: <span class="text-red-500">*</span></p>
+          <div class="flex sm:flex-row gap-3 mb-3">
+            <label class="social-platform-option flex items-center justify-center gap-2 cursor-pointer px-4 py-3 flex-1" onclick="selectSocialPlatform(this)">
+              <input type="radio" name="socialPlatform" value="Facebook" class="hidden" id="platformFacebook">
+              <i class="fab fa-facebook text-blue-600 text-xl"></i>
+              <span class="text-brown text-sm sm:text-base">Facebook</span>
+            </label>
+            
+            <label class="social-platform-option flex items-center justify-center gap-2 cursor-pointer px-4 py-3 flex-1" onclick="selectSocialPlatform(this)">
+              <input type="radio" name="socialPlatform" value="Instagram" class="hidden" id="platformInstagram">
+              <i class="fab fa-instagram text-pink-600 text-xl"></i>
+              <span class="text-brown text-sm sm:text-base">Instagram</span>
+            </label>
+
+            <label class="social-platform-option flex items-center justify-center gap-2 cursor-pointer px-4 py-3 flex-1" onclick="selectSocialPlatform(this)">
+              <input type="radio" name="socialPlatform" value="Tiktok" class="hidden" id="platformTiktok">
+              <i class="fab fa-tiktok text-gray-800 text-xl"></i>
+              <span class="text-brown text-sm sm:text-base">Tiktok</span>
+            </label>
+          </div>
+        </div>
+                
         <div class="flex justify-between items-center mt-8">
           <button type="button" onclick="scrollToSection(5)" class="arrow-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -233,18 +260,41 @@
       </div>
     </section>
 
-    <!-- Notes -->
+    <!-- Payment -->
     <section id="section-7" class="relative">
       <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-brown-200">
-        <label class="text-2xl font-bold mb-4 block text-brown">Notes (Optional)</label>
-        <textarea name="notes" class="w-full border border-brown-200 p-4 rounded-xl h-32 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Any special requests or instructions..."></textarea>
+        <label class="text-2xl font-bold mb-4 block text-brown">Payment Method <span class="text-red-500">*</span></label>
+        <select name="payment" required class="w-full border border-brown-200 p-4 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent">
+          <option value="" disabled selected>Select payment method</option>
+          <option value="GCash">GCash</option>
+          <option value="Bank Transfer">Bank Transfer</option>
+          <option value="COD">Cash on Delivery</option>
+        </select>
         <div class="flex justify-between items-center mt-8">
           <button type="button" onclick="scrollToSection(6)" class="arrow-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 19V5M5 12l7-7 7 7"/>
             </svg>
           </button>
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(8);" class="nav-button">
+          <button type="button" onclick="scrollToSection(8)" class="nav-button">
+            Next
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notes -->
+    <section id="section-8" class="relative">
+      <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-brown-200">
+        <label class="text-2xl font-bold mb-4 block text-brown">Notes (Optional)</label>
+        <textarea name="notes" class="w-full border border-brown-200 p-4 rounded-xl h-32 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Any special requests or instructions..."></textarea>
+        <div class="flex justify-between items-center mt-8">
+          <button type="button" onclick="scrollToSection(7)" class="arrow-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(9);" class="nav-button">
             Next
           </button>
         </div>
@@ -252,12 +302,12 @@
     </section>
 
     <!-- Summary -->
-    <section id="section-8" class="relative">
+    <section id="section-9" class="relative">
       <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-lg w-full border border-brown-200">
         <h2 class="text-2xl font-bold mb-6 text-brown">Order Summary</h2>
         <div id="summaryContent" class="text-left space-y-3 text-brown-800"></div>
         <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(7)" class="arrow-btn">
+          <button type="button" onclick="scrollToSection(8)" class="arrow-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 19V5M5 12l7-7 7 7"/>
             </svg>
@@ -271,6 +321,7 @@
 
   </form>
 
+  <!-- Rest of the file remains the same (footer, modals, etc.) -->
   <!-- Footer -->
   <div class="footer-container">
     <!-- Static Cart - Positioned above footer -->
@@ -364,7 +415,7 @@
       <div class="modal-body">
         <!-- Product Image -->
         <div class="mb-4">
-          <img id="productImage" src="" alt="Product Image" class="w-full h-48 object-cover rounded-lg bg-cream">
+          <img id="productImage" src="" alt="Product Image" class="w-full h-48 object-cover rounded-lg bg-cream" loading="lazy">
           <div class="text-center text-brown-600 text-sm mt-2" id="productImagePlaceholder">
             <!-- We'll add actual images later -->
             🍪 Image coming soon!

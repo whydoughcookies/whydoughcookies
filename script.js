@@ -525,31 +525,35 @@ function closeCartModal() {
     }
 }
 
+// Update the quick date button click handler
 function generateWeekendDates(){
     const container = document.getElementById('quickDates');
     if (!container) return;
     
     const today = new Date();
-    let count = 0, dayOffset = 1;
+    let count = 0, dayOffset = 0;
     container.innerHTML = '';
     
-    while(count < 6){
+    // Find the next available Thursday (if today is before Thursday)
+    while(count < 8){ // Show 4 dates: Thursday to Sunday
         const future = new Date(); 
         future.setDate(today.getDate() + dayOffset);
         const day = future.getDay();
-        if([5,6,0].includes(day)){
+        
+        // Thursday (4), Friday (5), Saturday (6), Sunday (0)
+        if([4,5,6,0].includes(day)){
             const dateStr = future.toISOString().split('T')[0];
             const displayDate = `${String(future.getMonth()+1).padStart(2,'0')}/${String(future.getDate()).padStart(2,'0')}`;
             
             const btn = document.createElement('button'); 
             btn.type='button'; 
             btn.textContent = displayDate;
-            btn.className = 'bg-brown-300 hover:bg-brown-400 px-3 py-2 rounded-lg text-sm font-medium transition-colors';
+            btn.className = 'bg-brown-300 hover:bg-brown-400 px-3 py-3 rounded-lg text-sm font-medium transition-colors';
             btn.onclick = ()=>{ 
                 const input = document.getElementById('deliveryDateInput'); 
                 if (input) {
-                    input.value = dateStr; 
-                    input.classList.remove('hidden'); 
+                    input.value = dateStr;
+                    input.type = 'date';
                 }
             };
             container.appendChild(btn); 
@@ -563,13 +567,23 @@ function setDateRestrictions(){
     const input = document.getElementById('deliveryDateInput');
     if (input) {
         const today = new Date(); 
-        input.setAttribute('min', today.toISOString().split('T')[0]);
-        input.addEventListener('input', function(){ 
-            const chosenDate = new Date(this.value); 
-            if(![5,6,0].includes(chosenDate.getDay())){ 
-                alert('Only Friday, Saturday, or Sunday are allowed.'); 
-                this.value = ''; 
-            } 
+        
+        // Set min date attribute when it becomes date type
+        input.addEventListener('focus', function() {
+            if (this.type === 'date') {
+                this.setAttribute('min', today.toISOString().split('T')[0]);
+            }
+        });
+        
+        input.addEventListener('change', function(){ 
+            if (this.value) {
+                const chosenDate = new Date(this.value); 
+                if(![5,6,0].includes(chosenDate.getDay())){ 
+                    alert('Only Friday, Saturday, or Sunday are allowed.'); 
+                    this.value = ''; 
+                    this.type = 'text';
+                }
+            }
         });
     }
 }
@@ -671,6 +685,54 @@ function getSelectedCookies(){
         }
     }); 
     return selections; 
+}
+
+// Time slot selection
+function selectTimeSlot(element, timeSlot) {
+    document.querySelectorAll('.time-slot-option').forEach(opt => {
+        opt.classList.remove('active');
+    });
+    element.classList.add('active');
+    const radio = element.querySelector('input[type="radio"]');
+    if (radio) radio.checked = true;
+    
+    // Update hidden field for Google Forms
+    document.getElementById('timeSlotField').value = timeSlot;
+}
+
+// Enhanced delivery method selection with details
+function selectDeliveryMethod(element, method) {
+    document.querySelectorAll('.delivery-option').forEach(opt => {
+        if (opt.querySelector('input[name="deliveryMethod"]')) {
+            opt.classList.remove('active');
+        }
+    });
+    element.classList.add('active');
+    const radio = element.querySelector('input[type="radio"]');
+    if (radio) radio.checked = true;
+    
+    // Show/hide details based on selection
+    const pickupDetails = document.getElementById('pickupDetails');
+    const deliveryDetails = document.getElementById('deliveryDetails');
+    
+    if (pickupDetails && deliveryDetails) {
+        if (method === 'pickup') {
+            pickupDetails.classList.remove('hidden');
+            deliveryDetails.classList.add('hidden');
+        } else if (method === 'delivery') {
+            pickupDetails.classList.add('hidden');
+            deliveryDetails.classList.remove('hidden');
+        }
+    }
+}
+
+// Updated date picker functionality
+function openDateInput() {
+    const input = document.getElementById('deliveryDateInput');
+    if (input) {
+        input.focus();
+        input.showPicker && input.showPicker(); // This triggers the date picker on supported browsers
+    }
 }
 
 function openCustomizeModal() {
@@ -943,21 +1005,12 @@ function validateForm() {
         return false;
     }
     
-    // Email validation
-    const email = document.querySelector('input[name="email"]').value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        showToast('Please enter a valid email address.', 'warning');
-        scrollToSection(4);
-        return false;
-    }
-    
     // Phone number validation (Philippines format)
     const contactNumber = document.querySelector('input[name="contactNumber"]').value.trim();
     const phoneRegex = /^(09|\+639)\d{9}$/;
     if (!phoneRegex.test(contactNumber)) {
         showToast('Please enter a valid Philippine phone number (e.g., 09123456789).', 'warning');
-        scrollToSection(4);
+        scrollToSection(5);
         return false;
     }
     
@@ -985,6 +1038,14 @@ function validateForm() {
         return false;
     }
     
+    // Time slot validation
+    const timeSlot = document.querySelector('input[name="timeSlot"]:checked');
+    if (!timeSlot) {
+        showToast('Please select a preferred time slot.', 'warning');
+        scrollToSection(3);
+        return false;
+    }
+    
     // Social media validation
     if (!validateSocialMedia()) {
         return false;
@@ -993,13 +1054,13 @@ function validateForm() {
     return true;
 }
 
-function buildOrderSummary(){
-    const form = document.getElementById('orderForm'); 
+function buildOrderSummary() {
+    const form = document.getElementById('orderForm');
     if (!form) return;
     
-    const name = form.name.value.trim(); 
+    const name = form.name.value.trim();
     const socialPlatform = form.socialPlatform?.value || '';
-    const socialHandle = form.socialHandle.value.trim(); 
+    const socialHandle = form.socialHandle.value.trim();
     
     let socialDisplay = 'Not provided';
     if (socialHandle && socialPlatform) {
@@ -1011,8 +1072,16 @@ function buildOrderSummary(){
     }
     
     const deliveryDate = form.deliveryDate.value || '—';
-    const deliveryMethod = form.deliveryMethod?.value || 'Not selected';
-    const contact = form.contactNumber.value.trim(); 
+    
+    // FIX: Get the selected time slot value properly
+    const timeSlotElement = document.querySelector('input[name="timeSlot"]:checked');
+    const timeSlot = timeSlotElement ? timeSlotElement.value : 'Not selected';
+    
+    // FIX: Get the selected delivery method value properly
+    const deliveryMethodElement = document.querySelector('input[name="deliveryMethod"]:checked');
+    const deliveryMethod = deliveryMethodElement ? deliveryMethodElement.value : 'Not selected';
+    
+    const contact = form.contactNumber.value.trim();
     const notes = form.notes.value.trim();
     const payment = form.payment.value;
 
@@ -1020,19 +1089,20 @@ function buildOrderSummary(){
     let html = `<strong>Name:</strong> ${escapeHtml(name)}<br>
                 <strong>Social:</strong> ${escapeHtml(socialDisplay)}<br>
                 <strong>Delivery Date:</strong> ${escapeHtml(deliveryDate)}<br>
+                <strong>Preferred Time:</strong> ${escapeHtml(timeSlot)}<br>
                 <strong>Delivery Method:</strong> ${escapeHtml(deliveryMethod === 'pickup' ? 'Pick Up' : 'Delivery')}<br>
                 <strong>Contact Number:</strong> ${escapeHtml(contact)}<br>
                 <strong>Payment Method:</strong> ${escapeHtml(payment)}<br><hr>`;
     
     html += `<strong>Order Items:</strong><br>`;
     
-    if(cart.length > 0){
+    if (cart.length > 0) {
         cart.forEach((item) => {
             totalAmount += item.total;
             if (item.type === 'customBox') {
-                html += `- ${item.name}: ` + 
-                        item.items.map(it => `${it.name} x ${it.qty}`).join(', ') + 
-                        ` = ₱${item.total}<br>`;
+                html += `- ${item.name}: ` +
+                    item.items.map(it => `${it.name} x ${it.qty}`).join(', ') +
+                    ` = ₱${item.total}<br>`;
             } else {
                 html += `- ${item.name} x ${item.quantity} = ₱${item.total}<br>`;
             }
@@ -1094,7 +1164,6 @@ function prepareFormSubmitData() {
         }
 
         const orderId = generateOrderId(name);
-        const email = form.email.value.trim();
         const socialPlatform = form.socialPlatform?.value || '';
         const socialHandle = form.socialHandle.value.trim();
         
@@ -1109,7 +1178,14 @@ function prepareFormSubmitData() {
         
         const contactNumber = form.contactNumber.value.trim();
         const deliveryDate = form.deliveryDate.value || 'Not selected';
-        const deliveryMethod = form.deliveryMethod?.value || 'Not selected';
+        // FIX: Get time slot properly
+        const timeSlotElement = document.querySelector('input[name="timeSlot"]:checked');
+        const timeSlot = timeSlotElement ? timeSlotElement.value : 'Not selected';
+        
+        // FIX: Get delivery method properly
+        const deliveryMethodElement = document.querySelector('input[name="deliveryMethod"]:checked');
+        const deliveryMethod = deliveryMethodElement ? deliveryMethodElement.value : 'Not selected';
+        
         const payment = form.payment.value;
         const notes = form.notes.value.trim();
         
@@ -1134,12 +1210,12 @@ STATUS: AWAITING CONFIRMATION
 
 CUSTOMER INFORMATION:
 • Name: ${name}
-• Email: ${email}
 • Social: ${social}
 • Contact: ${contactNumber}
 
 DELIVERY INFORMATION:
 • Date: ${deliveryDate}
+• Time Slot: ${timeSlot}
 • Method: ${deliveryMethod === 'pickup' ? 'Pick Up' : 'Delivery'}
 • Payment: ${payment}
 
@@ -1153,19 +1229,17 @@ ${notes || 'No special notes'}
 
 🎯 ACTION REQUIRED:
 1. Contact customer within 24 hours
-2. Confirm order details via Email/IG/FB
+2. Confirm order details via Tiktok/IG/FB
 3. Arrange payment & delivery
 4. Update order status
 
 CONTACT OPTIONS:
-📧 Email: ${email}
 📱 Contact: ${contactNumber}
 📱 Social: ${social}
 
 Order received: ${new Date().toLocaleString()}
         `.trim();
         
-        document.getElementById('customerEmailField').value = email;
         document.getElementById('autoResponseField').value = businessOrderSummary;
         document.getElementById('orderSummaryField').value = businessOrderSummary;
         document.getElementById('customerNameField').value = name;
@@ -1179,7 +1253,7 @@ Order received: ${new Date().toLocaleString()}
             subjectField.value = `Why Dough Order #${orderId} - ${name} - ${itemCount} item(s) - ₱${totalAmount}`;
         }
         
-        setupGoogleFormsData(orderId, name, email, socialHandle, contactNumber, deliveryDate, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount);
+        setupGoogleFormsData(orderId, name, socialHandle, contactNumber, deliveryDate, timeSlot, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount);
         
         const orderData = {
             orderId: orderId,
@@ -1187,10 +1261,10 @@ Order received: ${new Date().toLocaleString()}
             totalAmount: totalAmount,
             itemCount: itemCount,
             deliveryDate: deliveryDate,
+            timeSlot: timeSlot,
             timestamp: new Date().toISOString(),
-            email: email,
             contactNumber: contactNumber,
-            social: social,
+            social: socialHandle && socialPlatform ? `${socialHandle} - ${socialPlatform}` : socialHandle || socialPlatform || 'Not provided',
             deliveryMethod: deliveryMethod,
             payment: payment,
             notes: notes
@@ -1232,7 +1306,7 @@ function calculateCookieQuantities() {
     return quantities;
 }
 
-function setupGoogleFormsData(orderId, name, email, social, contactNumber, deliveryDate, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount) {
+function setupGoogleFormsData(orderId, name, social, contactNumber, deliveryDate, timeSlot, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount) {
     let googleForm = document.getElementById('googleForm');
     if (!googleForm) {
         googleForm = document.createElement('form');
@@ -1248,17 +1322,18 @@ function setupGoogleFormsData(orderId, name, email, social, contactNumber, deliv
     const fieldMapping = {
         'entry.1702384608': orderId,
         'entry.884438646': name,
-        'entry.945933971': email,
         'entry.1424096514': social,
         'entry.2010027852': contactNumber,
-        'entry.376530706': deliveryDate,
-        'entry.57353341': deliveryMethod,
+        'entry.1965862851': deliveryDate,
+        'entry.57353341': timeSlot,
+        'entry.376530706': deliveryMethod,
         'entry.603581341': payment,
         'entry.658455856': notes,
         'entry.1597602789': orderDetails,
         'entry.1560348506': formatCookieQuantities(cookieQuantities),
         'entry.891879407': `₱${totalAmount}`,
     };
+    console.log(fieldMapping);
     
     Object.entries(fieldMapping).forEach(([fieldId, value]) => {
         const input = document.createElement('input');
@@ -1492,9 +1567,9 @@ function displayOrderDetails() {
     } else {
         document.getElementById('orderIdDisplay').textContent = 'Not Found';
         document.getElementById('orderDetails').innerHTML = 
-            '<li class="text-brown-600">Order details not available. Please check your email for confirmation.</li>';
+            '<li class="text-brown-600">Order details not available.</li>';
         
-        showToast('Order details not found. Please check your email for confirmation.', 'warning');
+        showToast('Order details not found.', 'warning');
     }
 }
 
@@ -1599,7 +1674,7 @@ function takeScreenshot() {
         showToast('Please wait for order details to load', 'warning');
         return;
     }
-    alert(`Take a screenshot of this page to save your Order ID: ${orderId}\n\nYou can also check your email for a written confirmation.`);
+    alert(`Take a screenshot of this page to save your Order ID: ${orderId}`);
 }
 
 function clearPreviousCart() {

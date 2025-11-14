@@ -678,33 +678,6 @@ section {
     }
   }
   
-  /* Social Media Platform Styles */
-  .social-platform-option {
-    padding: 10px 16px;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    background: #fff;
-  }
-  
-  .social-platform-option:hover {
-    border-color: var(--accent);
-    background: var(--brown-100);
-  }
-  
-  .social-platform-option.active {
-    border-color: var(--accent);
-    background: var(--brown-100);
-  }
-  
-  .social-platform-option.active .bg-accent {
-    display: flex;
-  }
-  
-  .social-platform-option input:checked + div .bg-accent {
-    display: flex;
-  }
-  
   #socialPlatformSelection {
     transition: all 0.3s ease-in-out;
     opacity: 0;
@@ -766,8 +739,7 @@ section {
   
   /* Simple header styles */
   .simple-header {
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: transparent;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -1043,6 +1015,211 @@ section {
     }
   }
   
+  /* Mobile-specific social platform layout */
+@media (max-width: 640px) {
+  .social-platform-option {
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  #socialPlatformSelection .flex-col {
+    width: 100%;
+  }
+}
+
+/* Date picker improvements */
+input[type="date"] {
+  color: var(--brown);
+}
+
+input[type="date"]:invalid {
+  color: #999;
+}
+
+/* Time slot selection styles */
+.time-slot-option {
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 8px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.time-slot-option:hover {
+  border-color: var(--accent);
+  background: var(--brown-100);
+}
+
+.time-slot-option.active {
+  border-color: var(--accent);
+  background: var(--brown-100);
+}
+
+/* Delivery details styling */
+.delivery-details {
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+/* Time Slot Grid Layout */
+.time-slot-option {
+  padding: 12px 8px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #fff;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-slot-option:hover {
+  border-color: var(--accent);
+  background: var(--brown-100);
+}
+
+.time-slot-option.active {
+  border-color: var(--accent);
+  background: var(--brown-100);
+  transform: scale(1.02);
+}
+
+/* Social Media Platform Mobile Layout */
+@media (max-width: 640px) {
+  .social-platform-option {
+    padding: 12px 8px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: #fff;
+    flex: 1 1 calc(50% - 8px);
+    min-width: calc(50% - 8px);
+    margin-bottom: 8px;
+  }
+  
+  #socialPlatformSelection .flex-wrap {
+    gap: 8px;
+  }
+}
+
+/* Date Input Placeholder Styling */
+.date-input-placeholder {
+  color: #6b7280;
+}
+
+.date-input-placeholder:focus {
+  color: var(--brown);
+}
+
+input[type="date"]:invalid {
+  color: #6b7280;
+}
+
+input[type="date"] {
+  color: var(--brown);
+}
+
+/* Ensure quick dates are properly styled */
+#quickDates {
+  gap: 8px;
+}
+
+#quickDates button {
+  padding: 10px 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+#quickDates button:hover {
+  transform: translateY(-1px);
+}
+
+/* Social Media Platform with Icons */
+.social-platform-option {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: #fff;
+  text-align: center;
+}
+
+.social-platform-option:hover {
+  border-color: var(--accent);
+  background: var(--brown-100);
+  transform: translateY(-2px);
+}
+
+.social-platform-option.active {
+  border-color: var(--accent);
+  background: var(--brown-100);
+  box-shadow: 0 4px 12px rgba(168, 120, 86, 0.2);
+}
+
+/* Social Media Icon Colors */
+.fa-facebook { color: #1877F2; }
+.fa-instagram { 
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.fa-tiktok { color: #000000; }
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .social-platform-option {
+    padding: 16px 12px;
+    min-height: 60px;
+  }
+  
+  #socialPlatformSelection .flex-row {
+    gap: 8px;
+  }
+  
+  .social-platform-option {
+    flex: 1;
+    min-width: 80px;
+    max-width: 100px;
+  }
+}
+
+/* Ensure Font Awesome icons are properly sized */
+.fab {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .fab {
+    font-size: 1.75rem;
+  }
+}
+
+/* Ensure only logo is clickable */
+.simple-header {
+  pointer-events: none; /* Make header non-clickable */
+}
+
+.logo-link {
+  pointer-events: auto; /* Make logo clickable */
+  display: inline-block; /* Ensure proper click area */
+}
+
+/* Optional: Make it more obvious it's clickable */
+.logo-link:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+
   /* Color utility classes for the new color scheme */
   .bg-brown-100 { background-color: var(--brown-100); }
   .bg-brown-200 { background-color: var(--brown-200); }
