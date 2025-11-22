@@ -11,259 +11,260 @@
 </head>
 <body class="text-brown homepage-body">
   <!-- Navigation -->
-  <nav class="fixed top-0 w-full bg-white bg-opacity-90 backdrop-blur-sm z-50 shadow-sm">
-    <div class="container mx-auto px-6 py-4">
-      <div class="flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-          <a href="/" class="logo-link">
-            <img src="images/logo.PNG" alt="Why Dough Logo" class="h-11 mr-2" loading="lazy">
+  <!-- Improved semantic structure -->
+  <header role="banner">
+    <nav aria-label="Main navigation" class="fixed top-0 w-full bg-white bg-opacity-90 backdrop-blur-sm z-50 shadow-sm">
+      <div class="container mx-auto px-6 py-4">
+        <div class="flex justify-between items-center">
+          <a href="/" class="logo-link" aria-label="Why Dough Cookies Home">
+            <img src="images/logo.PNG" alt="Why Dough Cookies Logo" class="h-11 mr-2" loading="lazy">
+          </a>
+          
+          <div class="hidden md:flex space-x-8" role="menubar">
+            <a href="#home" class="font-medium hover:text-brown/80 transition" role="menuitem">Home</a>
+            <a href="#about" class="font-medium hover:text-brown/80 transition" role="menuitem">About</a>
+            <a href="#products" class="font-medium hover:text-brown/80 transition" role="menuitem">Products</a>
+            <a href="#flavors" class="font-medium hover:text-brown/80 transition" role="menuitem">Flavors</a>
+            <a href="#testimonials" class="font-medium hover:text-brown/80 transition" role="menuitem">Reviews</a>
+          </div>
+          
+          <a href="/order" class="btn-primary px-6 py-2 rounded-full font-semibold transition" aria-label="Order cookies now">
+            Order Now
           </a>
         </div>
-        
-        <div class="hidden md:flex space-x-8">
-          <a href="#home" class="font-medium hover:text-brown/80 transition">Home</a>
-          <a href="#about" class="font-medium hover:text-brown/80 transition">About</a>
-          <a href="#products" class="font-medium hover:text-brown/80 transition">Products</a>
-          <a href="#flavors" class="font-medium hover:text-brown/80 transition">Flavors</a>
-          <a href="#testimonials" class="font-medium hover:text-brown/80 transition">Reviews</a>
+      </div>
+    </nav>
+  </header>
+  <main role="main">
+    <!-- Hero Section -->
+    <section id="home" class="hero-section flex items-center justify-center text-white pt-20">
+      <div class="container mx-auto px-6 text-center">
+        <h1 class="text-5xl md:text-7xl font-bold mb-6">Why Dough?</h1>
+        <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto leading-relaxed">
+          Soft. Chewy. We dough it better. <br><br> 
+          Handmade in small batches with real ingredients and real heart. Grab a cookie — your new favorite might be waiting.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/order" class="bg-white text-brown px-8 py-4 rounded-full font-bold text-lg hover:bg-cream transition transform hover:scale-105">
+            Order Cookies Now
+          </a>
+          <a href="#products" class="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:text-brown transition">
+            Explore Flavors
+          </a>
         </div>
-        
-        <a href="/order" class="btn-primary px-6 py-2 rounded-full font-semibold transition">
-          Order Now
-        </a>
       </div>
-    </div>
-  </nav>
+    </section>
 
-  <!-- Hero Section -->
-  <section id="home" class="hero-section flex items-center justify-center text-white pt-20">
-    <div class="container mx-auto px-6 text-center">
-      <h1 class="text-5xl md:text-7xl font-bold mb-6">Why Dough?</h1>
-      <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto leading-relaxed">
-        Soft. Chewy. We dough it better. <br><br> 
-        Handmade in small batches with real ingredients and real heart. Grab a cookie — your new favorite might be waiting.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/order" class="bg-white text-brown px-8 py-4 rounded-full font-bold text-lg hover:bg-cream transition transform hover:scale-105">
-          Order Cookies Now
-        </a>
-        <a href="#products" class="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:text-brown transition">
-          Explore Flavors
-        </a>
+    <!-- Introduction Section -->
+    <section id="about" class="section-padding bg-cream">
+      <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto text-center">
+          <h2 class="text-4xl font-bold mb-8">Why Not Why Dough?</h2>
+          <p class="text-lg mb-12 leading-relaxed">
+            At Why Dough, we dough things differently. We mix only the good stuff, bake with love, and craft cookies that feel like a warm hug. Whether you’re craving the familiar or trying something new from our seasonal lineup, each cookie is a little piece of our heart — soft, chewy, and always made with goodness.
+          </p>
+          
+          <div class="grid md:grid-cols-3 gap-8 mt-12">
+            <div class="text-center">
+              <div class="w-16 h-16 btn-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-2xl text-white">🥚</span>
+              </div>
+              <h3 class="text-xl font-bold mb-2">Quality Ingredients</h3>
+              <p>Only the good stuff — fresh, premium ingredients in every cookie we make.</p>
+            </div>
+            
+            <div class="text-center">
+              <div class="w-16 h-16 btn-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-2xl text-white">👩‍🍳</span>
+              </div>
+              <h3 class="text-xl font-bold mb-2">Handcrafted</h3>
+              <p>Each cookie is lovingly shaped, scooped, and baked the homemade way.</p>
+            </div>
+            
+            <div class="text-center">
+              <div class="w-16 h-16 btn-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-2xl text-white">💝</span>
+              </div>
+              <h3 class="text-xl font-bold mb-2">Made with Love</h3>
+              <p>We pour heart into every single batch, so every bite feels like a warm hug.</p>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Introduction Section -->
-  <section id="about" class="section-padding bg-cream">
-    <div class="container mx-auto px-6">
-      <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-4xl font-bold mb-8">Why Not Why Dough?</h2>
-        <p class="text-lg mb-12 leading-relaxed">
-          At Why Dough, we dough things differently. We mix only the good stuff, bake with love, and craft cookies that feel like a warm hug. Whether you’re craving the familiar or trying something new from our seasonal lineup, each cookie is a little piece of our heart — soft, chewy, and always made with goodness.
+    <!-- Product Showcase -->
+    <section id="products" class="section-padding bg-white">
+      <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-bold text-center mb-4">Our Cookie Collections</h2>
+        <p class="text-lg text-center mb-12 max-w-2xl mx-auto">
+          Treat yourself, share a box, or explore new flavors — we’ve got something for every craving.
         </p>
         
-        <div class="grid md:grid-cols-3 gap-8 mt-12">
-          <div class="text-center">
-            <div class="w-16 h-16 btn-primary rounded-full flex items-center justify-center mx-auto mb-4">
-              <span class="text-2xl text-white">🥚</span>
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- OG Set -->
+          <div class="flavor-card bg-cream rounded-2xl p-8 text-center">
+            <div class="w-32 h-32 bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span class="text-4xl">🍪</span>
             </div>
-            <h3 class="text-xl font-bold mb-2">Quality Ingredients</h3>
-            <p>Only the good stuff — fresh, premium ingredients in every cookie we make.</p>
+            <h3 class="text-2xl font-bold mb-3">The OG Set</h3>
+            <p class="mb-4">A trio of our signature cookies — The Usual, The Red One, and The Burnt One — each weighing 100g for that perfect, satisfying bite.</p>
+            <p class="text-2xl font-bold mb-6">₱320</p>
+            <button onclick="location.href='/order'" class="btn-primary text-white px-6 py-3 rounded-full font-semibold transition w-full">
+              Add to Cart
+            </button>
           </div>
           
-          <div class="text-center">
-            <div class="w-16 h-16 btn-primary rounded-full flex items-center justify-center mx-auto mb-4">
-              <span class="text-2xl text-white">👩‍🍳</span>
+          <!-- The Classics -->
+          <div class="flavor-card bg-cream rounded-2xl p-8 text-center">
+            <div class="w-32 h-32 bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span class="text-4xl">🍪🍪</span>
             </div>
-            <h3 class="text-xl font-bold mb-2">Handcrafted</h3>
-            <p>Each cookie is lovingly shaped, scooped, and baked the homemade way.</p>
+            <h3 class="text-2xl font-bold mb-3">The Classics</h3>
+            <p class="mb-4">A 6-piece box featuring all our classic flavors, with every cookie crafted at 100g for maximum softness and chew.</p>
+            <p class="text-2xl font-bold mb-6">₱660</p>
+            <button onclick="location.href='/order'" class="btn-primary text-white px-6 py-3 rounded-full font-semibold transition w-full">
+              Add to Cart
+            </button>
           </div>
           
-          <div class="text-center">
-            <div class="w-16 h-16 btn-primary rounded-full flex items-center justify-center mx-auto mb-4">
-              <span class="text-2xl text-white">💝</span>
+          <!-- Samplers -->
+          <div class="flavor-card bg-cream rounded-2xl p-8 text-center">
+            <div class="w-32 h-32 bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span class="text-4xl">🎁</span>
             </div>
-            <h3 class="text-xl font-bold mb-2">Made with Love</h3>
-            <p>We pour heart into every single batch, so every bite feels like a warm hug.</p>
+            <h3 class="text-2xl font-bold mb-3">Samplers</h3>
+            <p class="mb-4">A tasting set of 6 mini cookies, each at 50g, so you can enjoy every classic flavor in smaller, snackable sizes.</p>
+            <p class="text-2xl font-bold mb-6">₱320</p>
+            <button onclick="location.href='/order'" class="btn-primary text-white px-6 py-3 rounded-full font-semibold transition w-full">
+              Add to Cart
+            </button>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Product Showcase -->
-  <section id="products" class="section-padding bg-white">
-    <div class="container mx-auto px-6">
-      <h2 class="text-4xl font-bold text-center mb-4">Our Cookie Collections</h2>
-      <p class="text-lg text-center mb-12 max-w-2xl mx-auto">
-        Treat yourself, share a box, or explore new flavors — we’ve got something for every craving.
-      </p>
-      
-      <div class="grid md:grid-cols-3 gap-8">
-        <!-- OG Set -->
-        <div class="flavor-card bg-cream rounded-2xl p-8 text-center">
-          <div class="w-32 h-32 bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <span class="text-4xl">🍪</span>
-          </div>
-          <h3 class="text-2xl font-bold mb-3">The OG Set</h3>
-          <p class="mb-4">A trio of our signature cookies — The Usual, The Red One, and The Burnt One — each weighing 100g for that perfect, satisfying bite.</p>
-          <p class="text-2xl font-bold mb-6">₱320</p>
-          <button onclick="location.href='/order'" class="btn-primary text-white px-6 py-3 rounded-full font-semibold transition w-full">
-            Add to Cart
-          </button>
         </div>
         
-        <!-- The Classics -->
-        <div class="flavor-card bg-cream rounded-2xl p-8 text-center">
-          <div class="w-32 h-32 bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <span class="text-4xl">🍪🍪</span>
+        <div class="text-center mt-12">
+          <a href="/order" class="btn-primary text-white px-8 py-4 rounded-full font-bold text-lg transition inline-block">
+            View All Products & Customize Your Box
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="section-padding bg-cream parallax-section" style="background-image: linear-gradient(rgba(253, 244, 213, 0.9), rgba(253, 244, 213, 0.9)), url('images/bg-image-hero.JPG')">
+      <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto text-center">
+          <h2 class="text-4xl font-bold mb-8">Our Story</h2>
+          <div class="bg-white/80 rounded-2xl p-8 md:p-12">
+            <p class="text-lg mb-6 leading-relaxed">
+              Why Dough began as a simple passion project in a home kitchen, inspired by the joy of baking for family and friends and fueled by late-night cookie cravings. We believed that everyone deserves a truly exceptional cookie experience.
+            </p>
+            <p class="text-lg mb-6 leading-relaxed">
+              What started as sharing cookies with loved ones quickly grew into something more. The name “Why Dough?” reflects our philosophy: why settle for ordinary when you can have extraordinary? Why not indulge in treats made with care, creativity, and premium ingredients?
+            </p>
+            <p class="text-lg leading-relaxed">
+              Today, we continue to dough it better—one perfectly baked, soft, chewy cookie at a time. Each batch is still crafted with the same love and attention that started it all.
+            </p>
           </div>
-          <h3 class="text-2xl font-bold mb-3">The Classics</h3>
-          <p class="mb-4">A 6-piece box featuring all our classic flavors, with every cookie crafted at 100g for maximum softness and chew.</p>
-          <p class="text-2xl font-bold mb-6">₱660</p>
-          <button onclick="location.href='/order'" class="btn-primary text-white px-6 py-3 rounded-full font-semibold transition w-full">
-            Add to Cart
-          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meet the Doughs - Cookie Flavors -->
+    <section id="flavors" class="section-padding bg-white flavors-section">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl font-bold mb-4">Meet the Doughs</h2>
+          <p class="text-lg max-w-2xl mx-auto">
+            Say hello to our bestselling cookies! Soft, chewy, and packed with personality, each one is baked to make your taste buds smile.
+          </p>
         </div>
         
-        <!-- Samplers -->
-        <div class="flavor-card bg-cream rounded-2xl p-8 text-center">
-          <div class="w-32 h-32 bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <span class="text-4xl">🎁</span>
+        <!-- Desktop & Tablet Grid Layout (Hidden on Mobile) -->
+        <div class="flavors-grid" id="flavorsGrid">
+          <!-- Grid items will be populated by JavaScript -->
+        </div>
+        
+        <!-- Mobile Carousel Layout (Hidden on Desktop/Tablet) -->
+        <div class="flavors-carousel-container">
+          <div class="flavors-carousel-track" id="flavorsCarouselTrack">
+            <!-- Carousel items will be populated by JavaScript -->
           </div>
-          <h3 class="text-2xl font-bold mb-3">Samplers</h3>
-          <p class="mb-4">A tasting set of 6 mini cookies, each at 50g, so you can enjoy every classic flavor in smaller, snackable sizes.</p>
-          <p class="text-2xl font-bold mb-6">₱320</p>
-          <button onclick="location.href='/order'" class="btn-primary text-white px-6 py-3 rounded-full font-semibold transition w-full">
-            Add to Cart
-          </button>
+          
+          <!-- Carousel Navigation & Counter -->
+          <div class="carousel-counter">
+            <button class="flavor-carousel-nav flavor-carousel-prev" aria-label="Previous flavor">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="counter-display">
+              <span id="currentSlide">1</span> / <span id="totalSlides">6</span>
+            </div>
+            
+            <button class="flavor-carousel-nav flavor-carousel-next" aria-label="Next flavor">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
         </div>
       </div>
-      
-      <div class="text-center mt-12">
-        <a href="/order" class="btn-primary text-white px-8 py-4 rounded-full font-bold text-lg transition inline-block">
-          View All Products & Customize Your Box
-        </a>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- About Us Section -->
-  <section id="about" class="section-padding bg-cream parallax-section" style="background-image: linear-gradient(rgba(253, 244, 213, 0.9), rgba(253, 244, 213, 0.9)), url('images/bg-image-hero.JPG')">
-    <div class="container mx-auto px-6">
-      <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-4xl font-bold mb-8">Our Story</h2>
-        <div class="bg-white/80 rounded-2xl p-8 md:p-12">
-          <p class="text-lg mb-6 leading-relaxed">
-            Why Dough began as a simple passion project in a home kitchen, inspired by the joy of baking for family and friends and fueled by late-night cookie cravings. We believed that everyone deserves a truly exceptional cookie experience.
-          </p>
-          <p class="text-lg mb-6 leading-relaxed">
-            What started as sharing cookies with loved ones quickly grew into something more. The name “Why Dough?” reflects our philosophy: why settle for ordinary when you can have extraordinary? Why not indulge in treats made with care, creativity, and premium ingredients?
-          </p>
-          <p class="text-lg leading-relaxed">
-            Today, we continue to dough it better—one perfectly baked, soft, chewy cookie at a time. Each batch is still crafted with the same love and attention that started it all.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Meet the Doughs - Cookie Flavors -->
-  <section id="flavors" class="section-padding bg-white flavors-section">
-    <div class="container mx-auto px-6">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold mb-4">Meet the Doughs</h2>
-        <p class="text-lg max-w-2xl mx-auto">
-          Say hello to our bestselling cookies! Soft, chewy, and packed with personality, each one is baked to make your taste buds smile.
+    <!-- Testimonials Slider -->
+    <section id="testimonials" class="section-padding bg-cream parallax-section" style="background-image: linear-gradient(rgba(253, 244, 213, 0.9), rgba(253, 244, 213, 0.9)), url('images/bg-image-hero.JPG')">
+      <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-bold text-center mb-4">What Our Customers Say</h2>
+        <p class="text-lg text-center mb-12 max-w-2xl mx-auto">
+          Don't just take our word for it - hear from our happy cookie lovers!
         </p>
-      </div>
-      
-      <!-- Desktop & Tablet Grid Layout (Hidden on Mobile) -->
-      <div class="flavors-grid" id="flavorsGrid">
-        <!-- Grid items will be populated by JavaScript -->
-      </div>
-      
-      <!-- Mobile Carousel Layout (Hidden on Desktop/Tablet) -->
-      <div class="flavors-carousel-container">
-        <div class="flavors-carousel-track" id="flavorsCarouselTrack">
-          <!-- Carousel items will be populated by JavaScript -->
-        </div>
         
-        <!-- Carousel Navigation & Counter -->
-        <div class="carousel-counter">
-          <button class="flavor-carousel-nav flavor-carousel-prev" aria-label="Previous flavor">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          
-          <div class="counter-display">
-            <span id="currentSlide">1</span> / <span id="totalSlides">6</span>
-          </div>
-          
-          <button class="flavor-carousel-nav flavor-carousel-next" aria-label="Next flavor">
-            <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Testimonials Slider -->
-  <section id="testimonials" class="section-padding bg-cream parallax-section" style="background-image: linear-gradient(rgba(253, 244, 213, 0.9), rgba(253, 244, 213, 0.9)), url('images/bg-image-hero.JPG')">
-    <div class="container mx-auto px-6">
-      <h2 class="text-4xl font-bold text-center mb-4">What Our Customers Say</h2>
-      <p class="text-lg text-center mb-12 max-w-2xl mx-auto">
-        Don't just take our word for it - hear from our happy cookie lovers!
-      </p>
-      
-      <div class="max-w-4xl mx-auto">
-        <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 relative">
-          <div class="text-brown/60 text-5xl mb-4">"</div>
-          
-          <div id="testimonialSlider">
-            <!-- Testimonial 1 -->
-            <div class="testimonial-slide text-center">
-              <p class="text-lg mb-6 italic">
-                "The best cookies I've ever had! The OG Set is perfect for trying their signature flavors. 
-                The Burnt One is absolutely incredible - don't let the name fool you!"
-              </p>
-              <div class="flex items-center justify-center space-x-3">
-                <div class="w-12 h-12 bg-brown/20 rounded-full flex items-center justify-center">
-                  <span class="font-bold">SM</span>
-                </div>
-                <div class="text-left">
-                  <p class="font-bold">Sarah M.</p>
-                  <p class="text-sm text-brown/70">Regular Customer</p>
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 relative">
+            <div class="text-brown/60 text-5xl mb-4">"</div>
+            
+            <div id="testimonialSlider">
+              <!-- Testimonial 1 -->
+              <div class="testimonial-slide text-center">
+                <p class="text-lg mb-6 italic">
+                  "The best cookies I've ever had! The OG Set is perfect for trying their signature flavors. 
+                  The Burnt One is absolutely incredible - don't let the name fool you!"
+                </p>
+                <div class="flex items-center justify-center space-x-3">
+                  <div class="w-12 h-12 bg-brown/20 rounded-full flex items-center justify-center">
+                    <span class="font-bold">SM</span>
+                  </div>
+                  <div class="text-left">
+                    <p class="font-bold">Sarah M.</p>
+                    <p class="text-sm text-brown/70">Regular Customer</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          
-          <div class="flex justify-center space-x-2 mt-8">
-            <button onclick="changeTestimonial(0)" class="w-3 h-3 btn-primary rounded-full"></button>
-            <button onclick="changeTestimonial(1)" class="w-3 h-3 bg-brown/30 rounded-full"></button>
-            <button onclick="changeTestimonial(2)" class="w-3 h-3 bg-brown/30 rounded-full"></button>
+            
+            <div class="flex justify-center space-x-2 mt-8">
+              <button onclick="changeTestimonial(0)" class="w-3 h-3 btn-primary rounded-full"></button>
+              <button onclick="changeTestimonial(1)" class="w-3 h-3 bg-brown/30 rounded-full"></button>
+              <button onclick="changeTestimonial(2)" class="w-3 h-3 bg-brown/30 rounded-full"></button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CTA Section -->
-  <section class="section-padding bg-white cta-light">
-    <div class="container mx-auto px-6 text-center">
-      <h2 class="text-4xl font-bold mb-6" style="color: #5d4a27;">Ready to Taste the Difference?</h2>
-      <p class="text-xl mb-8 max-w-2xl mx-auto" style="color: #5d4a27;">
-        Discover why our cookies have everyone coming back for more. Treat yourself today!
-      </p>
-      <a href="/order" class="btn-primary text-white px-8 py-4 rounded-full font-bold text-lg transition transform hover:scale-105 inline-block">
-        Order Now 🍪
-      </a>
-    </div>
-  </section>
-
+    <!-- CTA Section -->
+    <section class="section-padding bg-white cta-light">
+      <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold mb-6" style="color: #5d4a27;">Ready to Taste the Difference?</h2>
+        <p class="text-xl mb-8 max-w-2xl mx-auto" style="color: #5d4a27;">
+          Discover why our cookies have everyone coming back for more. Treat yourself today!
+        </p>
+        <a href="/order" class="btn-primary text-white px-8 py-4 rounded-full font-bold text-lg transition transform hover:scale-105 inline-block">
+          Order Now 🍪
+        </a>
+      </div>
+    </section>
+  </main>
   <!-- Footer -->
-  <footer class="py-12 footer-dark">
+  <footer role="contentinfo" class="py-12 footer-dark">
     <div class="container mx-auto px-6">
       <div class="flex flex-col md:flex-row justify-between items-center">
         <div class="mb-6 md:mb-0">

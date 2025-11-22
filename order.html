@@ -11,22 +11,24 @@
 </head>
 <body class="text-brown">
   <!-- Order Page Navigation with Cart -->
-  <nav class="order-nav">
-    <div class="container mx-auto px-6 py-4">
-      <div class="flex justify-between items-center">
-        <a href="/" class="logo-link">
-          <img src="images/logo.PNG" alt="Why Dough Logo" class="h-11" loading="lazy">
-        </a>
-        
-        <button class="nav-cart-btn" onclick="openCartModal()">
-          🛒
-          <span id="navCartCount" class="nav-cart-count" style="display: none;">0</span>
-        </button>
+  <header role="banner">
+    <nav class="order-nav">
+      <div class="container mx-auto px-6 py-4">
+        <div class="flex justify-between items-center">
+          <a href="/" class="logo-link">
+            <img src="images/logo.PNG" alt="Why Dough Logo" class="h-11" loading="lazy">
+          </a>
+          
+          <button class="nav-cart-btn" onclick="openCartModal()">
+            🛒
+            <span id="navCartCount" class="nav-cart-count" style="display: none;">0</span>
+          </button>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </header>
 
-  <form id="orderForm">
+  <form id="orderForm"  aria-labelledby="order-form-title">
     <!-- FormSubmit.co Configuration -->
     <input type="hidden" name="_subject" id="emailSubject" value="Why Dough Order">
     <input type="hidden" name="_captcha" value="false">
@@ -43,13 +45,13 @@
     <input type="hidden" name="time_slot" id="timeSlotField">
 
     <!-- Name Section -->
-    <section id="section-2" class="relative">
+    <section id="section-2" class="relative" aria-labelledby="name-heading">
       <div class="form-container max-w-md">
         <label class="text-2xl font-bold mb-4 block text-brown">What's your name? <span class="text-red-500">*</span></label>
         <input name="name" required type="text" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Your name" />
-        
+        <div id="name-required" class="sr-only">This field is required</div>
         <div class="flex justify-end items-center mt-8">
-          <button type="button" onclick="scrollToSection(3)" class="nav-button">
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(3)" class="nav-button">
             Next
           </button>
         </div>
@@ -78,7 +80,7 @@
         <div id="quickDates" class="grid grid-cols-4 gap-3 mb-6"></div>
         
         <!-- Date picker field -->
-        <div class="mb-6">
+        <div class="mb-6" id="deliverydate-div">
           <input 
             name="deliveryDate" 
             id="deliveryDateInput" 
@@ -93,7 +95,7 @@
 
         <!-- Time Slot Selection -->
         <label class="text-2xl font-bold mb-4 block text-brown">Preferred Time Slot</label>
-        <div class="grid grid-cols-3 gap-3 mb-6">
+        <div class="grid grid-cols-3 gap-3 mb-6" id="timeslot-div">
           <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '9AM-12PM')">
             <input type="radio" name="timeSlot" value="9AM-12PM" class="hidden">
             <span class="text-brown text-sm">9AM - 12PM</span>
@@ -109,12 +111,12 @@
         </div>
         
         <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(2)" class="arrow-btn">
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(2)" class="arrow-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 19V5M5 12l7-7 7 7"/>
             </svg>
           </button>
-          <button type="button" onclick="scrollToSection(4)" class="nav-button">
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(4)" class="nav-button">
             Next
           </button>
         </div>
@@ -147,12 +149,12 @@
         </div>
         
         <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(3)" class="arrow-btn">
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(3)" class="arrow-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 19V5M5 12l7-7 7 7"/>
             </svg>
           </button>
-          <button type="button" onclick="scrollToSection(5)" class="nav-button">
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(5)" class="nav-button">
             Next
           </button>
         </div>
@@ -200,12 +202,12 @@
         </div>
 
         <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(4)" class="arrow-btn">
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(4)" class="arrow-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 19V5M5 12l7-7 7 7"/>
             </svg>
           </button>
-          <button type="button" onclick="scrollToSection(6)" class="nav-button">
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(6)" class="nav-button">
             Next
           </button>
         </div>
@@ -257,12 +259,12 @@
         </div>
                 
         <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(5)" class="arrow-btn">
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(5)" class="arrow-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 19V5M5 12l7-7 7 7"/>
             </svg>
           </button>
-          <button type="button" onclick="scrollToSection(7)" class="nav-button">
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(7)" class="nav-button">
             Next
           </button>
         </div>
@@ -280,12 +282,12 @@
           <option value="COD">Cash on Delivery</option>
         </select>
         <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(6)" class="arrow-btn">
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(6)" class="arrow-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 19V5M5 12l7-7 7 7"/>
             </svg>
           </button>
-          <button type="button" onclick="scrollToSection(8)" class="nav-button">
+          <button type="button" onclick="buildOrderSummary(); scrollToSection(8)" class="nav-button">
             Next
           </button>
         </div>
