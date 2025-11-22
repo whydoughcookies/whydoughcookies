@@ -24,10 +24,6 @@ html, body {
   font-family: 'Poppins', sans-serif; 
 }
 
-form section{
-  background-color: var(--cream);
-}
-
 /* Page-specific scroll behavior */
 .homepage-body {
   scroll-snap-type: none !important;

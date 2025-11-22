@@ -488,13 +488,14 @@ function updateProductQuantity(delta) {
 
 // Fixed Toast Function
 function showToast(message, type = 'success') {
-  const toastContainer = document.getElementById('toastContainer');
+  let toastContainer = document.getElementById('toastContainer');
+  
+  // Create toast container if it doesn't exist
   if (!toastContainer) {
-    // Create toast container if it doesn't exist
-    const container = document.createElement('div');
-    container.id = 'toastContainer';
-    container.className = 'toast-container';
-    document.body.appendChild(container);
+    toastContainer = document.createElement('div');
+    toastContainer.id = 'toastContainer';
+    toastContainer.className = 'toast-container';
+    document.body.appendChild(toastContainer);
   }
   
   const toast = document.createElement('div');
@@ -502,7 +503,7 @@ function showToast(message, type = 'success') {
   
   const icons = {
     success: '✅',
-    error: '❌',
+    error: '❌', 
     warning: '⚠️'
   };
   
@@ -1083,8 +1084,9 @@ function generateOrderId(name) {
 }
 
 function prepareFormSubmitData() {
-  const form = DOM.get('#orderForm');
+  const form = document.getElementById('orderForm');
   if (!form) {
+    console.error('Order form not found');
     return null;
   }
 
@@ -1092,6 +1094,7 @@ function prepareFormSubmitData() {
     const name = form.name.value.trim();
     
     if (!name) {
+      console.error('Customer name is required');
       return null;
     }
 
@@ -1099,24 +1102,28 @@ function prepareFormSubmitData() {
     const socialPlatform = form.socialPlatform?.value || '';
     const socialHandle = form.socialHandle.value.trim();
     
-    let social = 'Not provided';
+    let socialDisplay = 'Not provided';
     if (socialHandle && socialPlatform) {
-      social = `${socialHandle} - ${socialPlatform}`;
+      socialDisplay = `${socialHandle} - ${socialPlatform}`;
     } else if (socialHandle) {
-      social = `${socialHandle} (platform not selected)`;
+      socialDisplay = `${socialHandle} (platform not selected)`;
     } else if (socialPlatform) {
-      social = `${socialPlatform} (no username)`;
+      socialDisplay = `${socialPlatform} (no username)`;
     }
     
     const contactNumber = form.contactNumber.value.trim();
     const deliveryDate = form.deliveryDate.value || 'Not selected';
-    const timeSlotElement = DOM.get('input[name="timeSlot"]:checked');
+    const timeSlotElement = document.querySelector('input[name="timeSlot"]:checked');
     const timeSlot = timeSlotElement ? timeSlotElement.value : 'Not selected';
-    const deliveryMethodElement = DOM.get('input[name="deliveryMethod"]:checked');
+    const deliveryMethodElement = document.querySelector('input[name="deliveryMethod"]:checked');
     const deliveryMethod = deliveryMethodElement ? deliveryMethodElement.value : 'Not selected';
     const payment = form.payment.value;
     const notes = form.notes.value.trim();
     
+    const totalAmount = state.cart.reduce((sum, item) => sum + item.total, 0);
+    const itemCount = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    // FIX: Define orderDetails and cookieQuantities
     const orderDetails = state.cart.map(item => {
       if (item.type === 'customBox') {
         return `${item.name}: ${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')} = ₱${item.total}`;
@@ -1124,12 +1131,26 @@ function prepareFormSubmitData() {
         return `${item.name} x ${item.quantity} = ₱${item.total}`;
       }
     }).join('\n');
-    
-    const totalAmount = state.cart.reduce((sum, item) => sum + item.total, 0);
-    const itemCount = state.cart.reduce((sum, item) => sum + item.quantity, 0);
 
     const cookieQuantities = calculateCookieQuantities();
-    
+
+    const orderData = {
+      orderId: orderId,
+      customerName: name,
+      totalAmount: totalAmount,
+      itemCount: itemCount,
+      deliveryDate: deliveryDate,
+      timeSlot: timeSlot,
+      timestamp: new Date().toISOString(),
+      contactNumber: contactNumber,
+      social: socialDisplay,
+      deliveryMethod: deliveryMethod,
+      payment: payment,
+      notes: notes,
+      cart: [...state.cart] // Include the cart for thank-you page
+    };
+
+    // Setup form data for submission
     const businessOrderSummary = `
 🚨 NEW COOKIE ORDER - ACTION REQUIRED 🚨
 =========================================
@@ -1138,7 +1159,7 @@ STATUS: AWAITING CONFIRMATION
 
 CUSTOMER INFORMATION:
 • Name: ${name}
-• Social: ${social}
+• Social: ${socialDisplay}
 • Contact: ${contactNumber}
 
 DELIVERY INFORMATION:
@@ -1163,40 +1184,25 @@ ${notes || 'No special notes'}
 
 CONTACT OPTIONS:
 📱 Contact: ${contactNumber}
-📱 Social: ${social}
+📱 Social: ${socialDisplay}
 
 Order received: ${new Date().toLocaleString()}
     `.trim();
     
-    DOM.get('#autoResponseField').value = businessOrderSummary;
-    DOM.get('#orderSummaryField').value = businessOrderSummary;
-    DOM.get('#customerNameField').value = name;
-    DOM.get('#customerContactField').value = `${socialHandle} | ${contactNumber}`;
-    DOM.get('#deliveryInfoField').value = `${deliveryDate} - ${deliveryMethod === 'pickup' ? 'Pick Up' : 'Delivery'}`;
-    DOM.get('#totalAmountField').value = `₱${totalAmount}`;
-    DOM.get('#orderIdField').value = orderId;
+    document.getElementById('autoResponseField').value = businessOrderSummary;
+    document.getElementById('orderSummaryField').value = businessOrderSummary;
+    document.getElementById('customerNameField').value = name;
+    document.getElementById('customerContactField').value = `${socialHandle} | ${contactNumber}`;
+    document.getElementById('deliveryInfoField').value = `${deliveryDate} - ${deliveryMethod === 'pickup' ? 'Pick Up' : 'Delivery'}`;
+    document.getElementById('totalAmountField').value = `₱${totalAmount}`;
+    document.getElementById('orderIdField').value = orderId;
     
-    const subjectField = DOM.get('input[name="_subject"]');
+    const subjectField = document.querySelector('input[name="_subject"]');
     if (subjectField) {
       subjectField.value = `Why Dough Order #${orderId} - ${name} - ${itemCount} item(s) - ₱${totalAmount}`;
     }
     
     setupGoogleFormsData(orderId, name, socialHandle, contactNumber, deliveryDate, timeSlot, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount);
-    
-    const orderData = {
-      orderId: orderId,
-      customerName: name,
-      totalAmount: totalAmount,
-      itemCount: itemCount,
-      deliveryDate: deliveryDate,
-      timeSlot: timeSlot,
-      timestamp: new Date().toISOString(),
-      contactNumber: contactNumber,
-      social: socialHandle && socialPlatform ? `${socialHandle} - ${socialPlatform}` : socialHandle || socialPlatform || 'Not provided',
-      deliveryMethod: deliveryMethod,
-      payment: payment,
-      notes: notes
-    };
     
     return orderData;
     
@@ -1278,78 +1284,105 @@ function formatCookieQuantities(cookieQuantities) {
     .join('; ');
 }
 
-// ENHANCED FORM SUBMISSION HANDLER
+// Enhanced handleFormSubmit function
 async function handleFormSubmit(e) {
-e.preventDefault();
+  e.preventDefault();
 
-// Validate form before submission
-if (!validateForm()) {
+  // Validate form before submission
+  if (!validateForm()) {
     return;
-}
+  }
 
-// Show loading state
-const submitBtn = e.target.querySelector('button[type="submit"]');
-const originalText = submitBtn.textContent;
-submitBtn.textContent = 'Submitting...';
-submitBtn.disabled = true;
+  // Show loading state
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'Submitting...';
+  submitBtn.disabled = true;
 
-const loadingOverlay = document.getElementById('loadingOverlay');
-if (loadingOverlay) {
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  if (loadingOverlay) {
     loadingOverlay.classList.remove('hidden');
-}
+  }
 
-try {
+  try {
     // Prepare and submit order data
     const orderData = prepareFormSubmitData();
     if (!orderData) {
-        throw new Error('Failed to prepare order data');
+      throw new Error('Failed to prepare order data');
     }
+
+    // STORE ORDER DATA FOR THANK-YOU PAGE
+    storeOrderDataForThankYouPage(orderData);
     
     // Submit to both services
     const [googleSuccess, emailSuccess] = await Promise.allSettled([
-        submitToGoogleForms(),
-        submitToFormSubmit()
+      submitToGoogleForms(),
+      submitToFormSubmit()
     ]);
-    
+
     // Handle submission results
     const googleOk = googleSuccess.status === 'fulfilled' && googleSuccess.value;
     const emailOk = emailSuccess.status === 'fulfilled' && emailSuccess.value;
-    
+
     if (googleOk && emailOk) {
-        showToast('Order submitted successfully! 📧📊', 'success');
+      showToast('Order submitted successfully! 📧📊', 'success');
     } else if (googleOk) {
-        showToast('Order submitted to tracking! (Email failed)', 'warning');
+      showToast('Order submitted to tracking! (Email failed)', 'warning');
     } else if (emailOk) {
-        showToast('Order submitted via email! (Tracking failed)', 'warning');
+      showToast('Order submitted via email! (Tracking failed)', 'warning');
     } else {
-        showToast('Order received offline! We\'ll contact you soon.', 'warning');
+      showToast('Order received offline! We\'ll contact you soon.', 'warning');
     }
-    
+
     // Clear cart and redirect
     clearCartAfterSubmission();
-    
+
+    // Add a small delay to ensure storage is written
     setTimeout(() => {
-        window.location.href = '/thank-you';
-    }, 2000);
-    
-} catch (error) {
+      window.location.href = '/thank-you';
+    }, 1000);
+
+  } catch (error) {
+    console.error('Submission error:', error);
     showToast('Order received! Please contact us if you don\'t hear back.', 'warning');
     
-    // Still redirect to thank you page
+    // Still redirect to thank you page even if submission fails
     clearCartAfterSubmission();
     setTimeout(() => {
-        window.location.href = '/thank-you';
-    }, 2000);
-} finally {
+      window.location.href = '/thank-you';
+    }, 1000);
+  } finally {
     // Restore button state
     submitBtn.textContent = originalText;
     submitBtn.disabled = false;
     
     // Hide loading overlay
     if (loadingOverlay) {
-        loadingOverlay.classList.add('hidden');
+      loadingOverlay.classList.add('hidden');
     }
+  }
 }
+
+// Store order data for thank-you page
+function storeOrderDataForThankYouPage(orderData) {
+  try {
+    // Include cart in order data
+    const completeOrderData = {
+      ...orderData,
+      cart: [...state.cart], // Copy current cart
+      timestamp: new Date().toISOString()
+    };
+
+    // Store in both sessionStorage and localStorage for redundancy
+    sessionStorage.setItem('lastOrder', JSON.stringify(completeOrderData));
+    localStorage.setItem('lastOrder', JSON.stringify(completeOrderData));
+    
+    console.log('Order data stored:', completeOrderData);
+    return true;
+  } catch (error) {
+    console.error('Error storing order data:', error);
+    return false;
+  }
 }
 
 function setupRealTimeValidation() {
@@ -1964,38 +1997,39 @@ function setupSmoothScrolling() {
   });
 }
 
-// Thank You Page Functions
 function displayOrderDetails() {
   const orderData = getOrderData();
   
+  console.log('Retrieved order data:', orderData); // Debug log
+  
   if (orderData && orderData.orderId) {
-    DOM.get('#orderIdDisplay').textContent = orderData.orderId;
-    DOM.get('#customerName').textContent = orderData.customerName || '-';
-    DOM.get('#orderTotal').textContent = orderData.totalAmount || '0';
-    DOM.get('#deliveryDate').textContent = orderData.deliveryDate || '-';
+    document.getElementById('orderIdDisplay').textContent = orderData.orderId;
+    document.getElementById('customerName').textContent = orderData.customerName || '-';
+    document.getElementById('orderTotal').textContent = orderData.totalAmount || '0';
+    document.getElementById('deliveryDate').textContent = orderData.deliveryDate || '-';
     
-    // Update items display to show all items instead of just count
-    const itemCountElement = DOM.get('#itemCount');
-    if (itemCountElement) {
-      // Remove the old items count display and replace with detailed items
-      const orderDetailsContainer = DOM.get('#orderDetails');
-      if (orderDetailsContainer && orderData.cart) {
-        // Find the items line and replace it with detailed items
+    // Update items display
+    const orderDetailsContainer = document.getElementById('orderDetails');
+    if (orderDetailsContainer) {
+      if (orderData.cart && orderData.cart.length > 0) {
         const itemsHtml = generateOrderItemsHtml(orderData.cart);
-        orderDetailsContainer.innerHTML = orderDetailsContainer.innerHTML.replace(
-          /<li>• Items:.*<\/li>/,
-          itemsHtml
-        );
+        orderDetailsContainer.innerHTML = itemsHtml;
+      } else {
+        orderDetailsContainer.innerHTML = '<li class="text-brown-600">Items: No items in order</li>';
       }
     }
     
     document.title = `Order #${orderData.orderId} - Why Dough`;
+    console.log('Order details displayed successfully');
   } else {
-    DOM.get('#orderIdDisplay').textContent = 'Not Found';
-    DOM.get('#orderDetails').innerHTML = 
-      '<li class="text-brown-600">Order details not available.</li>';
+    document.getElementById('orderIdDisplay').textContent = 'Not Found';
+    const orderDetails = document.getElementById('orderDetails');
+    if (orderDetails) {
+      orderDetails.innerHTML = '<li class="text-brown-600">Order details not available.</li>';
+    }
     
-    showToast('Order details not found.', 'warning');
+    console.warn('Order data not found for display');
+    // Don't show toast on thank-you page to avoid errors
   }
 }
 
@@ -2024,38 +2058,60 @@ function generateOrderItemsHtml(cart) {
   return itemsHtml;
 }
 
-// Also update the getOrderData function to ensure cart is preserved
+// Enhanced getOrderData function
 function getOrderData() {
-  let orderData = sessionStorage.getItem('lastOrder');
-  
-  if (!orderData) {
-    orderData = localStorage.getItem('lastOrder');
-  }
-  
-  if (!orderData) {
-    return null;
-  }
+  let orderData = null;
   
   try {
-    const parsedData = JSON.parse(orderData);
+    // Try sessionStorage first (more secure for single session)
+    orderData = sessionStorage.getItem('lastOrder');
     
-    // Ensure cart data is available
-    if (!parsedData.cart) {
-      // Try to get cart from separate storage
-      const savedCart = localStorage.getItem('whyDoughCart') || sessionStorage.getItem('whyDoughCart');
-      if (savedCart) {
-        try {
-          parsedData.cart = JSON.parse(savedCart);
-        } catch (e) {
-          console.error('Error parsing cart data:', e);
-        }
+    // If not found in sessionStorage, try localStorage
+    if (!orderData) {
+      orderData = localStorage.getItem('lastOrder');
+    }
+
+    // If still not found, check URL parameters (fallback)
+    if (!orderData) {
+      orderData = getOrderDataFromURL();
+    }
+
+    if (orderData) {
+      const parsedData = JSON.parse(orderData);
+      
+      // Validate the order data has required fields
+      if (!parsedData.orderId || !parsedData.customerName) {
+        console.warn('Order data missing required fields:', parsedData);
+        return null;
       }
+      
+      return parsedData;
     }
     
-    return parsedData;
-  } catch (e) {
+    return null;
+  } catch (error) {
+    console.error('Error retrieving order data:', error);
     return null;
   }
+}
+
+// Fallback: Get order data from URL parameters
+function getOrderDataFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const orderId = urlParams.get('orderId');
+  const customerName = urlParams.get('customerName');
+  
+  if (orderId && customerName) {
+    return JSON.stringify({
+      orderId: orderId,
+      customerName: customerName,
+      totalAmount: urlParams.get('totalAmount') || '0',
+      deliveryDate: urlParams.get('deliveryDate') || '-',
+      cart: [] // Can't recover cart from URL
+    });
+  }
+  
+  return null;
 }
 
 function clearStorageAndGoHome() {
@@ -2154,6 +2210,8 @@ document.addEventListener('DOMContentLoaded', function() {
       state.cart = [];
     }
   }
+
+  setVH();
   
   // Homepage initialization
   if (DOM.get('#flavorsCarouselTrack')) {
@@ -2172,10 +2230,12 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Thank you page initialization
   if (DOM.get('#orderIdDisplay')) {
-    displayOrderDetails();
+    setTimeout(() => {
+      displayOrderDetails();
+    }, 100);
   }
 
-  setVH();
+  
   window.addEventListener('resize', setVH);
   window.addEventListener('orientationchange', setVH);
 });

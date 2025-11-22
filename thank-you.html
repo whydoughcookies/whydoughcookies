@@ -43,11 +43,11 @@
                 <p class="text-sm text-brown-700 mb-2">
                 <strong>Order Details:</strong>
                 </p>
-                <ul class="text-sm text-brown-600 space-y-1" id="orderDetails">
+                <ul class="text-sm text-brown-600 space-y-1">
                     <li>• Customer: <span id="customerName">-</span></li>
                     <li>• Total Amount: ₱<span id="orderTotal">0</span></li>
-                    <li>• Items: <span id="itemCount">0</span></li>
                     <li>• Delivery: <span id="deliveryDate">-</span></li>
+                    <span id="orderDetails">0</span>
                 </ul>
                 
                 <div class="border-t border-brown-200 mt-3 pt-3">
@@ -76,7 +76,8 @@
             </p>
         </div>
     </section>
-
+    <!-- Add this before closing body tag in thank-you.html -->
+    <div id="toastContainer" class="toast-container"></div>
     <script src="script.js"></script>
 </body>
 </html>
