@@ -47,12 +47,12 @@
     <!-- Name Section -->
     <section id="section-2" class="relative" aria-labelledby="name-heading">
       <div class="form-container max-w-md">
-        <label class="text-2xl font-bold mb-4 block text-brown">What's your name? <span class="text-red-500">*</span></label>
+        <label class="text-2xl font-bold mb-4 block text-brown text-center">What's your name? <span class="text-red-500">*</span></label>
         <input name="name" required type="text" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Your name" />
         <div id="name-required" class="sr-only">This field is required</div>
         <div class="flex justify-end items-center mt-8">
           <button type="button" onclick="buildOrderSummary(); scrollToSection(3)" class="nav-button">
-            Next
+            Next <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M5 12l7 7 7-7"/></svg>
           </button>
         </div>
       </div>
@@ -98,15 +98,15 @@
         <div class="grid grid-cols-3 gap-3 mb-6" id="timeslot-div">
           <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '9AM-12PM')">
             <input type="radio" name="timeSlot" value="9AM-12PM" class="hidden">
-            <span class="text-brown text-sm">9AM - 12PM</span>
+            <span class="text-brown">9AM - 12PM</span>
           </div>
           <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '1PM-3PM')">
             <input type="radio" name="timeSlot" value="1PM-3PM" class="hidden">
-            <span class="text-brown text-sm">1PM - 3PM</span>
+            <span class="text-brown">1PM - 3PM</span>
           </div>
           <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '4PM-6PM')">
             <input type="radio" name="timeSlot" value="4PM-6PM" class="hidden">
-            <span class="text-brown text-sm">4PM - 6PM</span>
+            <span class="text-brown">4PM - 6PM</span>
           </div>
         </div>
         
@@ -117,7 +117,7 @@
             </svg>
           </button>
           <button type="button" onclick="buildOrderSummary(); scrollToSection(4)" class="nav-button">
-            Next
+            Next <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M5 12l7 7 7-7"/></svg>
           </button>
         </div>
       </div>
@@ -155,7 +155,7 @@
             </svg>
           </button>
           <button type="button" onclick="buildOrderSummary(); scrollToSection(5)" class="nav-button">
-            Next
+            Next <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M5 12l7 7 7-7"/></svg>
           </button>
         </div>
       </div>
@@ -164,7 +164,7 @@
     <!-- Cookie selection -->
     <section id="section-5" class="relative">
       <div class="form-container max-w-4xl">
-        <h2 class="text-3xl font-bold text-brown text-center">Choose your cookies</h2>
+        <h2 class="text-3xl font-bold text-brown text-center mb-4">Choose your cookies</h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
 

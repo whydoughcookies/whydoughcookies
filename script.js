@@ -264,7 +264,7 @@ function generateWeekendDates() {
     const displayDate = formatDateDisplay(date);
     
     return `
-      <button type="button" class="quick-date-btn bg-brown-300 hover:bg-brown-400 px-3 py-3 rounded-lg text-sm font-medium transition-colors" data-date="${dateStr}">
+      <button type="button" class="quick-date-btn bg-brown-300 hover:bg-brown-400 px-3 py-3 rounded-lg font-medium transition-colors" data-date="${dateStr}">
         ${displayDate}
       </button>
     `;
@@ -944,6 +944,101 @@ function clearAllErrors() {
   const errorHighlights = document.querySelectorAll('.error-highlight, .container-error-highlight');
   errorHighlights.forEach(element => {
       element.classList.remove('error-highlight', 'container-error-highlight');
+  });
+}
+
+// Disable scrolling between sections and enforce button navigation
+function disableSectionScrolling() {
+  // Only apply to order page
+  if (!document.getElementById('orderForm')) return;
+  
+  // Prevent wheel/touch scroll on body
+  document.body.style.overflow = 'hidden';
+  document.body.style.height = '100vh';
+  
+  // Add event listeners to prevent scrolling
+  preventScrollEvents();
+  
+  // Update scrollToSection to be more strict
+  overrideScrollToSection();
+}
+
+function preventScrollEvents() {
+  // Prevent wheel scrolling
+  window.addEventListener('wheel', preventScroll, { passive: false });
+  
+  // Prevent touch scrolling on body
+  window.addEventListener('touchmove', preventScroll, { passive: false });
+  
+  // Prevent keyboard scrolling
+  window.addEventListener('keydown', preventKeyboardScroll);
+}
+
+function preventScroll(e) {
+  // Allow scrolling only in form containers of sections 3 and 5
+  const isScrollableContainer = 
+    e.target.closest('#section-3 .form-container') || 
+    e.target.closest('#section-5 .form-container');
+  
+  if (!isScrollableContainer) {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  }
+}
+
+function preventKeyboardScroll(e) {
+  // Prevent spacebar, page up/down, arrow keys from scrolling
+  const scrollKeys = [' ', 'Spacebar', 'PageUp', 'PageDown', 'ArrowUp', 'ArrowDown'];
+  if (scrollKeys.includes(e.key)) {
+    e.preventDefault();
+    return false;
+  }
+}
+
+function overrideScrollToSection() {
+  // Store the original function
+  const originalScrollToSection = window.scrollToSection;
+  
+  // Override with our controlled version
+  window.scrollToSection = function(id) {
+    const element = document.getElementById(`section-${id}`);
+    if (element) {
+      // Use smooth scroll but disable any other scrolling
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+      
+      // Update current section tracking if you have it
+      updateCurrentSection(id);
+    }
+  };
+}
+
+function updateCurrentSection(sectionId) {
+  // You can add visual indicators or tracking here
+  console.log(`Navigated to section ${sectionId} via button`);
+  
+  // Optional: Add active state to current section
+  document.querySelectorAll('section').forEach(section => {
+    section.classList.remove('active-section');
+  });
+  document.getElementById(`section-${sectionId}`).classList.add('active-section');
+}
+
+// Enhanced navigation buttons with better UX
+function enhanceNavigationButtons() {
+  // Add click handlers to all next/prev buttons
+  document.addEventListener('click', function(e) {
+    const button = e.target.closest('.nav-button, .arrow-btn');
+    if (!button) return;
+    
+    // Add loading state to button
+    button.classList.add('loading');
+    setTimeout(() => {
+      button.classList.remove('loading');
+    }, 500);
   });
 }
 
@@ -1997,6 +2092,87 @@ function setupSmoothScrolling() {
   });
 }
 
+// Enhanced scroll handling for iOS
+function setupScrollableSections() {
+  const scrollableContainers = [
+    document.querySelector('#section-3 .form-container'),
+    document.querySelector('#section-5 .form-container')
+  ];
+
+  scrollableContainers.forEach(container => {
+    if (!container) return;
+
+    // Add scrollable class for CSS targeting
+    container.classList.add('scrollable');
+
+    // Detect if content is scrollable
+    const isScrollable = container.scrollHeight > container.clientHeight;
+    
+    if (isScrollable) {
+      // Add scroll indicator
+      addScrollIndicator(container);
+      
+      // Track scrolling to hide hints
+      container.addEventListener('scroll', function() {
+        this.classList.add('scrolling');
+        
+        // Remove scroll indicator after first scroll
+        const indicator = this.querySelector('.scroll-indicator');
+        if (indicator) {
+          indicator.style.opacity = '0';
+          setTimeout(() => indicator.remove(), 300);
+        }
+      });
+
+      // Show scrollbars on touch start (iOS)
+      container.addEventListener('touchstart', function() {
+        this.style.overflowY = 'auto';
+      });
+
+      // Hide scrollbars after a delay when not scrolling
+      let scrollTimeout;
+      container.addEventListener('scroll', function() {
+        this.style.overflowY = 'auto';
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          if (this.scrollTop === 0 || 
+              this.scrollTop + this.clientHeight >= this.scrollHeight - 10) {
+            this.style.overflowY = 'hidden';
+          }
+        }, 1500);
+      });
+    }
+  });
+}
+
+function addScrollIndicator(container) {
+  const indicator = document.createElement('div');
+  indicator.className = 'scroll-indicator';
+  indicator.textContent = 'Scroll for more';
+  indicator.style.position = 'absolute';
+  indicator.style.bottom = '70px';
+  indicator.style.left = '50%';
+  indicator.style.transform = 'translateX(-50)';
+  indicator.style.background = 'var(--accent)';
+  indicator.style.color = 'white';
+  indicator.style.padding = '6px 12px';
+  indicator.style.borderRadius = '20px';
+  indicator.style.fontSize = '0.75rem';
+  indicator.style.fontWeight = 'bold';
+  indicator.style.zIndex = '10';
+  indicator.style.pointerEvents = 'none';
+  indicator.style.animation = 'bounce 2s infinite';
+  
+  container.style.position = 'relative';
+  container.appendChild(indicator);
+
+  // Auto-remove after 8 seconds
+  setTimeout(() => {
+    indicator.style.opacity = '0';
+    setTimeout(() => indicator.remove(), 300);
+  }, 8000);
+}
+
 function displayOrderDetails() {
   const orderData = getOrderData();
   
@@ -2212,6 +2388,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   setVH();
+  setTimeout(setupScrollableSections, 500);
   
   // Homepage initialization
   if (DOM.get('#flavorsCarouselTrack')) {
