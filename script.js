@@ -361,6 +361,20 @@ function setupDateSelection() {
   }
 }
 
+function resetTimeSlotSelection() {
+  // Remove active visuals
+  DOM.getAll('.time-slot-option').forEach(opt => {
+    DOM.removeClass(opt, 'active');
+  });
+
+  // Clear hidden field
+  const timeSlotField = DOM.get('#timeSlotField');
+  if (timeSlotField) {
+    timeSlotField.value = '';
+  }
+}
+
+
 // Modal Management
 function openCartModal() {
   const modal = DOM.get("#cartModal");
@@ -552,17 +566,28 @@ function showToast(message, type = 'success') {
 
 // Selection Handlers
 function selectTimeSlot(element, timeSlot) {
+  // Clear active state from all time slots
   DOM.getAll('.time-slot-option').forEach(opt => DOM.removeClass(opt, 'active'));
+
+  // Set active state on the clicked one
   DOM.addClass(element, 'active');
-  
-  const radio = element.querySelector('input[type="radio"]');
-  if (radio) radio.checked = true;
-  
-  DOM.get('#timeSlotField').value = timeSlot;
-  
-  // Clear time slot error when a time is selected
+
+  // (Optional) If you still keep a dummy input inside, you can ignore .checked now
+  const radio = element.querySelector('.time-slot-radio');
+  if (radio) {
+    radio.checked = true; // purely visual/state, not used in validation
+  }
+
+  // This is the ONLY source of truth for validation + submission
+  const timeSlotField = DOM.get('#timeSlotField');
+  if (timeSlotField) {
+    timeSlotField.value = timeSlot;
+  }
+
+  // Clear any previous error
   clearTimeSlotError();
 }
+
 
 function selectDeliveryMethod(element, method) {
   DOM.getAll('.delivery-option').forEach(opt => {
@@ -858,17 +883,18 @@ function validateForm() {
   
   let isValid = true;
   const errors = [];
+  let firstErrorSection = null; // track first section with an error
 
-  // 1. Name validation
+  // 1. SECTION 2 – NAME
   const nameField = document.querySelector('input[name="name"]');
   const nameValue = nameField ? nameField.value.trim() : '';
 
   if (!nameField || !nameValue) {
     showFieldError(nameField, 'Please enter your name');
     errors.push({ field: nameField, section: 'section-2' });
+    if (!firstErrorSection) firstErrorSection = 'section-2';
     isValid = false;
   } else {
-    // Allow letters, spaces, dot, apostrophe, and hyphen only
     const nameRegex = /^[A-Za-z\s'.-]+$/;
     if (!nameRegex.test(nameValue)) {
       showFieldError(
@@ -876,21 +902,25 @@ function validateForm() {
         'Please use letters only (no emojis or special characters)'
       );
       errors.push({ field: nameField, section: 'section-2' });
+      if (!firstErrorSection) firstErrorSection = 'section-2';
       isValid = false;
     }
   }
 
-  // 2. Delivery date validation
+  // 2. SECTION 3 – DELIVERY DATE
   const dateField = document.querySelector('#deliveryDateInput');
   if (!dateField || !dateField.value) {
     showFieldError(dateField, 'Please select a delivery date');
     errors.push({ field: dateField, section: 'section-3' });
+    if (!firstErrorSection) firstErrorSection = 'section-3';
     isValid = false;
   }
 
-  // 3. Time slot validation
-  const timeSlotSelected = document.querySelector('input[name="timeSlot"]:checked');
-  if (!timeSlotSelected) {
+  // SECTION 3 — TIME SLOT (validate hidden field only)
+  const timeSlotField = document.querySelector('#timeSlotField');
+  const timeSlotValue = timeSlotField ? timeSlotField.value.trim() : '';
+
+  if (!timeSlotValue) {
     const timeSlotSection = document.querySelector('#section-3');
     const timeSlotContainer = document.querySelector('#section-3 #timeslot-div');
     if (timeSlotContainer && timeSlotSection) {
@@ -900,11 +930,12 @@ function validateForm() {
         'Please select a preferred time slot'
       );
       errors.push({ field: timeSlotContainer, section: 'section-3' });
+      if (!firstErrorSection) firstErrorSection = 'section-3';
       isValid = false;
     }
   }
 
-  // 4. Delivery method validation
+  // 4. SECTION 4 – DELIVERY METHOD
   const deliveryMethodSelected = document.querySelector('input[name="deliveryMethod"]:checked');
   if (!deliveryMethodSelected) {
     const deliverySection = document.querySelector('#section-4');
@@ -916,28 +947,41 @@ function validateForm() {
         'Please select a delivery method'
       );
       errors.push({ field: deliveryContainer, section: 'section-4' });
+      if (!firstErrorSection) firstErrorSection = 'section-4';
       isValid = false;
     }
   }
 
-  // 5. Contact number validation
+  // 5. SECTION 5 – CART / COOKIES
+  if (state.cart.length === 0) {
+    showToast('Please add at least one item to your cart before submitting.', 'warning');
+    const cookieSection = document.querySelector('#section-5');
+    errors.push({ field: cookieSection, section: 'section-5' });
+    if (!firstErrorSection) firstErrorSection = 'section-5';
+    isValid = false;
+  }
+
+  // 6. SECTION 6 – CONTACT NUMBER
   const contactField = document.querySelector('input[name="contactNumber"]');
   const phoneRegex = /^(09|\+639)\d{9}$/;
+  const contactValue = contactField ? contactField.value.trim() : '';
 
-  if (!contactField || !contactField.value.trim()) {
+  if (!contactField || !contactValue) {
     showFieldError(contactField, 'Please enter your contact number');
     errors.push({ field: contactField, section: 'section-6' });
+    if (!firstErrorSection) firstErrorSection = 'section-6';
     isValid = false;
-  } else if (!phoneRegex.test(contactField.value.trim())) {
+  } else if (!phoneRegex.test(contactValue)) {
     showFieldError(
       contactField,
       'Please enter a valid Philippine phone number (e.g., 09123456789)'
     );
     errors.push({ field: contactField, section: 'section-6' });
+    if (!firstErrorSection) firstErrorSection = 'section-6';
     isValid = false;
   }
 
-  // 6. Social media platform (only if handle is provided)
+  // 7. SECTION 6 – SOCIAL (only if handle entered)
   const socialHandleField = document.querySelector('#socialHandleInput');
   const socialHandle = socialHandleField ? socialHandleField.value.trim() : '';
   const platformSelected = document.querySelector('input[name="socialPlatform"]:checked');
@@ -951,54 +995,41 @@ function validateForm() {
         'Please select a social media platform since you provided a username'
       );
       errors.push({ field: socialContainer, section: 'section-6' });
+      if (!firstErrorSection) firstErrorSection = 'section-6';
       isValid = false;
     }
   }
 
-  // 7. Payment method validation
+  // 8. SECTION 7 – PAYMENT
   const paymentField = document.querySelector('select[name="payment"]');
   if (!paymentField || !paymentField.value) {
     showFieldError(paymentField, 'Please select a payment method');
     errors.push({ field: paymentField, section: 'section-7' });
+    if (!firstErrorSection) firstErrorSection = 'section-7';
     isValid = false;
   }
 
-  // 8. Cart validation
-  if (state.cart.length === 0) {
-    showToast('Please add at least one item to your cart before submitting.', 'warning');
-    errors.push({ section: 'section-5' });
-    isValid = false;
-  }
+  // ---------------------------
+  // SCROLL + TOAST
+  // ---------------------------
+  if (!isValid && firstErrorSection) {
+    const match = firstErrorSection.match(/(\d+)/);
+    if (match) {
+      const numericId = parseInt(match[1], 10);
+      if (!isNaN(numericId)) {
+        console.log('Validation: first error section =', firstErrorSection);
+        updateCurrentSection(numericId);
 
-  // 🚨 Scroll to first error (and fix active-section) if any
-  if (errors.length > 0) {
-    const firstError = errors[0];
-    const sectionId = firstError.section; // e.g. "section-2"
-
-    if (sectionId) {
-      const match = sectionId.match(/(\d+)/);
-      if (match) {
-        const numericId = parseInt(match[1], 10);
-
-        if (!isNaN(numericId)) {
-          console.log('Validation: scrolling to section', numericId);
-
-          // 1) Mark correct section as active
-          updateCurrentSection(numericId);
-
-          // 2) Scroll that section into view
-          const sectionEl = document.getElementById(sectionId);
-          if (sectionEl) {
-            sectionEl.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
-          }
+        const sectionEl = document.getElementById(firstErrorSection);
+        if (sectionEl) {
+          sectionEl.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
         }
       }
     }
 
-    // Summary toast
     showToast(
       `Please fix ${errors.length} error${errors.length > 1 ? 's' : ''} in the form before submitting.`,
       'error'
@@ -1007,7 +1038,6 @@ function validateForm() {
 
   return isValid;
 }
-
 
 // Update the clearAllErrors function to handle the new error placement
 function clearAllErrors() {
@@ -1192,8 +1222,8 @@ function buildOrderSummary() {
   }
   
   const deliveryDate = form.deliveryDate.value || '—';
-  const timeSlotElement = DOM.get('input[name="timeSlot"]:checked');
-  const timeSlot = timeSlotElement ? timeSlotElement.value : 'Not selected';
+  const timeSlotField = DOM.get('#timeSlotField');
+  const timeSlot = timeSlotField && timeSlotField.value ? timeSlotField.value : 'Not selected';
   const deliveryMethodElement = DOM.get('input[name="deliveryMethod"]:checked');
   const deliveryMethod = deliveryMethodElement ? deliveryMethodElement.value : 'Not selected';
   const contact = form.contactNumber.value.trim();
@@ -1290,8 +1320,8 @@ function prepareFormSubmitData() {
     
     const contactNumber = form.contactNumber.value.trim();
     const deliveryDate = form.deliveryDate.value || 'Not selected';
-    const timeSlotElement = document.querySelector('input[name="timeSlot"]:checked');
-    const timeSlot = timeSlotElement ? timeSlotElement.value : 'Not selected';
+    const timeSlotField = document.getElementById('timeSlotField');
+    const timeSlot = timeSlotField && timeSlotField.value ? timeSlotField.value : 'Not selected';
     const deliveryMethodElement = document.querySelector('input[name="deliveryMethod"]:checked');
     const deliveryMethod = deliveryMethodElement ? deliveryMethodElement.value : 'Not selected';
     const payment = form.payment.value;
@@ -1672,9 +1702,9 @@ function validateSingleField(field) {
       showFieldError(field, 'Please use letters only (no emojis or special characters)');
       return false;
     }
-  
-    clearFieldError(field);
+    //clearFieldError(field);
     return true;
+
   } else if (fieldName === 'deliveryDate' && field.value == '') {
     showFieldError(field, 'Please select a delivery date');
   } else if (fieldName === 'contactNumber') {
@@ -1691,21 +1721,29 @@ function validateSingleField(field) {
 
 function clearDeliveryDateError() {
   const dateField = document.querySelector('#deliveryDateInput');
-  const dateContainer = document.querySelector('#deliverydate-div');
-  
+
   if (dateField) {
+    // Remove highlight on the input
     dateField.classList.remove('error-highlight');
+
+    // Remove error message directly after the input
+    const next = dateField.nextElementSibling;
+    if (
+      next &&
+      (next.classList.contains('field-error') ||
+        next.classList.contains('container-error'))
+    ) {
+      next.remove();
+    }
   }
+
+  // Optional: also remove any container highlight on the wrapper, if ever used
+  const dateContainer = document.querySelector('#deliverydate-div');
   if (dateContainer) {
     dateContainer.classList.remove('container-error-highlight');
   }
-  
-  // Remove any error messages near the date field
-  const dateError = document.querySelector('#deliverydate-div + .field-error, #deliverydate-div + .container-error');
-  if (dateError) {
-    dateError.remove();
-  }
 }
+
 
 function clearTimeSlotError() {
   const timeSlotContainer = document.querySelector('#section-3 #timeslot-div');
@@ -2518,6 +2556,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (DOM.get('#orderForm')) {
     updateCurrentSection(2); // Start at section-2 (What's your name?)
     setupSectionFocusTracking();
+    resetTimeSlotSelection();
   }
 
   // Thank you page initialization

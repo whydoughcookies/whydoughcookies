@@ -28,7 +28,7 @@
     </nav>
   </header>
 
-  <form id="orderForm"  aria-labelledby="order-form-title">
+  <form id="orderForm" aria-labelledby="order-form-title" autocomplete="off">
     <!-- FormSubmit.co Configuration -->
     <input type="hidden" name="_subject" id="emailSubject" value="Why Dough Order">
     <input type="hidden" name="_captcha" value="false">
@@ -99,17 +99,17 @@
         <label class="text-2xl font-bold mb-4 block text-brown">Preferred Time Slot</label>
         <div class="grid grid-cols-3 gap-3 mb-6" id="timeslot-div">
           <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '9AM-12PM')">
-            <input type="radio" name="timeSlot" value="9AM-12PM" class="hidden">
+            <input type="radio" class="hidden time-slot-radio">
             <span class="text-brown">9AM - 12PM</span>
           </div>
           <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '1PM-3PM')">
-            <input type="radio" name="timeSlot" value="1PM-3PM" class="hidden">
+            <input type="radio" class="hidden time-slot-radio">
             <span class="text-brown">1PM - 3PM</span>
           </div>
           <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '4PM-6PM')">
-            <input type="radio" name="timeSlot" value="4PM-6PM" class="hidden">
+            <input type="radio" class="hidden time-slot-radio">
             <span class="text-brown">4PM - 6PM</span>
-          </div>
+          </div>          
         </div>
       </div>
       <div class="navigation-buttons">
