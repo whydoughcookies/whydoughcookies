@@ -1566,3 +1566,9 @@ section.active-section .navigation-buttons {
   }
 }
 
+.step-indicator {
+  font-size: 0.75rem;
+  color: #6b7280;        /* subtle gray-brown */
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}

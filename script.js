@@ -1142,15 +1142,48 @@ function setupSectionFocusTracking() {
 }
 
 function updateCurrentSection(sectionId) {
-  // You can add visual indicators or tracking here
   console.log(`Navigated to section ${sectionId} via button`);
-  
-  // Optional: Add active state to current section
+
+  // Remove active state from all sections
   document.querySelectorAll('section').forEach(section => {
     section.classList.remove('active-section');
   });
-  document.getElementById(`section-${sectionId}`).classList.add('active-section');
+
+  const activeSection = document.getElementById(`section-${sectionId}`);
+  if (!activeSection) return;
+
+  activeSection.classList.add('active-section');
+
+  // 🔢 Step indicator logic
+  const nav = activeSection.querySelector('.navigation-buttons');
+  if (nav) {
+    // Try to find an existing step indicator in this nav
+    let indicatorDiv = nav.querySelector('.step-indicator');
+
+    // If it doesn't exist yet, create it and insert as the first child
+    if (!indicatorDiv) {
+      indicatorDiv = document.createElement('div');
+      indicatorDiv.className = 'step-indicator';
+      nav.insertBefore(indicatorDiv, nav.firstChild);
+    }
+
+    const STEP_TOTAL = 8;
+    const sectionToStep = {
+      2: 1,
+      3: 2,
+      4: 3,
+      5: 4,
+      6: 5,
+      7: 6,
+      8: 7,
+      9: 8
+    };
+
+    const currentStep = sectionToStep[sectionId] || 1;
+    indicatorDiv.textContent = `Step ${currentStep} of ${STEP_TOTAL}`;
+  }
 }
+
 
 // Enhanced navigation buttons with better UX
 function enhanceNavigationButtons() {
