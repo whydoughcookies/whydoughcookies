@@ -1149,38 +1149,10 @@ function updateCurrentSection(sectionId) {
     section.classList.remove('active-section');
   });
 
+  // Add active state to the current section
   const activeSection = document.getElementById(`section-${sectionId}`);
-  if (!activeSection) return;
-
-  activeSection.classList.add('active-section');
-
-  // 🔢 Step indicator logic
-  const nav = activeSection.querySelector('.navigation-buttons');
-  if (nav) {
-    // Try to find an existing step indicator in this nav
-    let indicatorDiv = nav.querySelector('.step-indicator');
-
-    // If it doesn't exist yet, create it and insert as the first child
-    if (!indicatorDiv) {
-      indicatorDiv = document.createElement('div');
-      indicatorDiv.className = 'step-indicator';
-      nav.insertBefore(indicatorDiv, nav.firstChild);
-    }
-
-    const STEP_TOTAL = 8;
-    const sectionToStep = {
-      2: 1,
-      3: 2,
-      4: 3,
-      5: 4,
-      6: 5,
-      7: 6,
-      8: 7,
-      9: 8
-    };
-
-    const currentStep = sectionToStep[sectionId] || 1;
-    indicatorDiv.textContent = `Step ${currentStep} of ${STEP_TOTAL}`;
+  if (activeSection) {
+    activeSection.classList.add('active-section');
   }
 }
 

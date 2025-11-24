@@ -22,6 +22,7 @@ html, body {
   overflow-x: hidden; 
   height: 100%; 
   font-family: 'Poppins', sans-serif; 
+  overscroll-behavior: none; /* Prevents pull-to-refresh on many browsers */
 }
 
 /* Page-specific scroll behavior */
@@ -1038,7 +1039,7 @@ section > div > label {
     scrollbar-width: thin;
     scrollbar-color: var(--accent) var(--brown-200);
   }
-
+  #section-3 .form-container,
   #section-5 .form-container{
     margin-top: 50px;
   }
@@ -1571,4 +1572,15 @@ section.active-section .navigation-buttons {
   color: #6b7280;        /* subtle gray-brown */
   font-weight: 500;
   margin-bottom: 0.25rem;
+}
+
+/* Adjust navigation bar position slightly above bottom */
+.navigation-buttons {
+  bottom: 30px !important;        /* was probably 0–4px before */
+}
+
+/* Optional: give a bit more tap padding area */
+.navigation-buttons button {
+  padding-bottom: 14px;
+  padding-top: 14px;
 }
