@@ -140,10 +140,29 @@ function setVH() {
   document.documentElement.style.setProperty('--vh', `${vh}px`);
 }
 
+// Enhanced navigation for external buttons
+function setupExternalNavigation() {
+  // Add loading states to all navigation buttons
+  document.querySelectorAll('.navigation-buttons .nav-button, .navigation-buttons .arrow-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+      // Add loading animation
+      this.classList.add('loading');
+      
+      // Remove loading state after navigation
+      setTimeout(() => {
+        this.classList.remove('loading');
+      }, 1000);
+    });
+  });
+}
+
 // Navigation
 function scrollToSection(id) {
   const element = document.getElementById(`section-${id}`);
-  if (element) element.scrollIntoView({ behavior: 'smooth' });
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+    updateCurrentSection(id);
+  }
 }
 
 // Cart Management
@@ -833,7 +852,6 @@ function selectSocialPlatform(element) {
   if (radio) radio.checked = true;
 }
 
-// FIXED VALIDATION SYSTEM - WORKS FOR ALL FIELDS
 function validateForm() {
   // Clear previous errors
   clearAllErrors();
@@ -843,96 +861,153 @@ function validateForm() {
 
   // 1. Name validation
   const nameField = document.querySelector('input[name="name"]');
-  if (!nameField || !nameField.value.trim()) {
-      showFieldError(nameField, 'Please enter your name');
+  const nameValue = nameField ? nameField.value.trim() : '';
+
+  if (!nameField || !nameValue) {
+    showFieldError(nameField, 'Please enter your name');
+    errors.push({ field: nameField, section: 'section-2' });
+    isValid = false;
+  } else {
+    // Allow letters, spaces, dot, apostrophe, and hyphen only
+    const nameRegex = /^[A-Za-z\s'.-]+$/;
+    if (!nameRegex.test(nameValue)) {
+      showFieldError(
+        nameField,
+        'Please use letters only (no emojis or special characters)'
+      );
       errors.push({ field: nameField, section: 'section-2' });
       isValid = false;
+    }
   }
 
-  // 2. Delivery date validation - FIXED
+  // 2. Delivery date validation
   const dateField = document.querySelector('#deliveryDateInput');
   if (!dateField || !dateField.value) {
-      showFieldError(dateField, 'Please select a delivery date');
-      errors.push({ field: dateField, section: 'section-3' });
-      isValid = false;
+    showFieldError(dateField, 'Please select a delivery date');
+    errors.push({ field: dateField, section: 'section-3' });
+    isValid = false;
   }
 
-  // 3. Time slot validation - FIXED (moved error outside container)
+  // 3. Time slot validation
   const timeSlotSelected = document.querySelector('input[name="timeSlot"]:checked');
   if (!timeSlotSelected) {
-      // Get the parent container of time slots to show error below it
-      const timeSlotSection = document.querySelector('#section-3');
-      const timeSlotContainer = document.querySelector('#section-3 #timeslot-div');
-      if (timeSlotContainer && timeSlotSection) {
-          showContainerError(timeSlotSection, timeSlotContainer, 'Please select a preferred time slot');
-          errors.push({ field: timeSlotContainer, section: 'section-3' });
-          isValid = false;
-      }
+    const timeSlotSection = document.querySelector('#section-3');
+    const timeSlotContainer = document.querySelector('#section-3 #timeslot-div');
+    if (timeSlotContainer && timeSlotSection) {
+      showContainerError(
+        timeSlotSection,
+        timeSlotContainer,
+        'Please select a preferred time slot'
+      );
+      errors.push({ field: timeSlotContainer, section: 'section-3' });
+      isValid = false;
+    }
   }
 
-  // 4. Delivery method validation - FIXED (moved error outside container)
+  // 4. Delivery method validation
   const deliveryMethodSelected = document.querySelector('input[name="deliveryMethod"]:checked');
   if (!deliveryMethodSelected) {
-      const deliverySection = document.querySelector('#section-4');
-      const deliveryContainer = document.querySelector('#section-4 .space-y-4');
-      if (deliveryContainer && deliverySection) {
-          showContainerError(deliverySection, deliveryContainer, 'Please select a delivery method');
-          errors.push({ field: deliveryContainer, section: 'section-4' });
-          isValid = false;
-      }
+    const deliverySection = document.querySelector('#section-4');
+    const deliveryContainer = document.querySelector('#section-4 .space-y-4');
+    if (deliveryContainer && deliverySection) {
+      showContainerError(
+        deliverySection,
+        deliveryContainer,
+        'Please select a delivery method'
+      );
+      errors.push({ field: deliveryContainer, section: 'section-4' });
+      isValid = false;
+    }
   }
 
   // 5. Contact number validation
   const contactField = document.querySelector('input[name="contactNumber"]');
   const phoneRegex = /^(09|\+639)\d{9}$/;
+
   if (!contactField || !contactField.value.trim()) {
-      showFieldError(contactField, 'Please enter your contact number');
-      errors.push({ field: contactField, section: 'section-6' });
-      isValid = false;
+    showFieldError(contactField, 'Please enter your contact number');
+    errors.push({ field: contactField, section: 'section-6' });
+    isValid = false;
   } else if (!phoneRegex.test(contactField.value.trim())) {
-      showFieldError(contactField, 'Please enter a valid Philippine phone number (e.g., 09123456789)');
-      errors.push({ field: contactField, section: 'section-6' });
-      isValid = false;
+    showFieldError(
+      contactField,
+      'Please enter a valid Philippine phone number (e.g., 09123456789)'
+    );
+    errors.push({ field: contactField, section: 'section-6' });
+    isValid = false;
   }
 
-  // 6. Social media validation - FIXED
-  const socialHandle = document.querySelector('#socialHandleInput').value.trim();
+  // 6. Social media platform (only if handle is provided)
+  const socialHandleField = document.querySelector('#socialHandleInput');
+  const socialHandle = socialHandleField ? socialHandleField.value.trim() : '';
   const platformSelected = document.querySelector('input[name="socialPlatform"]:checked');
+
   if (socialHandle && !platformSelected) {
-      const socialContainer = document.querySelector('#socialPlatformSelection');
-      if (socialContainer) {
-          showContainerError(socialContainer, 'Please select a social media platform since you provided a username');
-          errors.push({ field: socialContainer, section: 'section-6' });
-          isValid = false;
-      }
+    const socialContainer = document.querySelector('#socialPlatformSelection');
+    if (socialContainer) {
+      showContainerError(
+        socialContainer,
+        socialContainer,
+        'Please select a social media platform since you provided a username'
+      );
+      errors.push({ field: socialContainer, section: 'section-6' });
+      isValid = false;
+    }
   }
 
   // 7. Payment method validation
   const paymentField = document.querySelector('select[name="payment"]');
   if (!paymentField || !paymentField.value) {
-      showFieldError(paymentField, 'Please select a payment method');
-      errors.push({ field: paymentField, section: 'section-7' });
-      isValid = false;
+    showFieldError(paymentField, 'Please select a payment method');
+    errors.push({ field: paymentField, section: 'section-7' });
+    isValid = false;
   }
 
   // 8. Cart validation
   if (state.cart.length === 0) {
-      showToast('Please add at least one item to your cart before submitting.', 'warning');
-      errors.push({ section: 'section-5' });
-      isValid = false;
+    showToast('Please add at least one item to your cart before submitting.', 'warning');
+    errors.push({ section: 'section-5' });
+    isValid = false;
   }
 
-  // Scroll to first error if any
+  // 🚨 Scroll to first error (and fix active-section) if any
   if (errors.length > 0) {
-      const firstError = errors[0];
-      scrollToErrorSection(firstError.section);
-      
-      // Show summary toast
-      showToast(`Please fix ${errors.length} error${errors.length > 1 ? 's' : ''} in the form before submitting.`, 'error');
+    const firstError = errors[0];
+    const sectionId = firstError.section; // e.g. "section-2"
+
+    if (sectionId) {
+      const match = sectionId.match(/(\d+)/);
+      if (match) {
+        const numericId = parseInt(match[1], 10);
+
+        if (!isNaN(numericId)) {
+          console.log('Validation: scrolling to section', numericId);
+
+          // 1) Mark correct section as active
+          updateCurrentSection(numericId);
+
+          // 2) Scroll that section into view
+          const sectionEl = document.getElementById(sectionId);
+          if (sectionEl) {
+            sectionEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        }
+      }
+    }
+
+    // Summary toast
+    showToast(
+      `Please fix ${errors.length} error${errors.length > 1 ? 's' : ''} in the form before submitting.`,
+      'error'
+    );
   }
 
   return isValid;
 }
+
 
 // Update the clearAllErrors function to handle the new error placement
 function clearAllErrors() {
@@ -1016,6 +1091,26 @@ function overrideScrollToSection() {
   };
 }
 
+function setupSectionFocusTracking() {
+  document.addEventListener(
+    'focusin',
+    (event) => {
+      const section = event.target.closest('section[id^="section-"]');
+      if (!section) return;
+
+      const match = section.id.match(/^section-(\d+)$/);
+      if (!match) return;
+
+      const id = parseInt(match[1], 10);
+      if (isNaN(id)) return;
+
+      console.log('Focus moved to section', id);
+      updateCurrentSection(id);
+    },
+    true // capture phase so we catch focus even before it bubbles
+  );
+}
+
 function updateCurrentSection(sectionId) {
   // You can add visual indicators or tracking here
   console.log(`Navigated to section ${sectionId} via button`);
@@ -1078,19 +1173,6 @@ function showContainerError(sectionElement, container, message) {
   // Insert the error message AFTER the container (outside)
   container.parentNode.insertBefore(errorElement, container.nextSibling);
 }
-
-function scrollToErrorSection(sectionId) {
-  if (sectionId) {
-      const element = document.getElementById(sectionId);
-      if (element) {
-          element.scrollIntoView({ 
-              behavior: 'smooth', 
-              block: 'center' 
-          });
-      }
-  }
-}
-
   
 function buildOrderSummary() {
   const form = DOM.get('#orderForm');
@@ -1511,6 +1593,14 @@ function setupRealTimeValidation() {
     }
   });
 
+  const nameField = document.querySelector('input[name="name"]');
+  if (nameField) {
+    nameField.addEventListener('input', function () {
+      const cleaned = this.value.replace(/[^A-Za-z\s'.-]/g, '');
+      if (cleaned !== this.value) this.value = cleaned;
+    });
+  }
+
   // Radio groups - time slot (with enhanced clearing)
   const timeSlotRadios = document.querySelectorAll('input[name="timeSlot"]');
   timeSlotRadios.forEach(radio => {
@@ -1570,8 +1660,21 @@ function validateSingleField(field) {
   }
   
   // Validate based on field type
-  if (fieldName === 'name' && !field.value.trim()) {
-    showFieldError(field, 'Please enter your name');
+  if (field.name === 'name') {
+    const value = field.value.trim();
+    if (!value) {
+      showFieldError(field, 'Please enter your name');
+      return false;
+    }
+  
+    const nameRegex = /^[A-Za-z\s'.-]+$/;
+    if (!nameRegex.test(value)) {
+      showFieldError(field, 'Please use letters only (no emojis or special characters)');
+      return false;
+    }
+  
+    clearFieldError(field);
+    return true;
   } else if (fieldName === 'deliveryDate' && field.value == '') {
     showFieldError(field, 'Please select a delivery date');
   } else if (fieldName === 'contactNumber') {
@@ -2378,6 +2481,8 @@ function takeScreenshot() {
 // Initialize based on page
 document.addEventListener('DOMContentLoaded', function() {
   // Load cart from storage
+  console.log('Why Dough script loaded – v2.3.0');
+
   const savedCart = localStorage.getItem('whyDoughCart');
   if (savedCart) {
     try {
@@ -2385,6 +2490,10 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (e) {
       state.cart = [];
     }
+  }
+  // Setup external navigation if on order page
+  if (document.getElementById('orderForm')) {
+    setupExternalNavigation();
   }
 
   setVH();
@@ -2405,6 +2514,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (orderForm) orderForm.addEventListener('submit', handleFormSubmit);
   }
   
+  // Set initial active section for order page
+  if (DOM.get('#orderForm')) {
+    updateCurrentSection(2); // Start at section-2 (What's your name?)
+    setupSectionFocusTracking();
+  }
+
   // Thank you page initialization
   if (DOM.get('#orderIdDisplay')) {
     setTimeout(() => {

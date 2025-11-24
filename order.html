@@ -50,11 +50,13 @@
         <label class="text-2xl font-bold mb-4 block text-brown text-center">What's your name? <span class="text-red-500">*</span></label>
         <input name="name" required type="text" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Your name" />
         <div id="name-required" class="sr-only">This field is required</div>
-        <div class="flex justify-end items-center mt-8">
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(3)" class="nav-button">
-            Next <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M5 12l7 7 7-7"/></svg>
-          </button>
-        </div>
+        
+      </div>
+      <div class="navigation-buttons">
+      <div></div>
+        <button type="button" onclick="buildOrderSummary(); scrollToSection(3)" class="nav-button">
+          Next <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M5 12l7 7 7-7"/></svg>
+        </button>
       </div>
     </section>
 
@@ -109,17 +111,16 @@
             <span class="text-brown">4PM - 6PM</span>
           </div>
         </div>
-        
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(2)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(4)" class="nav-button">
-            Next <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M5 12l7 7 7-7"/></svg>
-          </button>
-        </div>
+      </div>
+      <div class="navigation-buttons">
+        <button type="button" onclick="scrollToSection(2)" class="arrow-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+          </svg>
+        </button>
+        <button type="button" onclick="buildOrderSummary(); scrollToSection(4)" class="nav-button">
+          Next
+        </button>
       </div>
     </section>
 
@@ -147,17 +148,16 @@
             <p class="text-sm text-brown-600">Please ensure someone is available to receive your order.</p>
           </div>
         </div>
-        
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(3)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(5)" class="nav-button">
-            Next <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M5 12l7 7 7-7"/></svg>
-          </button>
-        </div>
+      </div>
+      <div class="navigation-buttons">
+        <button type="button" onclick="buildOrderSummary(); scrollToSection(3)" class="arrow-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+          </svg>
+        </button>
+        <button type="button" onclick="buildOrderSummary(); scrollToSection(5)" class="nav-button">
+          Next <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v13M5 12l7 7 7-7"/></svg>
+        </button>
       </div>
     </section>
 
@@ -198,19 +198,17 @@
             <p class="font-bold text-brown-700 mb-4 text-xl">₱320</p>
             <div class="text-sm text-brown-600 mt-2">Click to view details</div>
           </div>
-
         </div>
-
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(4)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(6)" class="nav-button">
-            Next
-          </button>
-        </div>
+      </div>
+      <div class="navigation-buttons">
+        <button type="button" onclick="buildOrderSummary(); scrollToSection(4)" class="arrow-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+          </svg>
+        </button>
+        <button type="button" onclick="buildOrderSummary(); scrollToSection(6)" class="nav-button">
+          Next
+        </button>
       </div>
     </section>
 
@@ -257,17 +255,16 @@
             </label>
           </div>
         </div>
-                
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(5)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(7)" class="nav-button">
-            Next
-          </button>
-        </div>
+      </div>
+      <div class="navigation-buttons">
+        <button type="button" onclick="buildOrderSummary(); scrollToSection(5)" class="arrow-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+          </svg>
+        </button>
+        <button type="button" onclick="buildOrderSummary(); scrollToSection(7)" class="nav-button">
+          Next
+        </button>
       </div>
     </section>
 
@@ -281,16 +278,16 @@
           <option value="Bank Transfer">Bank Transfer</option>
           <option value="COD">Cash on Delivery</option>
         </select>
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(6)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(8)" class="nav-button">
-            Next
-          </button>
-        </div>
+      </div>
+      <div class="navigation-buttons">
+        <button type="button" onclick="buildOrderSummary(); scrollToSection(6)" class="arrow-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+          </svg>
+        </button>
+        <button type="button" onclick="buildOrderSummary(); scrollToSection(8)" class="nav-button">
+          Next
+        </button>
       </div>
     </section>
 
@@ -299,16 +296,16 @@
       <div class="form-container max-w-md">
         <label class="text-2xl font-bold mb-4 block text-brown">Notes (Optional)</label>
         <textarea name="notes" class="w-full border border-brown-200 p-4 rounded-xl h-32 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Any special requests or instructions..."></textarea>
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(7)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="button" onclick="buildOrderSummary(); scrollToSection(9);" class="nav-button">
-            Next
-          </button>
-        </div>
+      </div>
+      <div class="navigation-buttons">
+        <button type="button" onclick="scrollToSection(7)" class="arrow-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+          </svg>
+        </button>
+        <button type="button" onclick="buildOrderSummary(); scrollToSection(9);" class="nav-button">
+          Next
+        </button>
       </div>
     </section>
 
@@ -317,16 +314,16 @@
       <div class="form-container max-w-lg">
         <h2 class="text-2xl font-bold mb-6 text-brown">Order Summary</h2>
         <div id="summaryContent" class="text-left space-y-3 text-brown-800"></div>
-        <div class="flex justify-between items-center mt-8">
-          <button type="button" onclick="scrollToSection(8)" class="arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
-          </button>
-          <button type="submit" class="nav-button bg-green-600 hover:bg-green-700">
-            Submit Order ✅
-          </button>
-        </div>
+      </div>
+      <div class="navigation-buttons">
+        <button type="button" onclick="scrollToSection(8)" class="arrow-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+          </svg>
+        </button>
+        <button type="submit" class="nav-button bg-green-600 hover:bg-green-700">
+          Submit Order ✅
+        </button>
       </div>
     </section>
 

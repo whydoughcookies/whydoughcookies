@@ -50,22 +50,6 @@ body:not(.homepage-body) {
   height: 100vh;
 }
 
-body:not(.homepage-body) section {
-  scroll-snap-align: none !important;
-  min-height: 100vh;
-  height: 100vh;
-  overflow: hidden;
-  text-align: center;
-}
-
-/* Ensure each section takes full viewport */
-#section-2, #section-3, #section-4, #section-5, 
-#section-6, #section-7, #section-8, #section-9 {
-  height: 100vh;
-  min-height: 100vh;
-  overflow: hidden;
-}
-
 section::before { 
   content: ""; 
   position:absolute; 
@@ -156,8 +140,9 @@ form section {
   box-shadow: 0 10px 25px rgba(93, 74, 39, 0.1);
   border: 1px solid var(--brown-200);
   max-width: 896px;
-  margin: 0 auto;
-  /*max-height: calc(100vh - 200px);*/
+  margin-bottom: 0;
+  /*margin: 0 auto;
+  max-height: calc(100vh - 200px);*/
   overflow: visible;
 }
 
@@ -650,6 +635,7 @@ form section {
 #section-7 .form-container,
 #section-8 .form-container {
   max-width: 400px;
+  margin-bottom: 70px;
 }
 
 #section-5 .form-container {
@@ -710,17 +696,6 @@ section > div > label {
   text-align: center;
 }
 
-#section-2 > div,
-#section-3 > div,
-#section-4 > div,
-#section-5 > div,
-#section-6 > div,
-#section-7 > div,
-#section-8 > div,
-#section-9 > div{
-  margin-top: 60px;
-}
-
 @media (max-width: 768px) {
   #section-5 .grid {
       gap: 1rem;
@@ -731,11 +706,6 @@ section > div > label {
     overflow: hidden !important;
     position: fixed;
     width: 100%;
-  }
-  
-  body:not(.homepage-body) section {
-    overflow: hidden;
-    padding-bottom: 80px !important; /* Space for footer */
   }
   
   /* Only allow scrolling within specific containers */
@@ -1061,12 +1031,16 @@ section > div > label {
     max-height: 65vh;
     overflow-y: auto;
     padding: 1.5rem;
-    padding-bottom: 80px; /* Space for sticky buttons */
+    padding-bottom: 80px;
     margin-bottom: 20px;
     position: relative;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: var(--accent) var(--brown-200); /* Firefox */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) var(--brown-200);
+  }
+
+  #section-5 .form-container{
+    margin-top: 50px;
   }
 
   /* Custom scrollbar for webkit browsers */
@@ -1104,14 +1078,14 @@ section > div > label {
   }
 
   /* Ensure the sections themselves have proper mobile spacing */
-  /*#section-3,*/
+  /*#section-3,
   #section-5 {
     padding: 1rem !important;
     min-height: 100vh;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-start;
-  }
+  }*/
 
   /* Adjust section 5 grid for better mobile scrolling */
   #section-5 .grid {
@@ -1219,6 +1193,22 @@ section > div > label {
     border: none;
     margin-top: 2rem;
   }
+
+  .navigation-buttons {
+    position: relative;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    background: transparent;
+    padding: 2rem 0 0 0;
+    border: none;
+    box-shadow: none;
+    margin: 0 auto;
+  }
+  
+  section {
+    padding-bottom: 2rem !important;
+  }
 }
 
 /* iOS Scrollbar Visibility Fix */
@@ -1310,6 +1300,23 @@ section > div > label {
   #section-5 .form-container.scrolling::after {
     display: none;
   }
+
+  .navigation-buttons {
+    width: 95%;
+    bottom: 70px; /* Closer to footer on mobile */
+    padding: 0.75rem;
+  }
+  
+  section {
+    padding-bottom: 130px !important;
+  }
+  
+  /* Make sure scrollable sections still work */
+  #section-3 .form-container,
+  #section-5 .form-container {
+    padding-bottom: 3rem; /* keep space for the nav buttons if needed */
+    margin-bottom: 0;
+  }
 }
 
 /* Enhanced scroll indicators for better UX */
@@ -1340,3 +1347,222 @@ section > div > label {
     transform: translateX(-50%) translateY(-3px);
   }
 }
+
+.navigation-buttons {
+  position: fixed;
+  bottom: 36px; /* Position above footer */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 400px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 16px;
+  z-index: 100;
+}
+
+/* Adjust section padding to account for fixed buttons */
+section {
+  padding-bottom: 140px !important; /* Extra space for buttons + footer */
+}
+
+/* Show navigation buttons only for the active section */
+section .navigation-buttons {
+  display: none;
+}
+
+section.active-section .navigation-buttons {
+  display: flex;
+}
+
+body:not(.homepage-body) section {
+  scroll-snap-align: none !important;
+  min-height: calc(var(--vh, 1vh) * 100);
+  height: calc(var(--vh, 1vh) * 100);
+  overflow: hidden;
+  text-align: center;
+
+  /* Center the section content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* === Layout & Section Behavior for Order / Thank-you Pages === */
+
+/* Lock viewport and use iOS-safe vh for non-homepage pages */
+body:not(.homepage-body) {
+  overflow: hidden;
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+/* Each section fills the viewport and centers its content */
+body:not(.homepage-body) section {
+  scroll-snap-align: none !important;
+  min-height: calc(var(--vh, 1vh) * 100);
+  height: calc(var(--vh, 1vh) * 100);
+  overflow: hidden;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.5rem 1rem 0; /* top & side padding; bottom space handled by footer + nav */
+}
+
+/* Form container (order & thank-you pages) */
+.form-container {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(93, 74, 39, 0.1);
+  border: 1px solid var(--brown-200);
+  width: 90%;
+  max-width: 896px;
+  margin: 0 auto;
+}
+
+/* Narrower form on most steps */
+#section-2 .form-container,
+#section-3 .form-container,
+#section-4 .form-container,
+#section-6 .form-container,
+#section-7 .form-container,
+#section-8 .form-container {
+  max-width: 400px;
+}
+
+/* Wider for cookie selection */
+#section-5 .form-container {
+  max-width: 800px;
+}
+
+/* Summary section width */
+#section-9 .form-container {
+  max-width: 500px;
+}
+
+/* === Navigation buttons bar === */
+
+.navigation-buttons {
+  position: fixed;
+  bottom: 80px; /* above the footer */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 400px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1rem;
+  border-radius: 16px;
+  z-index: 100;
+}
+
+/* Only show navigation bar for the active section */
+section .navigation-buttons {
+  display: none;
+}
+
+section.active-section .navigation-buttons {
+  display: flex;
+}
+
+/* === Footer (already used site-wide) === */
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--accent);
+  color: white;
+  padding: 12px;
+  text-align: center;
+  font-size: 0.9em;
+  z-index: 40;
+}
+
+/* === Mobile / Small screens === */
+@media (max-width: 768px) {
+  body:not(.homepage-body) {
+    position: fixed;
+    width: 100%;
+  }
+
+  body:not(.homepage-body) section {
+    padding: 1.25rem 1rem 0;
+  }
+
+  .form-container {
+    width: 95%;
+    padding: 1.25rem;
+  }
+
+  /* Scrollable steps (delivery date & cookie selection) */
+  #section-3 .form-container,
+  #section-5 .form-container {
+    max-height: 65vh;
+    overflow-y: auto;
+    padding-bottom: 2.5rem; /* extra room inside card */
+    margin-bottom: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) var(--brown-200);
+  }
+
+  #section-3 .form-container::-webkit-scrollbar,
+  #section-5 .form-container::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  #section-3 .form-container::-webkit-scrollbar-track,
+  #section-5 .form-container::-webkit-scrollbar-track {
+    background: var(--brown-200);
+    border-radius: 10px;
+    margin: 5px 0;
+  }
+
+  #section-3 .form-container::-webkit-scrollbar-thumb,
+  #section-5 .form-container::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 10px;
+  }
+
+  /* Nav bar a bit wider on mobile */
+  .navigation-buttons {
+    width: 95%;
+    bottom: 80px;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Make sure there is space for nav + footer */
+  section {
+    padding-bottom: 130px !important;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  body:not(.homepage-body) section {
+    padding: 1rem 0.75rem 0;
+  }
+
+  .form-container {
+    width: 98%;
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  #section-3 .form-container,
+  #section-5 .form-container {
+    max-height: 75vh;
+  }
+}
+
