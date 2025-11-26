@@ -1,4 +1,12 @@
-/* styles.css - Cleaned & Refactored */
+/* Why Dough Custom Font */
+@font-face {
+  font-family: 'WhyDoughFont';
+  src: url('fonts/WhyDough-Regular.otf') format('opentype'),
+       url('fonts/WhyDough-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* Color Scheme Variables */
 :root {
   --cream: #fdf4d5;
@@ -21,8 +29,17 @@ html, body {
   scroll-behavior: smooth; 
   overflow-x: hidden; 
   height: 100%; 
-  font-family: 'Poppins', sans-serif; 
+  font-family: 'WhyDoughFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overscroll-behavior: none; /* Prevents pull-to-refresh on many browsers */
+}
+
+body {
+  text-transform: lowercase;
+}
+
+.uppercase-wd,
+.uppercase-wd * {
+  text-transform: uppercase !important;
 }
 
 /* Page-specific scroll behavior */
@@ -1507,7 +1524,6 @@ section.active-section .navigation-buttons {
   }
 
   /* Scrollable steps (delivery date & cookie selection) */
-  #section-3 .form-container,
   #section-5 .form-container {
     max-height: 65vh;
     overflow-y: auto;
@@ -1567,20 +1583,44 @@ section.active-section .navigation-buttons {
   }
 }
 
-.step-indicator {
-  font-size: 0.75rem;
-  color: #6b7280;        /* subtle gray-brown */
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
 /* Adjust navigation bar position slightly above bottom */
 .navigation-buttons {
-  bottom: 30px !important;        /* was probably 0–4px before */
+  bottom: 36px !important;        /* was probably 0–4px before */
 }
 
 /* Optional: give a bit more tap padding area */
 .navigation-buttons button {
   padding-bottom: 14px;
   padding-top: 14px;
+}
+
+/* Navigation icons (Back + Next) */
+.nav-icon {
+  display: inline-block;
+}
+
+/* Icon inside pill "Next" button */
+.nav-button .nav-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Icon inside round arrow button */
+.arrow-btn .nav-icon {
+  width: 32px;
+  height: 32px;
+}
+
+/* Center placeholder text */
+::placeholder {
+  text-align: center;
+}
+
+/* Safari / iOS support */
+input::placeholder {
+  text-align: center;
+}
+
+textarea::placeholder {
+  text-align: center;
 }

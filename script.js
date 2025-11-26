@@ -2154,9 +2154,9 @@ flavors.forEach(flavor => {
 
 // Update the homepage initialization
 function initializeHomepage() {
-initializeFlavorsSection();
-setupTestimonialSlider();
-setupSmoothScrolling();
+  initializeFlavorsSection();
+  setupTestimonialSlider();
+  setupSmoothScrolling();
 }
 
 
@@ -2241,7 +2241,6 @@ function setupSmoothScrolling() {
 // Enhanced scroll handling for iOS
 function setupScrollableSections() {
   const scrollableContainers = [
-    document.querySelector('#section-3 .form-container'),
     document.querySelector('#section-5 .form-container')
   ];
 
