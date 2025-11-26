@@ -33,6 +33,10 @@ html, body {
   overscroll-behavior: none; /* Prevents pull-to-refresh on many browsers */
 }
 
+p {
+  font-size: 1.3rem !important;
+}
+
 body {
   text-transform: lowercase;
 }
@@ -889,7 +893,6 @@ section > div > label {
   width: 100%;
   height: auto;
   border-radius: 8px;
-  background: var(--brown-100);
   transition: opacity 0.3s ease;
 }
 
@@ -1125,7 +1128,7 @@ section > div > label {
 
   .quick-date-btn {
     padding: 0.75rem 0.5rem;
-    font-size: 0.7rem;
+    font-size: 0.85rem;
   }
 
   /* Time slot buttons adjustment */
@@ -1139,7 +1142,7 @@ section > div > label {
   }
 
   .time-slot-option span{
-    font-size: 0.7rem;
+    font-size: 0.85rem;
   }
 }
 
@@ -1622,5 +1625,11 @@ input::placeholder {
 }
 
 textarea::placeholder {
+  text-align: center;
+}
+
+/* Center all text inside inputs */
+input,
+textarea {
   text-align: center;
 }

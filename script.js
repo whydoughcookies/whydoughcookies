@@ -1039,88 +1039,6 @@ function validateForm() {
   return isValid;
 }
 
-// Update the clearAllErrors function to handle the new error placement
-function clearAllErrors() {
-  // Remove all error messages
-  const errorMessages = document.querySelectorAll('.field-error, .container-error');
-  errorMessages.forEach(error => error.remove());
-  
-  // Remove all error highlights
-  const errorHighlights = document.querySelectorAll('.error-highlight, .container-error-highlight');
-  errorHighlights.forEach(element => {
-      element.classList.remove('error-highlight', 'container-error-highlight');
-  });
-}
-
-// Disable scrolling between sections and enforce button navigation
-function disableSectionScrolling() {
-  // Only apply to order page
-  if (!document.getElementById('orderForm')) return;
-  
-  // Prevent wheel/touch scroll on body
-  document.body.style.overflow = 'hidden';
-  document.body.style.height = '100vh';
-  
-  // Add event listeners to prevent scrolling
-  preventScrollEvents();
-  
-  // Update scrollToSection to be more strict
-  overrideScrollToSection();
-}
-
-function preventScrollEvents() {
-  // Prevent wheel scrolling
-  window.addEventListener('wheel', preventScroll, { passive: false });
-  
-  // Prevent touch scrolling on body
-  window.addEventListener('touchmove', preventScroll, { passive: false });
-  
-  // Prevent keyboard scrolling
-  window.addEventListener('keydown', preventKeyboardScroll);
-}
-
-function preventScroll(e) {
-  // Allow scrolling only in form containers of sections 3 and 5
-  const isScrollableContainer = 
-    e.target.closest('#section-3 .form-container') || 
-    e.target.closest('#section-5 .form-container');
-  
-  if (!isScrollableContainer) {
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  }
-}
-
-function preventKeyboardScroll(e) {
-  // Prevent spacebar, page up/down, arrow keys from scrolling
-  const scrollKeys = [' ', 'Spacebar', 'PageUp', 'PageDown', 'ArrowUp', 'ArrowDown'];
-  if (scrollKeys.includes(e.key)) {
-    e.preventDefault();
-    return false;
-  }
-}
-
-function overrideScrollToSection() {
-  // Store the original function
-  const originalScrollToSection = window.scrollToSection;
-  
-  // Override with our controlled version
-  window.scrollToSection = function(id) {
-    const element = document.getElementById(`section-${id}`);
-    if (element) {
-      // Use smooth scroll but disable any other scrolling
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-      
-      // Update current section tracking if you have it
-      updateCurrentSection(id);
-    }
-  };
-}
-
 function setupSectionFocusTracking() {
   document.addEventListener(
     'focusin',
@@ -1781,17 +1699,20 @@ function clearDeliveryMethodError() {
 
 // Update the existing clearAllErrors function to use these specific functions
 function clearAllErrors() {
+  // Use specialized clear helpers first
   clearDeliveryDateError();
   clearTimeSlotError();
   clearDeliveryMethodError();
-  
-  // Clear field errors for other inputs
+  clearSocialMediaError();
+
+  // Remove any remaining inline error messages
   const errorMessages = document.querySelectorAll('.field-error, .container-error');
   errorMessages.forEach(error => error.remove());
-  
-  const errorHighlights = document.querySelectorAll('.error-highlight');
-  errorHighlights.forEach(element => {
-    element.classList.remove('error-highlight');
+
+  // Remove highlight classes from any element
+  const highlights = document.querySelectorAll('.error-highlight, .container-error-highlight');
+  highlights.forEach(element => {
+    element.classList.remove('error-highlight', 'container-error-highlight');
   });
 }
 
