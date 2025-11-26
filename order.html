@@ -63,7 +63,7 @@
     <!-- Delivery date & method -->
     <section id="section-3" class="relative">
       <div class="form-container max-w-md">
-        <label class="text-2xl font-bold mb-4 block text-brown">delivery date</label>
+        <label class="text-2xl font-bold mb-4 block text-brown">delivery date <span class="text-red-500">*</span></label>
         
         <!-- Responsive Delivery Disclaimer -->
         <div class="bg-cream border border-brown-200 rounded-lg p-3 mb-4 md:p-4 md:mb-6">
@@ -96,7 +96,7 @@
         </div>
 
         <!-- Time Slot Selection -->
-        <label class="text-2xl font-bold mb-4 block text-brown">preferred time slot</label>
+        <label class="text-2xl font-bold mb-4 block text-brown">preferred time slot <span class="text-red-500">*</span></label>
         <div class="grid grid-cols-3 gap-3 mb-6" id="timeslot-div">
           <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '9AM-12PM')">
             <input type="radio" class="hidden time-slot-radio">
@@ -125,7 +125,7 @@
     <!-- Delivery Method Section -->
     <section id="section-4" class="relative">
       <div class="form-container max-w-md">
-        <label class="text-2xl font-bold mb-4 block text-brown">delivery method</label>
+        <label class="text-2xl font-bold mb-4 block text-brown">delivery method <span class="text-red-500">*</span></label>
         <div class="space-y-4">
           <div class="delivery-option" onclick="selectDeliveryMethod(this, 'pickup')">
             <input type="radio" name="deliveryMethod" value="pickup" class="hidden">
@@ -160,7 +160,7 @@
     <!-- Cookie selection -->
     <section id="section-5" class="relative">
       <div class="form-container max-w-4xl">
-        <h2 class="text-3xl font-bold text-brown text-center mb-4">Choose your cookies</h2>
+        <h2 class="text-3xl font-bold text-brown text-center mb-4">Choose your cookies <span class="text-red-500">*</span></h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
 
@@ -211,7 +211,7 @@
       <div class="form-container max-w-md">
         <label class="text-2xl font-bold mb-6 block text-brown">Contact Details</label>
         
-        <label class="block font-semibold mb-3 text-brown-800">Contact Number</label>
+        <label class="block font-semibold mb-3 text-brown-800">Contact Number <span class="text-red-500">*</span></label>
         <input name="contactNumber" required type="tel" pattern="[0-9]{11}" title="Please enter an 11-digit number (e.g., 09123456789)" placeholder="e.g. 09XXXXXXXXX" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" />
         
         <!-- Social Media Handle Input -->
@@ -317,14 +317,14 @@
 
   <!-- Footer -->
   <div class="footer">
-    #WhyNotWhyDough  |  #WhyDoughItBetter
+    #WhyNot<span class="uppercase-wd">WhyDough</span>  |  #<span class="uppercase-wd">WhyDough</span>ItBetter
   </div>
 
   <!-- Cart Modal -->
   <div id="cartModal" class="modal">
     <div class="modal-content">
       <div class="modal-header flex justify-between items-center">
-        <h3 class="text-lg font-semibold text-brown">🛒 Your Cart</h3>
+        <h3 class="text-lg font-semibold text-brown">🛒 <span class="uppercase-wd">Why Dough</span> Cart</h3>
         <button type="button" onclick="closeCartModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
       </div>
       <div class="modal-body">
