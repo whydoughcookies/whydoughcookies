@@ -27,10 +27,23 @@
 /* Global Styles */
 html, body { 
   scroll-behavior: smooth; 
-  overflow-x: hidden; 
-  height: 100%; 
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-family: 'WhyDoughFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overscroll-behavior: none; /* Prevents pull-to-refresh on many browsers */
+}
+
+/* Scroll lock ONLY for order page */
+body.order-page {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* optional micro-adjust */
+body.text-brown section {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 p {
@@ -66,7 +79,7 @@ body {
   position: relative;
 }
 
-body:not(.homepage-body) {
+body.order-page {
   scroll-snap-type: none !important;
   overflow: hidden !important;
   height: 100vh;
@@ -773,10 +786,15 @@ section > div > label {
   background:var(--brown-100); 
 }
 
+.cookie-label{
+  font-size:1.4rem;
+  align-content: center;
+}
+
 .cookie-price { 
-  font-size:.9rem; 
-  color:#6b7280; 
-  margin-left:8px; 
+  font-size:1.5rem;
+  font-weight: bold;
+  margin-left:12px; 
 }
 
 .quantity-control { 
@@ -1128,7 +1146,7 @@ section > div > label {
 
   .quick-date-btn {
     padding: 0.75rem 0.5rem;
-    font-size: 0.85rem;
+    font-size: 1rem;
   }
 
   /* Time slot buttons adjustment */
@@ -1142,7 +1160,7 @@ section > div > label {
   }
 
   .time-slot-option span{
-    font-size: 0.85rem;
+    font-size: 1rem;
   }
 }
 
@@ -1638,4 +1656,13 @@ textarea::placeholder {
 input,
 textarea {
   text-align: center;
+}
+
+.thankyou-page section > div{
+  margin-top: 110px;
+}
+
+.social-link{
+  text-decoration: underline;
+  color: var(--brown-900);
 }

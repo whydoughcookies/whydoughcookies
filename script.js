@@ -30,21 +30,21 @@ const COOKIE_FLAVORS = [
 const PRODUCT_DATA = {
   ogSet: {
     name: "The OG Set",
-    description: "A perfect introduction to Why Dough! Includes 3 of our signature cookies: The Usual (our classic chocolate chip), The Red One (rich red velvet), and The Burnt One (deep, caramelized flavors). Each cookie is 100g of pure delight.",
+    description: "3 signature cookies — The Usual, The Red One, and The Burnt One. Each cookie weighs 100g+ of chewy indulgence.",
     price: 320,
     image: "images/og-set.PNG",
     id: "ogSet"
   },
   classic6: {
     name: "The Classics", 
-    description: "Our complete collection! Get all 6 of our classic flavors: The Usual, The Red One, The Burnt One, The Milky One (white chocolate dream), Pistash (pistachio perfection), and The Bizz (unique flavor rotation). Perfect for sharing or treating yourself!",
+    description: "All 6 classic flavors in one box: The Usual, The Red One, The Burnt One, The Milky One, PiStash, and The Bizz. Perfect for sharing or treating yourself.",
     price: 660,
     image: "images/classics.JPG", 
     id: "classic6"
   },
   samplers: {
     name: "Samplers",
-    description: "Can't decide? Try them all! This sampler includes 6 cookies (50g each) - one of each classic flavor. Perfect for first-timers or when you want a little taste of everything. Discover your new favorite!",
+    description: "6-piece sampler (50g each) — one of every classic flavor. Perfect for tasting it all.",
     price: 320,
     image: "images/samplers.PNG",
     id: "samplers"
@@ -299,13 +299,14 @@ function getAvailableDeliveryDates(startDate) {
   // Skip today and tomorrow (2-day preparation)
   currentDate.setDate(currentDate.getDate() + 2);
   
-  // Find next 4 available dates (Thursday-Sunday)
   while (dates.length < 8) {
     const day = currentDate.getDay();
+    // Find next 4 available dates (Thursday-Sunday)
     // Thursday (4), Friday (5), Saturday (6), Sunday (0)
-    if ([4, 5, 6, 0].includes(day)) {
+    /*if ([4, 5, 6, 0].includes(day)) {
       dates.push(new Date(currentDate));
-    }
+    }*/
+    dates.push(new Date(currentDate));
     currentDate.setDate(currentDate.getDate() + 1);
   }
   
@@ -671,8 +672,8 @@ function selectBoxSize(row) {
   
   if (sizeInfo && sizeMessage) {
     sizeMessage.textContent = state.selectedBoxSize === 'others' 
-      ? 'Please select at least 3 cookies for your custom box.'
-      : `Please select exactly ${state.selectedBoxSize} cookies for your box.`;
+      ? 'Please select at least 3 cookies for your custom pack.'
+      : `Please select exactly ${state.selectedBoxSize} cookies for your pack.`;
     sizeInfo.classList.remove('hidden');
   }
 }
@@ -690,7 +691,7 @@ function renderCookieList() {
 
     const label = document.createElement('div');
     label.className = 'flex-1 flex justify-between pr-4 cursor-pointer';
-    label.innerHTML = `<span>${flavor.name}</span><span class="cookie-price">₱${flavor.price}</span>`;
+    label.innerHTML = `<span class="cookie-label">${flavor.name}</span><span class="cookie-price">₱${flavor.price}</span>`;
 
     const qtyDiv = document.createElement('div');
     qtyDiv.className = 'quantity-control hidden items-center';
@@ -772,7 +773,7 @@ function addCustomBoxToCart() {
   
   const items = getSelectedCookies(); 
   if (items.length === 0) { 
-    showToast('Please select at least one cookie for your custom box', 'warning'); 
+    showToast('Please select at least one cookie for your custom pack', 'warning'); 
     return; 
   }
   
@@ -780,7 +781,7 @@ function addCustomBoxToCart() {
   
   if (state.selectedBoxSize === 'others') {
     if (totalQty < 3) {
-      showToast(`Please select at least 3 cookies for your custom box. Currently selected: ${totalQty}`, 'warning');
+      showToast(`Please select at least 3 cookies for your custom pack. Currently selected: ${totalQty}`, 'warning');
       return;
     }
   } else {
@@ -798,13 +799,13 @@ function addCustomBoxToCart() {
   
   const totalPrice = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
   
-  // Generate unique ID for custom box
+  // Generate unique ID for custom pack
   const customBoxId = `custom-${Date.now()}`;
   
   state.cart.push({
     id: customBoxId,
     type: 'customBox',
-    name: state.selectedBoxSize === 'others' ? `Custom Box (${totalQty} cookies)` : `Custom Box of ${state.selectedBoxSize}`,
+    name: state.selectedBoxSize === 'others' ? `Custom pack (${totalQty} cookies)` : `Custom pack of ${state.selectedBoxSize}`,
     boxSize: state.selectedBoxSize === 'others' ? totalQty.toString() : state.selectedBoxSize,
     items: [...items],
     price: totalPrice,
@@ -815,11 +816,11 @@ function addCustomBoxToCart() {
   updateCartDisplay();
   closeCustomizeModal();
   
-  // Remove active class from custom box card
+  // Remove active class from custom pack card
   const customBoxCard = document.querySelector('.cookie-card:last-child');
   if (customBoxCard) customBoxCard.classList.remove('active');
   
-  showToast(`Added custom cookie box to cart!`);
+  showToast(`Added custom pack to cart!`);
   
   // Reset selections
   state.selectedBoxSize = null;
@@ -877,23 +878,53 @@ function selectSocialPlatform(element) {
   if (radio) radio.checked = true;
 }
 
-function validateForm() {
-  // Clear previous errors
-  clearAllErrors();
-  
-  let isValid = true;
-  const errors = [];
-  let firstErrorSection = null; // track first section with an error
+// Helper: scroll to a section, center its form container, optionally focus a field, and show a toast
+function scrollToErrorSection(sectionNumber, fieldEl, toastMessage) {
+  const sectionId = `section-${sectionNumber}`;
+  const sectionEl = document.getElementById(sectionId);
 
+  if (typeof updateCurrentSection === 'function') {
+    updateCurrentSection(sectionNumber);
+  }
+
+  if (sectionEl) {
+    const target =
+      sectionEl.querySelector('.form-container') ||
+      sectionEl;
+
+    target.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+  }
+
+  if (fieldEl && typeof fieldEl.focus === 'function') {
+    setTimeout(() => fieldEl.focus(), 350);
+  }
+
+  if (toastMessage && typeof showToast === 'function') {
+    showToast(toastMessage, 'error');
+  }
+
+  // Always stop validation when we call this
+  return false;
+}
+
+function validateForm() {
+  console.log('[validateForm] running'); // debug marker so you can see it in console
+
+  // Clear previous errors and highlights
+  clearAllErrors();
+
+  // -------------------------
   // 1. SECTION 2 – NAME
+  // -------------------------
   const nameField = document.querySelector('input[name="name"]');
   const nameValue = nameField ? nameField.value.trim() : '';
 
   if (!nameField || !nameValue) {
     showFieldError(nameField, 'Please enter your name');
-    errors.push({ field: nameField, section: 'section-2' });
-    if (!firstErrorSection) firstErrorSection = 'section-2';
-    isValid = false;
+    return scrollToErrorSection(2, nameField, 'Please complete your name first.');
   } else {
     const nameRegex = /^[A-Za-z\s'.-]+$/;
     if (!nameRegex.test(nameValue)) {
@@ -901,143 +932,125 @@ function validateForm() {
         nameField,
         'Please use letters only (no emojis or special characters)'
       );
-      errors.push({ field: nameField, section: 'section-2' });
-      if (!firstErrorSection) firstErrorSection = 'section-2';
-      isValid = false;
+      return scrollToErrorSection(2, nameField, 'Please fix your name before continuing.');
     }
   }
 
+  // -------------------------
   // 2. SECTION 3 – DELIVERY DATE
+  // -------------------------
   const dateField = document.querySelector('#deliveryDateInput');
-  if (!dateField || !dateField.value) {
+  const dateValue = dateField ? dateField.value.trim() : '';
+
+  if (!dateField || !dateValue) {
     showFieldError(dateField, 'Please select a delivery date');
-    errors.push({ field: dateField, section: 'section-3' });
-    if (!firstErrorSection) firstErrorSection = 'section-3';
-    isValid = false;
+    return scrollToErrorSection(3, dateField, 'Please select a delivery date.');
   }
 
-  // SECTION 3 — TIME SLOT (validate hidden field only)
+  // -------------------------
+  // 3. SECTION 3 – TIME SLOT
+  // (uses hidden field + active tile)
+  // -------------------------
+  const activeTimeSlot = document.querySelector('#section-3 .time-slot-option.active');
   const timeSlotField = document.querySelector('#timeSlotField');
-  const timeSlotValue = timeSlotField ? timeSlotField.value.trim() : '';
+  let timeSlotValue = timeSlotField ? timeSlotField.value.trim() : '';
 
-  if (!timeSlotValue) {
-    const timeSlotSection = document.querySelector('#section-3');
+  // If a tile is active but hidden field is empty, sync it once
+  if (activeTimeSlot && !timeSlotValue && timeSlotField) {
+    const label = activeTimeSlot.innerText || activeTimeSlot.textContent || '';
+    timeSlotValue = label.trim();
+    timeSlotField.value = timeSlotValue;
+  }
+
+  if (!activeTimeSlot || !timeSlotValue) {
     const timeSlotContainer = document.querySelector('#section-3 #timeslot-div');
-    if (timeSlotContainer && timeSlotSection) {
+    if (timeSlotContainer) {
       showContainerError(
-        timeSlotSection,
+        document.querySelector('#section-3'),
         timeSlotContainer,
         'Please select a preferred time slot'
       );
-      errors.push({ field: timeSlotContainer, section: 'section-3' });
-      if (!firstErrorSection) firstErrorSection = 'section-3';
-      isValid = false;
     }
+    return scrollToErrorSection(3, timeSlotContainer, 'Please select a preferred time slot.');
   }
 
+  // -------------------------
   // 4. SECTION 4 – DELIVERY METHOD
+  // -------------------------
   const deliveryMethodSelected = document.querySelector('input[name="deliveryMethod"]:checked');
   if (!deliveryMethodSelected) {
-    const deliverySection = document.querySelector('#section-4');
     const deliveryContainer = document.querySelector('#section-4 .space-y-4');
-    if (deliveryContainer && deliverySection) {
+    if (deliveryContainer) {
       showContainerError(
-        deliverySection,
+        document.querySelector('#section-4'),
         deliveryContainer,
         'Please select a delivery method'
       );
-      errors.push({ field: deliveryContainer, section: 'section-4' });
-      if (!firstErrorSection) firstErrorSection = 'section-4';
-      isValid = false;
     }
+    return scrollToErrorSection(4, deliveryContainer, 'Please select a delivery method.');
   }
 
+  // -------------------------
   // 5. SECTION 5 – CART / COOKIES
-  if (state.cart.length === 0) {
-    showToast('Please add at least one item to your cart before submitting.', 'warning');
+  // -------------------------
+  if (!Array.isArray(state.cart) || state.cart.length === 0) {
     const cookieSection = document.querySelector('#section-5');
-    errors.push({ field: cookieSection, section: 'section-5' });
-    if (!firstErrorSection) firstErrorSection = 'section-5';
-    isValid = false;
+    showToast('Please add at least one item to your cart before submitting.', 'warning');
+    return scrollToErrorSection(5, cookieSection, null);
   }
 
+  // -------------------------
   // 6. SECTION 6 – CONTACT NUMBER
+  // -------------------------
   const contactField = document.querySelector('input[name="contactNumber"]');
-  const phoneRegex = /^(09|\+639)\d{9}$/;
   const contactValue = contactField ? contactField.value.trim() : '';
+  const phoneRegex = /^(09|\+639)\d{9}$/;
 
   if (!contactField || !contactValue) {
     showFieldError(contactField, 'Please enter your contact number');
-    errors.push({ field: contactField, section: 'section-6' });
-    if (!firstErrorSection) firstErrorSection = 'section-6';
-    isValid = false;
-  } else if (!phoneRegex.test(contactValue)) {
+    return scrollToErrorSection(6, contactField, 'Please enter your contact number.');
+  }
+
+  if (!phoneRegex.test(contactValue)) {
     showFieldError(
       contactField,
       'Please enter a valid Philippine phone number (e.g., 09123456789)'
     );
-    errors.push({ field: contactField, section: 'section-6' });
-    if (!firstErrorSection) firstErrorSection = 'section-6';
-    isValid = false;
+    return scrollToErrorSection(6, contactField, 'Please fix your contact number.');
   }
 
+  // -------------------------
   // 7. SECTION 6 – SOCIAL (only if handle entered)
+  // -------------------------
   const socialHandleField = document.querySelector('#socialHandleInput');
   const socialHandle = socialHandleField ? socialHandleField.value.trim() : '';
   const platformSelected = document.querySelector('input[name="socialPlatform"]:checked');
 
   if (socialHandle && !platformSelected) {
     const socialContainer = document.querySelector('#socialPlatformSelection');
-    if (socialContainer) {
-      showContainerError(
-        socialContainer,
-        socialContainer,
-        'Please select a social media platform since you provided a username'
-      );
-      errors.push({ field: socialContainer, section: 'section-6' });
-      if (!firstErrorSection) firstErrorSection = 'section-6';
-      isValid = false;
-    }
-  }
-
-  // 8. SECTION 7 – PAYMENT
-  const paymentField = document.querySelector('select[name="payment"]');
-  if (!paymentField || !paymentField.value) {
-    showFieldError(paymentField, 'Please select a payment method');
-    errors.push({ field: paymentField, section: 'section-7' });
-    if (!firstErrorSection) firstErrorSection = 'section-7';
-    isValid = false;
-  }
-
-  // ---------------------------
-  // SCROLL + TOAST
-  // ---------------------------
-  if (!isValid && firstErrorSection) {
-    const match = firstErrorSection.match(/(\d+)/);
-    if (match) {
-      const numericId = parseInt(match[1], 10);
-      if (!isNaN(numericId)) {
-        console.log('Validation: first error section =', firstErrorSection);
-        updateCurrentSection(numericId);
-
-        const sectionEl = document.getElementById(firstErrorSection);
-        if (sectionEl) {
-          sectionEl.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      }
-    }
-
-    showToast(
-      `Please fix ${errors.length} error${errors.length > 1 ? 's' : ''} in the form before submitting.`,
-      'error'
+    showContainerError(
+      socialContainer,
+      socialContainer,
+      'Please select a social media platform since you provided a username'
     );
+    return scrollToErrorSection(6, socialContainer, 'Please choose a social media platform.');
   }
 
-  return isValid;
+  // -------------------------
+  // 8. SECTION 7 – PAYMENT
+  // -------------------------
+  const paymentField = document.querySelector('select[name="payment"]');
+  const paymentValue = paymentField ? paymentField.value : '';
+
+  if (!paymentField || !paymentValue) {
+    showFieldError(paymentField, 'Please select a payment method');
+    return scrollToErrorSection(7, paymentField, 'Please select a payment method.');
+  }
+
+  // If we reach here, all checks passed
+  return true;
 }
+
 
 function setupSectionFocusTracking() {
   document.addEventListener(
@@ -1418,6 +1431,16 @@ function formatCookieQuantities(cookieQuantities) {
 async function handleFormSubmit(e) {
   e.preventDefault();
 
+  console.log('handleFormSubmit running'); // <- add this
+
+  // Force the currently focused field to blur so its inline validation runs
+  if (document.activeElement && document.activeElement !== document.body) {
+    try {
+      document.activeElement.blur();
+    } catch (err) {
+      // ignore
+    }
+  }
   // Validate form before submission
   if (!validateForm()) {
     return;
@@ -1491,6 +1514,27 @@ async function handleFormSubmit(e) {
       loadingOverlay.classList.add('hidden');
     }
   }
+}
+
+// Fallback: trigger handleFormSubmit from the button directly
+function submitOrderFromButton() {
+  console.log('submitOrderFromButton running');
+
+  const form = document.getElementById('orderForm');
+  if (!form) {
+    console.warn('Order form not found');
+    return;
+  }
+
+  // Create a fake event object that looks like a submit event
+  const fakeEvent = {
+    target: form,
+    preventDefault: () => {
+      // no-op, handleFormSubmit already prevents default
+    }
+  };
+
+  handleFormSubmit(fakeEvent);
 }
 
 // Store order data for thank-you page
@@ -1699,19 +1743,19 @@ function clearDeliveryMethodError() {
 
 // Update the existing clearAllErrors function to use these specific functions
 function clearAllErrors() {
-  // Use specialized clear helpers first
-  clearDeliveryDateError();
-  clearTimeSlotError();
-  clearDeliveryMethodError();
-  clearSocialMediaError();
+  // Use specialized clear helpers where available
+  if (typeof clearDeliveryDateError === 'function') clearDeliveryDateError();
+  if (typeof clearTimeSlotError === 'function') clearTimeSlotError();
+  if (typeof clearDeliveryMethodError === 'function') clearDeliveryMethodError();
+  if (typeof clearSocialMediaError === 'function') clearSocialMediaError();
 
-  // Remove any remaining inline error messages
+  // Remove all inline error messages
   const errorMessages = document.querySelectorAll('.field-error, .container-error');
   errorMessages.forEach(error => error.remove());
 
-  // Remove highlight classes from any element
-  const highlights = document.querySelectorAll('.error-highlight, .container-error-highlight');
-  highlights.forEach(element => {
+  // Remove any highlight classes
+  const highlighted = document.querySelectorAll('.error-highlight, .container-error-highlight');
+  highlighted.forEach(element => {
     element.classList.remove('error-highlight', 'container-error-highlight');
   });
 }
@@ -1804,52 +1848,52 @@ function initializeFlavorsSection() {
 const flavors = [
   { 
     name: "The Usual", 
-    description: "Your klassic ooey gooey bittersweet combo.", 
+    description: "Crispy outside, soft inside—loaded with premium dark and milk chocolate for the ultimate classic cookie.", 
     image: "images/the-usual.PNG" 
   },
   { 
     name: "The Red One", 
-    description: "Rich red velvet with white chocolate chunks", 
+    description: "Soft red velvet cookie filled with creamy cream cheese and layered with premium white chocolate.", 
     image: "images/the-red-one.PNG" 
   },
   { 
     name: "The Burnt One", 
-    description: "Deep, caramelized flavors with a perfect crisp", 
+    description: "Rich dark chocolate cookie packed with premium dark chocolate and a luscious cream cheese center.", 
     image: "images/the-burnt-one.PNG" 
   },
   { 
     name: "The Bizz", 
-    description: "Our rotating special flavor - always a surprise!", 
+    description: "Chewy cookie with rich Lotus Biscoff flavor, crunchy biscuit bits, and smooth milk chocolate.", 
     image: "images/the-bizz.PNG" 
   },
   { 
     name: "The Milky One", 
-    description: "Creamy white chocolate and macadamia nuts", 
+    description: "Soft buttery cookie overflowing with creamy white chocolate—sweet, chewy, and irresistibly dreamy.", 
     image: "images/milky-one.PNG" 
   },
   { 
     name: "Pistash", 
-    description: "Buttery pistachio with dark chocolate chunks", 
+    description: "Tender pistachio cookie infused with pistachio cream and crunch, finished with white and milk chocolate.", 
     image: "images/pistash.PNG" 
   },
   { 
     name: "The OT", 
-    description: "Oatmeal treat with raisins and cinnamon", 
+    description: "Malty Ovaltine cookie with a crunchy surprise filling and creamy milk chocolate.", 
     image: "images/the-ot.PNG" 
   },
   { 
     name: "Nut-so-Carrot", 
-    description: "Carrot cake inspired with nuts and spices", 
+    description: "Moist carrot cake–inspired cookie with cream cheese filling, real carrot goodness, and white chocolate.", 
     image: "images/nut-so-carrot.PNG" 
   },
   { 
     name: "Espress-oh", 
-    description: "Coffee infused with chocolate chunks", 
+    description: "Bold coffee cookie with cream cheese filling blended with silky white and milk chocolate.", 
     image: "images/espressoh.PNG" 
   },
   { 
     name: "Berry Match", 
-    description: "Mixed berries with white chocolate", 
+    description: "Earthy matcha cookie with tangy berry bits balanced by smooth white chocolate.", 
     image: "images/berry-match.PNG" 
   }
 ];
@@ -2283,12 +2327,14 @@ function generateOrderItemsHtml(cart) {
   
   let itemsHtml = '<li>• Items:</li>';
   
+
+
   cart.forEach((item, index) => {
     if (item.type === 'customBox') {
-      // Custom box items
+      // Custom pack items
       itemsHtml += `<li class="ml-4 text-brown-600">- ${item.name}:`;
       item.items.forEach(cookieItem => {
-        itemsHtml += `<span class="block ml-2">${cookieItem.name} × ${cookieItem.qty}</span>`;
+        itemsHtml += `${cookieItem.name} (×${cookieItem.qty}) `;
       });
       itemsHtml += `</li>`;
     } else {
@@ -2432,19 +2478,10 @@ function fallbackCopyTextToClipboard(text) {
   document.body.removeChild(textArea);
 }
 
-function takeScreenshot() {
-  const orderId = DOM.get('#orderIdDisplay').textContent;
-  if (orderId === 'Loading...' || orderId === 'Not Found') {
-    showToast('Please wait for order details to load', 'warning');
-    return;
-  }
-  alert(`Take a screenshot of this page to save your Order ID: ${orderId}`);
-}
-
 // Initialize based on page
 document.addEventListener('DOMContentLoaded', function() {
   // Load cart from storage
-  console.log('Why Dough script loaded – v2.3.0');
+  console.log('Why Dough script loaded – v2.4.0');
 
   const savedCart = localStorage.getItem('whyDoughCart');
   if (savedCart) {
@@ -2468,13 +2505,13 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Order page initialization
-  if (DOM.get('#quickDates')) {
+  const orderForm = DOM.get('#orderForm');
+  if (orderForm) {
     generateWeekendDates();
     updateCartDisplay();
     setupRealTimeValidation();
-    
-    const orderForm = DOM.get('#orderForm');
-    if (orderForm) orderForm.addEventListener('submit', handleFormSubmit);
+    console.log('Attaching submit handler to orderForm'); // debug
+    orderForm.addEventListener('submit', handleFormSubmit);
   }
   
   // Set initial active section for order page

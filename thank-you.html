@@ -8,11 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="text-brown">
+<body class="text-brown thankyou-page">
     <section class="min-h-screen flex items-center justify-center bg-gradient-to-r from-accent to-brown-700 bg-cream">
         <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-xl max-w-md w-full border border-brown-100 text-center">
             <h1 class="text-3xl font-bold mb-4 text-brown">Order Confirmed!</h1>
-            
             <!-- Order ID Display -->
             <div class="bg-cream border-2 border-brown-300 p-4 rounded-lg mb-6">
                 <p class="text-sm text-brown-700 mb-1">Your Order ID:</p>
@@ -23,7 +22,7 @@
                         id="copyButton"
                         class="bg-accent hover:bg-brown-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2"
                     >
-                        📋 Copy
+                        📋
                     </button>
                 </div>
                 <p class="text-xs text-brown-600">Click copy to save this for reference</p>
@@ -55,8 +54,10 @@
                         <strong>What's next?</strong>
                     </p>
                     <ul class="text-sm text-brown-600 list-disc list-inside space-y-1">
-                        <li>We'll contact you within 4 hours with the contacts you provided</li>
-                        <li>Prepare your payment method</li>
+                        <li>Copy your Order ID or take a screenshot of this page.</li>
+                        <li>We'll contact you within 4 hours with the contacts you provided.</li>
+                        <li>Or you can contact us at our <a class="social-link" href="https://ig.me/m/whydoughcookies">Instagram</a>, <a class="social-link" href="https://m.me/whydoughcookies">Facebook</a> or <a class="social-link" href="www.tiktok.com/@whydoughcookies">Tiktok</a> with your Order ID.</li>
+                        <li>Prepare your payment amount to transfer with your preferred payment option.</li>
                         <li>Get ready for delicious cookies! 🍪</li>
                     </ul>
                 </div>
@@ -66,17 +67,13 @@
                 <button onclick="clearStorageAndGoHome()" class="nav-button">
                     Back to Home
                 </button>
-                <button onclick="takeScreenshot()" class="secondary-button">
-                    📸 Save Order Details
-                </button>
             </div>
             
             <p class="text-xs text-brown-600 mt-6">
-                Having issues? Contact us at our <a href="https://ig.me/m/whydoughcookies">Instagram</a>, <a href="https://m.me/whydoughcookies">Facebook</a> or <a href="www.tiktok.com/@whydoughcookies">Tiktok</a> with your Order ID
+                Having issues? Contact us at our <a class="social-link" href="https://ig.me/m/whydoughcookies">Instagram</a>, <a class="social-link" href="https://m.me/whydoughcookies">Facebook</a> or <a class="social-link" href="www.tiktok.com/@whydoughcookies">Tiktok</a> with your Order ID
             </p>
         </div>
     </section>
-    <!-- Add this before closing body tag in thank-you.html -->
     <div id="toastContainer" class="toast-container"></div>
     <script src="script.js"></script>
 </body>

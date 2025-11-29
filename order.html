@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="text-brown">
+<body class="text-brown order-page">
   <!-- Order Page Navigation with Cart -->
   <header role="banner">
     <nav class="order-nav">
@@ -28,7 +28,11 @@
     </nav>
   </header>
 
-  <form id="orderForm" aria-labelledby="order-form-title" autocomplete="off">
+  <form id="orderForm" 
+    aria-labelledby="order-form-title" 
+    autocomplete="off" 
+    novalidate
+   >
     <!-- FormSubmit.co Configuration -->
     <input type="hidden" name="_subject" id="emailSubject" value="Why Dough Order">
     <input type="hidden" name="_captcha" value="false">
@@ -48,7 +52,7 @@
     <section id="section-2" class="relative" aria-labelledby="name-heading">
       <div class="form-container max-w-md">
         <label class="text-2xl font-bold mb-4 block text-brown text-center">what's your name? <span class="text-red-500">*</span></label>
-        <input name="name" required type="text" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="your name" />
+        <input name="name" type="text" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="your name" />
         <div id="name-required" class="sr-only">This field is required</div>
         
       </div>
@@ -70,10 +74,13 @@
           <div class="flex items-start space-x-2 md:space-x-3">
             <div class="flex-1">
               <p class="text-sm md:text-base text-brown-700 font-semibold mb-1">
-                thursday to sunday delivery only
+                Pre-orders only
+                
               </p>
               <p class="text-xs md:text-sm text-brown-600 leading-tight">
-                orders require 2-day preparation. today is <span id="currentDateDisplay"></span>.
+                Orders require at least 2 days preparation.
+                Order via our website, or send us a message for special requests.<br>
+                <b>today is <span id="currentDateDisplay"></span>.</b>
               </p>
             </div>
           </div>
@@ -85,8 +92,7 @@
         <div class="mb-6" id="deliverydate-div">
           <input 
             name="deliveryDate" 
-            id="deliveryDateInput" 
-            required 
+            id="deliveryDateInput"  
             type="text" 
             placeholder="select preferred date" 
             onfocus="this.type='date'; this.focus();" 
@@ -132,7 +138,7 @@
             <span class="font-semibold text-brown text-lg">pick up</span>
           </div>
           <div id="pickupDetails" class="hidden mt-2 p-4 bg-cream rounded-lg border border-brown-200">
-            <p class="text-sm text-brown-700 mb-2"><strong>Pickup Location:</strong> 123 Cookie Street, Metro Manila</p>
+            <p class="text-sm text-brown-700 mb-2"><strong>Pickup Location:</strong> 1755 Dominga Street, Pasay City, Metro Manila</p>
             <p class="text-sm text-brown-600">Please bring your order confirmation. We'll have your cookies ready!</p>
           </div>
           
@@ -142,7 +148,7 @@
           </div>
           <div id="deliveryDetails" class="hidden mt-2 p-4 bg-cream rounded-lg border border-brown-200">
             <p class="text-sm text-brown-700 mb-2"><strong>Delivery Areas:</strong> Metro Manila only</p>
-            <p class="text-sm text-brown-600 mb-2"><strong>Fee:</strong> ₱50 within 5km, ₱100 beyond</p>
+            <p class="text-sm text-brown-600 mb-2"><strong>Fee:</strong> Will be shouldered by you</p>
             <p class="text-sm text-brown-600">Please ensure someone is available to receive your order.</p>
           </div>
         </div>
@@ -166,7 +172,7 @@
 
           <!-- Customize Your Cookie Box Card -->
           <div class="cookie-card" onclick="toggleCustomBoxCard(this)">
-            <p class="font-semibold text-xl mb-4 text-brown">Customize Your Cookie Box</p>
+            <p class="font-semibold text-xl mb-4 text-brown">Customize Your Cookie Set</p>
             <p class="text-sm text-brown-600 mb-4">Create your own cookie selection</p>
             <div class="text-sm text-brown-600 mt-2">Click to customize</div>
           </div>
@@ -212,7 +218,7 @@
         <label class="text-2xl font-bold mb-6 block text-brown">Contact Details</label>
         
         <label class="block font-semibold mb-3 text-brown-800">Contact Number <span class="text-red-500">*</span></label>
-        <input name="contactNumber" required type="tel" pattern="[0-9]{11}" title="Please enter an 11-digit number (e.g., 09123456789)" placeholder="e.g. 09XXXXXXXXX" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" />
+        <input name="contactNumber" title="Please enter an 11-digit number (e.g., 09123456789)" placeholder="e.g. 09XXXXXXXXX" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" />
         
         <!-- Social Media Handle Input -->
         <label class="block font-semibold mb-3 text-brown-800">Social Media Handle <span class="text-gray-500 text-sm">(Optional)</span></label>
@@ -264,7 +270,7 @@
     <section id="section-7" class="relative">
       <div class="form-container max-w-md">
         <label class="text-2xl font-bold mb-4 block text-brown">Payment Method <span class="text-red-500">*</span></label>
-        <select name="payment" required class="w-full border border-brown-200 p-4 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent">
+        <select name="payment" class="w-full border border-brown-200 p-4 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent">
           <option value="" disabled selected>Select payment method</option>
           <option value="GCash">GCash</option>
           <option value="Bank Transfer">Bank Transfer</option>
@@ -306,7 +312,7 @@
         <button type="button" onclick="scrollToSection(8)" class="arrow-btn">
           <img src="icons/wd-up.svg" alt="Previous section" class="nav-icon">
         </button>
-        <button type="submit" class="nav-button bg-green-600 hover:bg-green-700">
+        <button type="submit" class="nav-button bg-green-600 hover:bg-green-700" onclick="submitOrderFromButton()">
           submit order
         </button>
       </div>
@@ -347,7 +353,7 @@
   <div id="customizeModal" class="modal">
     <div class="modal-content">
       <div class="modal-header flex justify-between items-center">
-        <h3 class="text-lg font-semibold text-brown">Customize Your Cookie Box</h3>
+        <h3 class="text-lg font-semibold text-brown">Customize Your Cookie set</h3>
         <button type="button" onclick="closeCustomizeModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
       </div>
       <div class="modal-body">
