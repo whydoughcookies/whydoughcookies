@@ -45,8 +45,31 @@
                 <ul class="text-sm text-brown-600 space-y-1">
                     <li>• Customer: <span id="customerName">-</span></li>
                     <li>• Total Amount: ₱<span id="orderTotal">0</span></li>
-                    <li>• Delivery: <span id="deliveryDate">-</span></li>
-                    <span id="orderDetails">0</span>
+
+                    <!-- Delivery date + time slot (shown beside) -->
+                    <li>
+                    • Delivery:
+                    <span id="deliveryDate">-</span>
+                    <span id="timeSlotDisplay" class="ml-1 text-xs text-brown-500"></span>
+                    </li>
+
+                    <!-- Delivery / payment -->
+                    <li>• Delivery method: <span id="deliveryMethodDisplay">-</span></li>
+                    <li>• Payment: <span id="paymentDisplay">-</span></li>
+
+                    <!-- Only shown if social is provided -->
+                    <li id="socialRow" class="hidden">
+                    • Social: <span id="socialDisplay">-</span>
+                    </li>
+
+                    <!-- Only shown if notes are provided -->
+                    <li id="notesRow" class="hidden">
+                    • Notes: <span id="notesDisplay">-</span>
+                    </li>
+                </ul>
+
+                <!-- Items list will be injected here -->
+                <ul id="orderDetails" class="mt-3 text-sm text-brown-600 space-y-1"></ul>
                 </ul>
                 
                 <div class="border-t border-brown-200 mt-3 pt-3">
@@ -75,6 +98,16 @@
         </div>
     </section>
     <div id="toastContainer" class="toast-container"></div>
+    
     <script src="script.js"></script>
+    <script>
+        // Make sure global scroll locks don't apply on thank-you page
+        document.addEventListener('DOMContentLoaded', function () {
+          if (document.body.classList.contains('thankyou-page')) {
+            document.body.style.overflowY = 'auto';
+            document.body.style.height = 'auto';
+          }
+        });
+      </script>
 </body>
 </html>

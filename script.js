@@ -32,7 +32,7 @@ const PRODUCT_DATA = {
     name: "The OG Set",
     description: "3 signature cookies — The Usual, The Red One, and The Burnt One. Each cookie weighs 100g+ of chewy indulgence.",
     price: 320,
-    image: "images/og-set.PNG",
+    image: "images/og-set.jpeg",
     id: "ogSet"
   },
   classic6: {
@@ -691,7 +691,7 @@ function renderCookieList() {
 
     const label = document.createElement('div');
     label.className = 'flex-1 flex justify-between pr-4 cursor-pointer';
-    label.innerHTML = `<span class="cookie-label">${flavor.name}</span><span class="cookie-price">₱${flavor.price}</span>`;
+    label.innerHTML = `<img class="custom-cookie-image" src="icons/${flavor.name}.svg"><span class="cookie-label">${flavor.name}</span><span class="cookie-price">₱${flavor.price}</span>`;
 
     const qtyDiv = document.createElement('div');
     qtyDiv.className = 'quantity-control hidden items-center';
@@ -880,23 +880,11 @@ function selectSocialPlatform(element) {
 
 // Helper: scroll to a section, center its form container, optionally focus a field, and show a toast
 function scrollToErrorSection(sectionNumber, fieldEl, toastMessage) {
-  const sectionId = `section-${sectionNumber}`;
-  const sectionEl = document.getElementById(sectionId);
-
   if (typeof updateCurrentSection === 'function') {
     updateCurrentSection(sectionNumber);
   }
 
-  if (sectionEl) {
-    const target =
-      sectionEl.querySelector('.form-container') ||
-      sectionEl;
-
-    target.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center'
-    });
-  }
+  scrollToSection(sectionNumber);
 
   if (fieldEl && typeof fieldEl.focus === 'function') {
     setTimeout(() => fieldEl.focus(), 350);
@@ -906,9 +894,9 @@ function scrollToErrorSection(sectionNumber, fieldEl, toastMessage) {
     showToast(toastMessage, 'error');
   }
 
-  // Always stop validation when we call this
   return false;
 }
+
 
 function validateForm() {
   console.log('[validateForm] running'); // debug marker so you can see it in console
@@ -1514,27 +1502,6 @@ async function handleFormSubmit(e) {
       loadingOverlay.classList.add('hidden');
     }
   }
-}
-
-// Fallback: trigger handleFormSubmit from the button directly
-function submitOrderFromButton() {
-  console.log('submitOrderFromButton running');
-
-  const form = document.getElementById('orderForm');
-  if (!form) {
-    console.warn('Order form not found');
-    return;
-  }
-
-  // Create a fake event object that looks like a submit event
-  const fakeEvent = {
-    target: form,
-    preventDefault: () => {
-      // no-op, handleFormSubmit already prevents default
-    }
-  };
-
-  handleFormSubmit(fakeEvent);
 }
 
 // Store order data for thank-you page
@@ -2285,15 +2252,73 @@ function addScrollIndicator(container) {
 
 function displayOrderDetails() {
   const orderData = getOrderData();
-  
   console.log('Retrieved order data:', orderData); // Debug log
-  
+
   if (orderData && orderData.orderId) {
-    document.getElementById('orderIdDisplay').textContent = orderData.orderId;
-    document.getElementById('customerName').textContent = orderData.customerName || '-';
-    document.getElementById('orderTotal').textContent = orderData.totalAmount || '0';
-    document.getElementById('deliveryDate').textContent = orderData.deliveryDate || '-';
-    
+    // Basic header
+    const orderIdEl = document.getElementById('orderIdDisplay');
+    if (orderIdEl) orderIdEl.textContent = orderData.orderId;
+
+    const customerNameEl = document.getElementById('customerName');
+    if (customerNameEl) customerNameEl.textContent = orderData.customerName || '-';
+
+    const orderTotalEl = document.getElementById('orderTotal');
+    if (orderTotalEl) orderTotalEl.textContent = orderData.totalAmount || '0';
+
+    const deliveryDateEl = document.getElementById('deliveryDate');
+    if (deliveryDateEl) deliveryDateEl.textContent = orderData.deliveryDate || '-';
+
+    // Delivery time slot (shown beside date)
+    const timeSlotEl = document.getElementById('timeSlotDisplay');
+    if (timeSlotEl) {
+      if (orderData.timeSlot && orderData.timeSlot !== 'Not selected') {
+        timeSlotEl.textContent = ` • ${orderData.timeSlot}`;
+      } else {
+        timeSlotEl.textContent = '';
+      }
+    }
+
+    // Delivery method
+    const deliveryMethodEl = document.getElementById('deliveryMethodDisplay');
+    if (deliveryMethodEl) {
+      deliveryMethodEl.textContent =
+        orderData.deliveryMethod && orderData.deliveryMethod !== 'Not selected'
+          ? orderData.deliveryMethod
+          : '-';
+    }
+
+    // Payment method
+    const paymentEl = document.getElementById('paymentDisplay');
+    if (paymentEl) {
+      paymentEl.textContent = orderData.payment || '-';
+    }
+
+    // Social handle (only show if provided)
+    const socialRowEl = document.getElementById('socialRow');
+    const socialEl = document.getElementById('socialDisplay');
+    if (socialRowEl && socialEl) {
+      if (orderData.social && orderData.social !== 'Not provided') {
+        socialEl.textContent = orderData.social;
+        socialRowEl.classList.remove('hidden');
+      } else {
+        socialRowEl.classList.add('hidden');
+        socialEl.textContent = '';
+      }
+    }
+
+    // Notes (only show if not empty)
+    const notesRowEl = document.getElementById('notesRow');
+    const notesEl = document.getElementById('notesDisplay');
+    if (notesRowEl && notesEl) {
+      if (orderData.notes && orderData.notes.trim() !== '') {
+        notesEl.textContent = orderData.notes.trim();
+        notesRowEl.classList.remove('hidden');
+      } else {
+        notesRowEl.classList.add('hidden');
+        notesEl.textContent = '';
+      }
+    }
+
     // Update items display
     const orderDetailsContainer = document.getElementById('orderDetails');
     if (orderDetailsContainer) {
@@ -2301,21 +2326,25 @@ function displayOrderDetails() {
         const itemsHtml = generateOrderItemsHtml(orderData.cart);
         orderDetailsContainer.innerHTML = itemsHtml;
       } else {
-        orderDetailsContainer.innerHTML = '<li class="text-brown-600">Items: No items in order</li>';
+        orderDetailsContainer.innerHTML =
+          '<li class="text-brown-600">Items: No items in order</li>';
       }
     }
-    
+
     document.title = `Order #${orderData.orderId} - Why Dough`;
     console.log('Order details displayed successfully');
   } else {
-    document.getElementById('orderIdDisplay').textContent = 'Not Found';
+    const orderIdEl = document.getElementById('orderIdDisplay');
+    if (orderIdEl) orderIdEl.textContent = 'Not Found';
+
     const orderDetails = document.getElementById('orderDetails');
     if (orderDetails) {
-      orderDetails.innerHTML = '<li class="text-brown-600">Order details not available.</li>';
+      orderDetails.innerHTML =
+        '<li class="text-brown-600">Order details not available.</li>';
     }
-    
+
     console.warn('Order data not found for display');
-    // Don't show toast on thank-you page to avoid errors
+    // no toast on thank-you
   }
 }
 
@@ -2324,25 +2353,24 @@ function generateOrderItemsHtml(cart) {
   if (!cart || cart.length === 0) {
     return '<li>• Items: No items in order</li>';
   }
-  
+
   let itemsHtml = '<li>• Items:</li>';
-  
 
-
-  cart.forEach((item, index) => {
+  cart.forEach((item) => {
     if (item.type === 'customBox') {
-      // Custom pack items
-      itemsHtml += `<li class="ml-4 text-brown-600">- ${item.name}:`;
-      item.items.forEach(cookieItem => {
-        itemsHtml += `${cookieItem.name} (×${cookieItem.qty}) `;
-      });
-      itemsHtml += `</li>`;
+      // Custom pack items with commas, only show cookies with qty > 0
+      const cookiesText = (item.items || [])
+        .filter(cookieItem => cookieItem.qty > 0)
+        .map(cookieItem => `${cookieItem.name} (×${cookieItem.qty})`)
+        .join(', ');
+
+      itemsHtml += `<li class="ml-4 text-brown-600">- ${item.name}: ${cookiesText}</li>`;
     } else {
       // Premade items
       itemsHtml += `<li class="ml-4 text-brown-600">- ${item.name} × ${item.quantity}</li>`;
     }
   });
-  
+
   return itemsHtml;
 }
 

@@ -52,7 +52,7 @@
     <section id="section-2" class="relative" aria-labelledby="name-heading">
       <div class="form-container max-w-md">
         <label class="text-2xl font-bold mb-4 block text-brown text-center">what's your name? <span class="text-red-500">*</span></label>
-        <input name="name" type="text" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="your name" />
+        <input name="name" type="text" maxlength="50" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="your name" />
         <div id="name-required" class="sr-only">This field is required</div>
         
       </div>
@@ -78,8 +78,7 @@
                 
               </p>
               <p class="text-xs md:text-sm text-brown-600 leading-tight">
-                Orders require at least 2 days preparation.
-                Order via our website, or send us a message for special requests.<br>
+                Orders require at least 2 days preparation.<br>
                 <b>today is <span id="currentDateDisplay"></span>.</b>
               </p>
             </div>
@@ -290,7 +289,7 @@
     <section id="section-8" class="relative">
       <div class="form-container max-w-md">
         <label class="text-2xl font-bold mb-4 block text-brown">Notes (Optional)</label>
-        <textarea name="notes" class="w-full border border-brown-200 p-4 rounded-xl h-32 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Any special requests or instructions..."></textarea>
+        <textarea name="notes" maxlength="200" class="w-full border border-brown-200 p-4 rounded-xl h-32 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Any special requests or instructions..."></textarea>
       </div>
       <div class="navigation-buttons">
         <button type="button" onclick="scrollToSection(7)" class="arrow-btn">
@@ -312,7 +311,7 @@
         <button type="button" onclick="scrollToSection(8)" class="arrow-btn">
           <img src="icons/wd-up.svg" alt="Previous section" class="nav-icon">
         </button>
-        <button type="submit" class="nav-button bg-green-600 hover:bg-green-700" onclick="submitOrderFromButton()">
+        <button type="submit" class="nav-button bg-green-600 hover:bg-green-700">
           submit order
         </button>
       </div>
