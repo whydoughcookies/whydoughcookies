@@ -206,7 +206,7 @@ function updateCartModal(totalItems, totalAmount) {
           <div class="flex-1">
             <h4 class="font-bold text-brown text-lg">${item.name}</h4>
             ${item.type === 'customBox' ? 
-              `<p class="text-sm text-brown-700">Box of ${item.boxSize}</p>
+              `<p class="text-sm text-brown-700">Pack of ${item.boxSize}</p>
                <p class="text-sm text-brown-600">${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')}</p>` : 
               `<p class="text-sm text-brown-700">Quantity: ${item.quantity}</p>`
             }

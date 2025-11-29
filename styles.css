@@ -163,6 +163,11 @@ section::before {
   font-weight: bold;
 }
 
+.cart-total{
+  font-size: 1.5rem;
+  font-weight: bolder;
+}
+
 /* Form Elements */
 form section {
   background-color: var(--cream);
