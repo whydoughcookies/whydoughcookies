@@ -1586,6 +1586,12 @@ section.active-section .navigation-buttons {
   }
 }
 
+@media (max-width: 400px) {
+  main #home{
+    margin-top: 76px;
+  }
+}
+
 /* Adjust navigation bar position slightly above bottom */
 .navigation-buttons {
   bottom: 36px !important;        /* was probably 0–4px before */
