@@ -875,7 +875,14 @@ function selectSocialPlatform(element) {
   
   element.classList.add('active');
   const radio = element.querySelector('input[type="radio"]');
-  if (radio) radio.checked = true;
+  if (radio) {
+    radio.checked = true;
+  }
+
+  // Clear the error whenever a valid platform is selected
+  if (typeof clearSocialMediaError === 'function') {
+    clearSocialMediaError();
+  }
 }
 
 // Helper: scroll to a section, center its form container, optionally focus a field, and show a toast
@@ -1333,7 +1340,7 @@ Order received: ${new Date().toLocaleString()}
       subjectField.value = `Why Dough Order #${orderId} - ${name} - ${itemCount} item(s) - ₱${totalAmount}`;
     }
     
-    setupGoogleFormsData(orderId, name, socialHandle, contactNumber, deliveryDate, timeSlot, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount);
+    setupGoogleFormsData(orderId, name, socialDisplay, contactNumber, deliveryDate, timeSlot, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount);
     
     return orderData;
     
@@ -1729,10 +1736,17 @@ function clearAllErrors() {
 
 function clearSocialMediaError() {
   const socialContainer = document.querySelector('#socialPlatformSelection');
-  if (socialContainer) {
-      socialContainer.classList.remove('container-error-highlight');
-      const error = socialContainer.querySelector('.container-error');
-      if (error) error.remove();
+  if (!socialContainer) return;
+
+  // Remove red highlight on the container
+  socialContainer.classList.remove('container-error-highlight');
+
+  // Remove any error message(s) directly after the container
+  let sibling = socialContainer.nextElementSibling;
+  while (sibling && sibling.classList.contains('container-error')) {
+    const toRemove = sibling;
+    sibling = sibling.nextElementSibling;
+    toRemove.remove();
   }
 }
 
