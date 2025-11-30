@@ -132,23 +132,23 @@
       <div class="form-container max-w-md">
         <label class="text-2xl font-bold mb-4 block text-brown">delivery method <span class="text-red-500">*</span></label>
         <div class="space-y-4">
-          <div class="delivery-option" onclick="selectDeliveryMethod(this, 'pickup')">
-            <input type="radio" name="deliveryMethod" value="pickup" class="hidden">
-            <span class="font-semibold text-brown text-lg">pick up</span>
-          </div>
-          <div id="pickupDetails" class="hidden mt-2 p-4 bg-cream rounded-lg border border-brown-200">
-            <p class="text-sm text-brown-700 mb-2"><strong>Pickup Location:</strong> 1755 Dominga Street, Pasay City, Metro Manila</p>
-            <p class="text-sm text-brown-600">Please bring your order confirmation. We'll have your cookies ready!</p>
-          </div>
-          
           <div class="delivery-option" onclick="selectDeliveryMethod(this, 'delivery')">
             <input type="radio" name="deliveryMethod" value="delivery" class="hidden">
             <span class="font-semibold text-brown text-lg">delivery</span>
           </div>
           <div id="deliveryDetails" class="hidden mt-2 p-4 bg-cream rounded-lg border border-brown-200">
             <p class="text-sm text-brown-700 mb-2"><strong>Delivery Areas:</strong> Metro Manila only</p>
-            <p class="text-sm text-brown-600 mb-2"><strong>Fee:</strong> Will be shouldered by you</p>
-            <p class="text-sm text-brown-600">Please ensure someone is available to receive your order.</p>
+            <p class="text-sm text-brown-600 mb-2"><strong>Fee:</strong> Shouldered by the customer. We can arrange the booking for you.</p>
+            <p class="text-sm text-brown-600"><strong>Note:</strong>Please ensure someone is available to receive your order upon delivery.</p>
+          </div>
+
+          <div class="delivery-option" onclick="selectDeliveryMethod(this, 'pickup')">
+            <input type="radio" name="deliveryMethod" value="pickup" class="hidden">
+            <span class="font-semibold text-brown text-lg">pick up</span>
+          </div>
+          <div id="pickupDetails" class="hidden mt-2 p-4 bg-cream rounded-lg border border-brown-200">
+            <p class="text-sm text-brown-700 mb-2"><strong>Pickup Location:</strong> 1755 Dominga Street, Pasay City, Metro Manila</p>
+            <p class="text-sm text-brown-600">Just let us know when you arrive and show your order confirmation — your cookies will be ready!</p>
           </div>
         </div>
       </div>
@@ -272,6 +272,7 @@
         <select name="payment" class="w-full border border-brown-200 p-4 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent">
           <option value="" disabled selected>Select payment method</option>
           <option value="GCash">GCash</option>
+          <option value="Maya">Maya</option>
           <option value="Bank Transfer">Bank Transfer</option>
         </select>
       </div>
