@@ -46,7 +46,7 @@ const PRODUCT_DATA = {
     name: "Samplers",
     description: "6-piece sampler (50g each) — one of every classic flavor. Perfect for tasting it all.",
     price: 320,
-    image: "images/samplers.PNG",
+    image: "images/samplers.jpg",
     id: "samplers"
   }
 };

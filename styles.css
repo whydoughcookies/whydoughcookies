@@ -608,6 +608,10 @@ form section {
   animation: loading 1.5s infinite;
 }
 
+.cookie-collection{
+  border-radius: 20px;
+}
+
 @keyframes loading {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
