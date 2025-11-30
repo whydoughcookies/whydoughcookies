@@ -177,12 +177,23 @@ function updateCartDisplay() {
     navCartCount.style.display = totalItems > 0 ? 'flex' : 'none';
   }
 
+  // 🔹 Toggle "Proceed to checkout" button in section 5
+  const proceedWrapper = document.getElementById('proceedCheckoutWrapper');
+  if (proceedWrapper) {
+    if (totalItems > 0) {
+      proceedWrapper.classList.remove('hidden');
+    } else {
+      proceedWrapper.classList.add('hidden');
+    }
+  }
+
   // Update cart modal
   updateCartModal(totalItems, totalAmount);
   
   // Save to storage
   saveCartToStorage();
 }
+
 
 function updateCartModal(totalItems, totalAmount) {
   const cartItems = DOM.get('#cartItems');
@@ -587,6 +598,10 @@ function selectTimeSlot(element, timeSlot) {
 
   // Clear any previous error
   clearTimeSlotError();
+  // Auto-advance when both date + time slot are set
+  if (isDeliverySectionComplete()) {
+    autoAdvanceFromSection(3);
+  }
 }
 
 
@@ -617,6 +632,8 @@ function selectDeliveryMethod(element, method) {
   
   // Clear delivery method error when a method is selected
   clearDeliveryMethodError();
+  // Auto-advance to "choose your cookies" (Section 5)
+  autoAdvanceFromSection(4);
 }
 
 // Fixed toggleCustomBoxCard function
@@ -904,6 +921,50 @@ function scrollToErrorSection(sectionNumber, fieldEl, toastMessage) {
   return false;
 }
 
+function isOrderPage() {
+  return document.body && document.body.classList.contains('order-page');
+}
+
+function autoAdvanceFromSection(sectionNumber) {
+  if (!isOrderPage()) return;
+
+  // small delay so user sees their action before jump
+  setTimeout(() => {
+    scrollToSection(sectionNumber + 1);
+  }, 350);
+}
+
+function isDeliverySectionComplete() {
+  const dateField = document.querySelector('#deliveryDateInput');
+  const timeSlotField = document.querySelector('#timeSlotField');
+
+  const hasDate = dateField && dateField.value.trim() !== '';
+  const hasTime = timeSlotField && timeSlotField.value.trim() !== '';
+
+  return hasDate && hasTime;
+}
+
+function isContactSectionComplete() {
+  const contactField = document.querySelector('input[name="contactNumber"]');
+  const contactValue = contactField ? contactField.value.trim() : '';
+  const phoneRegex = /^(09|\+639)\d{9}$/;
+
+  if (!contactField || !phoneRegex.test(contactValue)) {
+    return false;
+  }
+
+  const socialHandleField = document.querySelector('#socialHandleInput');
+  const socialHandle = socialHandleField ? socialHandleField.value.trim() : '';
+
+  if (!socialHandle) {
+    // no social provided, contact is good
+    return true;
+  }
+
+  const platformSelected = document.querySelector('input[name="socialPlatform"]:checked');
+  return !!platformSelected;
+}
+
 
 function validateForm() {
   console.log('[validateForm] running'); // debug marker so you can see it in console
@@ -1133,6 +1194,13 @@ function showContainerError(sectionElement, container, message) {
   
   // Insert the error message AFTER the container (outside)
   container.parentNode.insertBefore(errorElement, container.nextSibling);
+}
+
+function handleProceedToCheckout() {
+  if (typeof buildOrderSummary === 'function') {
+    buildOrderSummary();
+  }
+  scrollToSection(6); // Section 6 = Contact details
 }
   
 function buildOrderSummary() {
@@ -1544,33 +1612,50 @@ function setupRealTimeValidation() {
   
   fieldsToValidate.forEach(selector => {
     const field = document.querySelector(selector);
-    if (field) {
-      field.addEventListener('blur', function() {
-        validateSingleField(this);
-      });
-      
-      field.addEventListener('input', function() {
-        // Clear error when user starts typing
-        if (selector === '#deliveryDateInput') {
-          clearDeliveryDateError();
-        } else {
-          this.classList.remove('error-highlight');
-          const error = this.nextElementSibling;
-          if (error && (error.classList.contains('field-error') || error.classList.contains('container-error'))) {
-            error.remove();
-          }
+    if (!field) return;
+
+    field.addEventListener('blur', function() {
+      validateSingleField(this);
+
+      if (!isOrderPage()) return;
+
+      const name  = this.name || this.id;
+      const value = this.value ? this.value.trim() : '';
+
+      // SECTION 3 – Delivery date (date part) → wait until both date + time slot set
+      if (this.id === 'deliveryDateInput') {
+        if (isDeliverySectionComplete()) {
+          autoAdvanceFromSection(3);
         }
-      });
-    }
+      }
+
+      // SECTION 7 – Payment → Section 8
+      if (name === 'payment' && value) {
+        autoAdvanceFromSection(7);
+      }
+    });
   });
 
+  // Name field — Show next button only when valid
   const nameField = document.querySelector('input[name="name"]');
-  if (nameField) {
+  const nextBtnWrapper2 = DOM.get('#nextBtnWrapper2');
+
+  if (nameField && nextBtnWrapper2) {
     nameField.addEventListener('input', function () {
       const cleaned = this.value.replace(/[^A-Za-z\s'.-]/g, '');
       if (cleaned !== this.value) this.value = cleaned;
+
+      const value = cleaned.trim();
+      const valid = /^[A-Za-z\s'.-]+$/.test(value);
+
+      if (valid && value.length > 0) {
+        nextBtnWrapper2.classList.remove('hidden');
+      } else {
+        nextBtnWrapper2.classList.add('hidden');
+      }
     });
   }
+
 
   // Radio groups - time slot (with enhanced clearing)
   const timeSlotRadios = document.querySelectorAll('input[name="timeSlot"]');
@@ -1588,22 +1673,47 @@ function setupRealTimeValidation() {
     });
   });
 
-  // Social media
-  const socialInput = document.querySelector('#socialHandleInput');
-  if (socialInput) {
-    socialInput.addEventListener('input', function() {
-      clearSocialMediaError();
-    });
+  // Contact section next button logic
+  const nextBtnWrapper6 = DOM.get('#nextBtnWrapper6');
+  const phoneField = document.querySelector('input[name="contactNumber"]');
+  const socialField = document.querySelector('#socialHandleInput');
+  const socialRadios = document.querySelectorAll('input[name="socialPlatform"]');
+
+  function updateContactNextButton() {
+    if (!nextBtnWrapper6) return;
+
+    const phone = phoneField ? phoneField.value.trim() : '';
+    const phoneValid = /^(09|\+639)\d{9}$/.test(phone);
+
+    const social = socialField ? socialField.value.trim() : '';
+    const platformSelected = [...socialRadios].some(r => r.checked);
+
+    let canProceed = false;
+
+    if (phoneValid) {
+      if (social === '') {
+        // No social → OK
+        canProceed = true;
+      } else if (platformSelected) {
+        // Social provided AND platform selected → OK
+        canProceed = true;
+      }
+    }
+
+    if (canProceed) {
+      nextBtnWrapper6.classList.remove('hidden');
+    } else {
+      nextBtnWrapper6.classList.add('hidden');
+    }
   }
 
-  const socialRadios = document.querySelectorAll('input[name="socialPlatform"]');
-  socialRadios.forEach(radio => {
-    radio.addEventListener('change', function() {
-      clearSocialMediaError();
-    });
-  });
-  
-  // Payment method
+  // Listeners
+  if (phoneField) phoneField.addEventListener('input', updateContactNextButton);
+  if (socialField) socialField.addEventListener('input', updateContactNextButton);
+  socialRadios.forEach(radio => radio.addEventListener('change', updateContactNextButton));
+
+
+  // Payment method change → still auto-advance to Section 8
   const paymentSelect = document.querySelector('select[name="payment"]');
   if (paymentSelect) {
     paymentSelect.addEventListener('change', function() {
@@ -1612,9 +1722,28 @@ function setupRealTimeValidation() {
       if (error && error.classList.contains('field-error')) {
         error.remove();
       }
+
+      if (this.value && isOrderPage()) {
+        autoAdvanceFromSection(7);
+      }
+    });
+  }
+
+  // Notes – no auto-advance, just error clearing if ever used
+  const notesField = document.querySelector('textarea[name="notes"]');
+  const nextBtnWrapper8 = DOM.get('#nextBtnWrapper8');
+
+  if (notesField && nextBtnWrapper8) {
+    notesField.addEventListener('input', function () {
+      if (this.value.trim().length > 0) {
+        nextBtnWrapper8.classList.remove('hidden');
+      } else {
+        nextBtnWrapper8.classList.add('hidden');
+      }
     });
   }
 }
+
 
 function validateSingleField(field) {
   const fieldName = field.name || field.id;
