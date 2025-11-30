@@ -62,7 +62,7 @@
           type="button" 
           class="nav-button w-full"
           onclick="scrollToSection(3)">
-          next: delivery details
+          next
         </button>
       </div>      
 
@@ -162,6 +162,17 @@
           </div>
         </div>
       </div>
+
+      <!-- NEXT BUTTON (hidden until a method is selected) -->
+      <div id="deliveryNextWrapper" class="mt-4 hidden px-6 max-w-md mx-auto">
+        <button 
+          type="button" 
+          class="nav-button w-full"
+          onclick="scrollToSection(5)">
+          next
+        </button>
+      </div>
+
       <div class="navigation-buttons">
         <button type="button" onclick="buildOrderSummary(); scrollToSection(3)" class="arrow-btn">
           <img src="icons/wd-up.svg" alt="Previous section" class="nav-icon">
@@ -218,7 +229,7 @@
             type="button"
             onclick="handleProceedToCheckout()"
             class="nav-button w-full">
-            Proceed to checkout →
+            Proceed to checkout
         </button>
       </div>
 
@@ -283,7 +294,7 @@
           type="button" 
           class="nav-button w-full"
           onclick="scrollToSection(7)">
-          next: payment
+          next
         </button>
       </div>   
 
@@ -331,7 +342,7 @@
           type="button" 
           class="nav-button w-full"
           onclick="scrollToSection(9)">
-          next: review & submit
+          next
         </button>
       </div>      
 
@@ -355,7 +366,7 @@
         <button type="button" onclick="scrollToSection(8)" class="arrow-btn">
           <img src="icons/wd-up.svg" alt="Previous section" class="nav-icon">
         </button>
-        <button type="submit" class="nav-button bg-green-600 hover:bg-green-700">
+        <button type="submit" class="nav-button bg-brown-600 hover:bg-brown-700">
           submit order
         </button>
       </div>

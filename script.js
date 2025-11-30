@@ -632,8 +632,10 @@ function selectDeliveryMethod(element, method) {
   
   // Clear delivery method error when a method is selected
   clearDeliveryMethodError();
-  // Auto-advance to "choose your cookies" (Section 5)
-  autoAdvanceFromSection(4);
+
+  // Show next button
+  const nextWrapper = document.getElementById('deliveryNextWrapper');
+  if (nextWrapper) nextWrapper.classList.remove('hidden');
 }
 
 // Fixed toggleCustomBoxCard function
@@ -2702,4 +2704,20 @@ document.addEventListener('DOMContentLoaded', function() {
   
   window.addEventListener('resize', setVH);
   window.addEventListener('orientationchange', setVH);
+});
+
+// Prevent Enter key from submitting or jumping sections in text fields
+document.addEventListener('keydown', function(e) {
+  const target = e.target;
+
+  // Only block Enter on inputs and textareas
+  if (
+    e.key === 'Enter' &&
+    (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')
+  ) {
+    e.preventDefault();
+    // Blur the input → closes the keyboard on mobile
+    target.blur();
+    return false;
+  }
 });
