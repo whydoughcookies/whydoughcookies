@@ -2710,14 +2710,13 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('keydown', function(e) {
   const target = e.target;
 
-  // Only block Enter on inputs and textareas
-  if (
-    e.key === 'Enter' &&
-    (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')
-  ) {
+  // Only for INPUT fields (not textarea)
+  if (e.key === 'Enter' && target.tagName === 'INPUT') {
     e.preventDefault();
+    
     // Blur the input → closes the keyboard on mobile
     target.blur();
+
     return false;
   }
 });
