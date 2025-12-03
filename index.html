@@ -64,31 +64,77 @@
             At <span class="uppercase-wd">Why Dough</span>, we dough things differently. We mix only the good stuff, bake with love, and craft cookies that feel like a warm hug. Whether you’re craving the familiar or trying something new from our seasonal lineup, each cookie is a little piece of our heart — soft, chewy, and always made with goodness.
           </p>
           
-          <div class="grid md:grid-cols-3 gap-8 mt-12">
-            <div class="text-center">
-              <div class="w-16 h-16 btn-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <span class="text-2xl text-white">🥚</span>
+          <!-- Cookie image carousel -->
+          <div id="aboutCarousel" class="about-carousel mt-8">
+            <!-- Prev arrow -->
+            <button
+              type="button"
+              class="about-carousel-arrow about-carousel-arrow-left"
+              onclick="aboutPrevImage()"
+              aria-label="Previous photo"
+            >
+              ‹
+            </button>
+
+            <!-- Track / slides -->
+            <div class="about-carousel-track">
+              <div class="about-slide about-slide-active">
+                <img
+                  src="images/showcase-1.JPG"
+                  alt="The Usual cookie"
+                  class="about-slide-image"
+                  loading="lazy"
+                >
               </div>
-              <h3 class="text-xl font-bold mb-2">Quality Ingredients</h3>
-              <p>Only the good stuff — fresh, premium ingredients in every cookie we make.</p>
-            </div>
-            
-            <div class="text-center">
-              <div class="w-16 h-16 btn-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <span class="text-2xl text-white">👩‍🍳</span>
+
+              <div class="about-slide">
+                <img
+                  src="images/showcase-2.JPG"
+                  alt="The Red One cookie"
+                  class="about-slide-image"
+                  loading="lazy"
+                >
               </div>
-              <h3 class="text-xl font-bold mb-2">Handcrafted</h3>
-              <p>Each cookie is lovingly shaped, scooped, and baked the homemade way.</p>
-            </div>
-            
-            <div class="text-center">
-              <div class="w-16 h-16 btn-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <span class="text-2xl text-white">💝</span>
+
+              <div class="about-slide">
+                <img
+                  src="images/showcase-3.JPG"
+                  alt="The Burnt One cookie"
+                  class="about-slide-image"
+                  loading="lazy"
+                >
               </div>
-              <h3 class="text-xl font-bold mb-2">Made with Love</h3>
-              <p>We pour heart into every single batch, so every bite feels like a warm hug.</p>
+
+              <div class="about-slide">
+                <img
+                  src="images/showcase-4.JPG"
+                  alt="The Classics cookie set"
+                  class="about-slide-image"
+                  loading="lazy"
+                >
+              </div>
+
+              <div class="about-slide">
+                <img
+                  src="images/showcase-5.JPG"
+                  alt="Samplers cookie set"
+                  class="about-slide-image"
+                  loading="lazy"
+                >
+              </div>
             </div>
+
+            <!-- Next arrow -->
+            <button
+              type="button"
+              class="about-carousel-arrow about-carousel-arrow-right"
+              onclick="aboutNextImage()"
+              aria-label="Next photo"
+            >
+              ›
+            </button>
           </div>
+
         </div>
       </div>
     </section>
@@ -104,8 +150,8 @@
         <div class="grid md:grid-cols-3 gap-8">
           <!-- OG Set -->
           <div class="flavor-card bg-cream rounded-2xl p-8 text-center">
-            <div class="h-48 bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <img src="images/og-set.jpeg"
+            <div class="bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <img src="images/og-set.JPG"
                 alt="The OG cookie set"
                 class="cookie-collection"
                 loading="lazy">
@@ -117,7 +163,7 @@
           
           <!-- The Classics -->
           <div class="flavor-card bg-cream rounded-2xl p-8 text-center">
-            <div class="h-48 bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div class="bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <img src="images/classics.JPG"
                 alt="The Classics cookie set"
                 class="cookie-collection"
@@ -130,7 +176,7 @@
           
           <!-- Samplers -->
           <div class="flavor-card bg-cream rounded-2xl p-8 text-center">
-            <div class="h-48 bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div class="bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <img src="images/samplers.jpg"
                 alt="Samplers cookie set"
                 class="cookie-collection"
@@ -250,8 +296,8 @@
         <p class="text-xl mb-8 max-w-2xl mx-auto" style="color: #5d4a27;">
           Discover why our cookies have everyone coming back for more. Treat yourself today!
         </p>
-        <a href="/order" class="btn-primary text-white px-8 py-4 rounded-full font-bold text-lg transition transform hover:scale-105 inline-block">
-          Order Now 🍪
+        <a href="/order" class="btn-primary text-white px-8 py-4 rounded-full font-bold text-xl transition transform hover:scale-105 inline-block">
+          Order Now
         </a>
       </div>
     </section>

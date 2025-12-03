@@ -24,7 +24,10 @@ const COOKIE_FLAVORS = [
   { name: "The OT", price: 115 },
   { name: "Nut-so-Carrot", price: 130 },
   { name: "Espress-oh", price: 115 },
-  { name: "Berry match", price: 120 }
+  { name: "Berry match", price: 120 },
+  { name: "The Minty One", price: 130 },
+  { name: "The Campfire", price: 115 },
+  { name: "Nut Usual", price: 120 },
 ];
 
 const PRODUCT_DATA = {
@@ -32,7 +35,7 @@ const PRODUCT_DATA = {
     name: "The OG Set",
     description: "3 signature cookies — The Usual, The Red One, and The Burnt One. Each cookie weighs 100g+ of chewy indulgence.",
     price: 320,
-    image: "images/og-set.jpeg",
+    image: "images/og-set.JPG",
     id: "ogSet"
   },
   classic6: {
@@ -2007,6 +2010,24 @@ const flavors = [
     name: "Berry Match", 
     description: "Earthy matcha cookie with tangy berry bits balanced by smooth white chocolate.", 
     image: "images/berry-match.PNG" 
+  },
+  { 
+    name: "The Minty One", 
+    description: "Deep dark chocolate cookie with cool peppermint for a perfectly festive bite.", 
+    image: "icons/The Minty One.svg",
+    tag: "Limited Edition" 
+  },
+  { 
+    name: "The Campfire", 
+    description: "To serve the perfect s'mores - Gooey marshmallow inside toasted on top, on a crispy graham cracker base.", 
+    image: "icons/The Campfire.svg",
+    tag: "Limited Edition" 
+  },
+  { 
+    name: "Nut Usual", 
+    description: "Your classic cookie upgraded with the toasted walnuts and an oozy caramel center for ultimate holiday indulgence.", 
+    image: "icons/Nut Usual.svg",
+    tag: "Limited Edition" 
   }
 ];
 
@@ -2022,6 +2043,7 @@ function initializeFlavorsGrid(flavors) {
   grid.innerHTML = flavors.map(flavor => `
     <div class="flavor-card">
       <div class="flavor-image-container">
+        ${flavor.tag ? `<div class="flavor-tag">${flavor.tag}</div>` : ''}
         <img src="${flavor.image}" alt="${flavor.name}" loading="lazy" class="flavor-image">
       </div>
       <h3 class="flavor-name">${flavor.name}</h3>
@@ -2029,7 +2051,6 @@ function initializeFlavorsGrid(flavors) {
     </div>
   `).join('');
 
-  // Preload images for grid
   preloadFlavorImages(flavors);
 }
 
@@ -2052,6 +2073,7 @@ track.innerHTML = flavors.map((flavor, index) => `
   <div class="flavor-carousel-item">
     <div class="flavor-card">
       <div class="flavor-image-container">
+        ${flavor.tag ? `<div class="flavor-tag">${flavor.tag}</div>` : ''}
         <img src="${flavor.image}" alt="${flavor.name}" loading="lazy" class="flavor-image">
       </div>
       <h3 class="flavor-name">${flavor.name}</h3>
@@ -2229,13 +2251,78 @@ flavors.forEach(flavor => {
 });
 }
 
+let aboutSlides = [];
+let aboutCurrentIndex = 0;
+let aboutCarouselTimer = null;
+
+function initAboutCarousel() {
+  const carousel = document.getElementById('aboutCarousel');
+  if (!carousel) return;
+
+  aboutSlides = Array.from(carousel.querySelectorAll('.about-slide'));
+  if (!aboutSlides.length) return;
+
+  aboutCurrentIndex = 0;
+  updateAboutCarousel();
+
+  // clear any existing timer (if homepage re-inits)
+  if (aboutCarouselTimer) {
+    clearInterval(aboutCarouselTimer);
+  }
+
+  // auto-play every 5 seconds
+  aboutCarouselTimer = setInterval(() => {
+    aboutNextImage(true);   // pass flag so we know it's from timer
+  }, 5000);
+}
+
+function updateAboutCarousel() {
+  if (!aboutSlides.length) return;
+
+  aboutSlides.forEach((slide, index) => {
+    slide.classList.toggle('about-slide-active', index === aboutCurrentIndex);
+  });
+}
+
+function aboutNextImage(fromTimer = false) {
+  if (!aboutSlides.length) return;
+
+  aboutCurrentIndex = (aboutCurrentIndex + 1) % aboutSlides.length;
+  updateAboutCarousel();
+
+  // If user clicked arrow, restart timer so it feels responsive
+  if (!fromTimer) {
+    restartAboutCarouselTimer();
+  }
+}
+
+function aboutPrevImage() {
+  if (!aboutSlides.length) return;
+
+  aboutCurrentIndex =
+    (aboutCurrentIndex - 1 + aboutSlides.length) % aboutSlides.length;
+  updateAboutCarousel();
+  restartAboutCarouselTimer();
+}
+
+function restartAboutCarouselTimer() {
+  if (aboutCarouselTimer) {
+    clearInterval(aboutCarouselTimer);
+  }
+  if (!aboutSlides.length) return;
+
+  aboutCarouselTimer = setInterval(() => {
+    aboutNextImage(true);
+  }, 5000);
+}
+
 // Update the homepage initialization
 function initializeHomepage() {
   initializeFlavorsSection();
   setupTestimonialSlider();
   setupSmoothScrolling();
+  initAboutCarousel();
 }
-
 
 // Testimonial Slider
 function setupTestimonialSlider() {

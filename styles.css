@@ -449,6 +449,23 @@ form section {
   position: relative;
 }
 
+.flavor-tag {
+  position: absolute;
+  top: 1.5rem;
+  left: 0.75rem;
+  background: var(--brown);
+  color: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(93, 74, 39, 0.2);
+  z-index: 2;
+  transform: rotate(-30deg);
+}
+
 .flavor-image {
   width: 100%;
   height: 100%;
@@ -1712,4 +1729,94 @@ body.thank-you-page section > div {
   width: 45px;
   height: 45px;
   align-content: center;
+}
+
+/* === About section image carousel === */
+
+.about-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.about-carousel-track {
+  flex: 1;
+  max-width: 720px;      /* wider for landscape shots */
+  overflow: hidden;
+  position: relative;     /* needed for fade layering */
+  min-height: 320px;      /* ensures space for stacked slides */
+}
+
+.about-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.7s ease;  /* slow fade */
+  pointer-events: none;
+}
+
+.about-slide.about-slide-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.about-slide-image {
+  width: 100%;
+  max-width: 720px;       /* allow image to be nice & wide */
+  max-height: 320px;      /* taller for landscape */
+  object-fit: cover;
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 25px rgba(93, 74, 39, 0.18);
+  border: 1px solid rgba(93, 74, 39, 0.08);
+}
+
+/* Arrow buttons */
+
+.about-carousel-arrow {
+  border: none;
+  background: #ffffff;
+  color: #5d4a27;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.about-carousel-arrow:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  background: #fffaf0;
+}
+
+.about-carousel-arrow:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Mobile tweaks */
+
+@media (max-width: 640px) {
+  .about-carousel {
+    gap: 0.5rem;
+  }
+
+  .about-carousel-track {
+    max-width: 100%;
+  }
+
+  .about-slide-image {
+    max-width: 100%;
+    /* max-height: 260px;    a bit taller than before */
+    border-radius: 1.25rem;
+  }
 }
