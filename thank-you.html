@@ -42,34 +42,33 @@
                 <p class="text-sm text-brown-700 mb-2">
                 <strong>Order Details:</strong>
                 </p>
-                <ul class="text-sm text-brown-600 space-y-1">
-                    <li>• Customer: <span id="customerName">-</span></li>
-                    <li>• Total Amount: ₱<span id="orderTotal">0</span></li>
+                <ul class="text-m text-brown-600 space-y-1">
+                    <li><b>• Customer: </b><span id="customerName">-</span></li>
+                    
 
                     <!-- Delivery date + time slot (shown beside) -->
-                    <li>
-                    • Delivery:
-                    <span id="deliveryDate">-</span>
-                    <span id="timeSlotDisplay" class="ml-1 text-xs text-brown-500"></span>
+                    <li><b>• Delivery Date: </b><span id="deliveryDate"></span></li>
+                    <li><b>• Preferred time slot: </b><span id="timeSlotDisplay"></span></li>
                     </li>
 
                     <!-- Delivery / payment -->
-                    <li>• Delivery method: <span id="deliveryMethodDisplay">-</span></li>
-                    <li>• Payment: <span id="paymentDisplay">-</span></li>
+                    <li><b>• Delivery method: </b><span id="deliveryMethodDisplay">-</span></li>
+                    <li><b>• Payment: </b><span id="paymentDisplay">-</span></li>
 
                     <!-- Only shown if social is provided -->
                     <li id="socialRow" class="hidden">
-                    • Social: <span id="socialDisplay">-</span>
+                        <b>• Social: </b><span id="socialDisplay">-</span>
                     </li>
 
                     <!-- Only shown if notes are provided -->
                     <li id="notesRow" class="hidden">
-                    • Notes: <span id="notesDisplay">-</span>
+                        <b>• Notes: </b><span id="notesDisplay">-</span>
                     </li>
+                    <li><b>• Total Amount: </b>₱<span id="orderTotal">0</span></li>
                 </ul>
 
                 <!-- Items list will be injected here -->
-                <ul id="orderDetails" class="mt-3 text-sm text-brown-600 space-y-1"></ul>
+                <ul id="orderDetails" class="text-m text-brown-600 space-y-1"></ul>
                 
                 <div class="border-t border-brown-200 mt-3 pt-3">
                     <p class="text-sm text-brown-700 mb-2">
@@ -92,7 +91,7 @@
             </div>
             
             <p class="text-xs text-brown-600 mt-6">
-                Having issues? Contact us at our <a class="social-link" href="https://ig.me/m/whydoughcookies">Instagram</a>, <a class="social-link" href="https://m.me/whydoughcookies">Facebook</a> or <a class="social-link" href="www.tiktok.com/@whydoughcookies">Tiktok</a> with your Order ID
+                Having issues? Contact us at our <a class="social-link" href="https://ig.me/m/whydoughcookies">Instagram</a>, <a class="social-link" href="https://m.me/whydoughcookies">Facebook</a> or <a class="social-link" href="www.tiktok.com/@whydoughcookies">Tiktok</a>
             </p>
         </div>
     </section>

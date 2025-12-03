@@ -1376,6 +1376,10 @@ section > div > label {
     padding-bottom: 130px !important;
   }
   
+  .thankyou-page section{
+    padding-bottom: 1.3rem !important;
+  }
+
   /* Make sure scrollable sections still work */
   #section-3 .form-container,
   #section-5 .form-container {
@@ -1454,8 +1458,6 @@ body:not(.homepage-body):not(.thankyou-page) section {
   justify-content: center;
   flex-direction: column;
 }
-
-/* === Layout & Section Behavior for Order / Thank-you Pages === */
 
 /* Lock viewport and use iOS-safe vh for non-homepage pages */
 body:not(.homepage-body):not(.thankyou-page) {
@@ -1684,10 +1686,6 @@ textarea {
   text-align: center;
 }
 
-.thank-you-page section > div{
-  margin-top: 110px;
-}
-
 .social-link{
   text-decoration: underline;
   color: var(--brown-900);
@@ -1701,28 +1699,6 @@ textarea {
   #socialPlatformSelection .social-platform-option {
     flex: 1 1 100%;
   }
-}
-
-/* === Thank-you page: allow normal scrolling & top-aligned layout === */
-
-body.thank-you-page {
-  overflow-y: auto;        /* enable vertical scroll */
-  overflow-x: hidden;
-  height: auto;
-  min-height: 100vh;
-}
-
-/* Override the fullscreen flex-centering for sections on thank-you page */
-body.thank-you-page section {
-  min-height: auto;
-  height: auto;
-  overflow: visible;
-  display: block;          /* stop centering with flex */
-  padding: 3rem 1rem 3rem; /* gives you that top margin feeling like order page */
-}
-
-body.thank-you-page section > div {
-  margin-top: 0.5rem; /* adjust to taste */
 }
 
 .custom-cookie-image {

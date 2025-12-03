@@ -2504,7 +2504,7 @@ function displayOrderDetails() {
     const timeSlotEl = document.getElementById('timeSlotDisplay');
     if (timeSlotEl) {
       if (orderData.timeSlot && orderData.timeSlot !== 'Not selected') {
-        timeSlotEl.textContent = ` • ${orderData.timeSlot}`;
+        timeSlotEl.textContent = `${orderData.timeSlot}`;
       } else {
         timeSlotEl.textContent = '';
       }
@@ -2586,7 +2586,7 @@ function generateOrderItemsHtml(cart) {
     return '<li>• Items: No items in order</li>';
   }
 
-  let itemsHtml = '<li>• Items:</li>';
+  let itemsHtml = '<li><b>• Items: </b></li>';
 
   cart.forEach((item) => {
     if (item.type === 'customBox') {
