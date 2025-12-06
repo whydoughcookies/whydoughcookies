@@ -1267,7 +1267,6 @@ CONTACT OPTIONS:
 Order received: ${new Date().toLocaleString()}
     `.trim();
     
-    document.getElementById('autoResponseField').value = businessOrderSummary;
     document.getElementById('orderSummaryField').value = businessOrderSummary;
     document.getElementById('customerNameField').value = name;
     document.getElementById('customerContactField').value = `${socialHandle} | ${contactNumber}`;
@@ -1403,23 +1402,12 @@ async function handleFormSubmit(e) {
     storeOrderDataForThankYouPage(orderData);
     
     // Submit to both services
-    const [googleSuccess, emailSuccess] = await Promise.allSettled([
-      submitToGoogleForms(),
-      submitToFormSubmit()
-    ]);
+    const googleSuccess = await submitToGoogleForms();
 
-    // Handle submission results
-    const googleOk = googleSuccess.status === 'fulfilled' && googleSuccess.value;
-    const emailOk = emailSuccess.status === 'fulfilled' && emailSuccess.value;
-
-    if (googleOk && emailOk) {
-      showToast('Order submitted successfully! 📧📊', 'success');
-    } else if (googleOk) {
-      showToast('Order submitted to tracking! (Email failed)', 'warning');
-    } else if (emailOk) {
-      showToast('Order submitted via email! (Tracking failed)', 'warning');
+    if (googleSuccess) {
+      showToast('Order submitted successfully! 📊', 'success');
     } else {
-      showToast('Order received offline! We\'ll contact you soon.', 'warning');
+        showToast('Order received! Tracking failed, but your order is saved.', 'warning');
     }
 
     // Clear cart and redirect
@@ -1427,7 +1415,7 @@ async function handleFormSubmit(e) {
 
     // Add a small delay to ensure storage is written
     setTimeout(() => {
-      window.location.href = '/thank-you';
+      window.location.href = '/thank-you.html';
     }, 1000);
 
   } catch (error) {
@@ -1437,7 +1425,7 @@ async function handleFormSubmit(e) {
     // Still redirect to thank you page even if submission fails
     clearCartAfterSubmission();
     setTimeout(() => {
-      window.location.href = '/thank-you';
+      window.location.href = '/thank-you.html';
     }, 1000);
   } finally {
     // Restore button state
@@ -1787,29 +1775,6 @@ async function submitToGoogleForms() {
   }
 }
 
-async function submitToFormSubmit() {
-  const form = DOM.get('#orderForm');
-  const formData = new FormData(form);
-  
-  try {
-    const response = await fetch('https://formsubmit.co/ajax/whydoughcookies@gmail.com', {
-      method: 'POST',
-      body: formData,
-    });
-    
-    const result = await response.json();
-    
-    if (result.success) {
-      return true;
-    } else {
-      return false;
-    }
-    
-  } catch (error) {
-    return false;
-  }
-}
-
 function clearCartAfterSubmission() {
   state.cart = [];
   updateCartDisplay();
@@ -1830,70 +1795,70 @@ function initializeFlavorsSection() {
 const flavors = [
   { 
     name: "The Usual", 
-    description: "Crispy outside, soft inside—loaded with premium dark and milk chocolate for the ultimate classic cookie.", 
-    image: "images/the-usual.PNG" 
+    description: "Crispy outside, soft inside—loaded with dark and milk chocolate", 
+    image: "images/the-usual.png" 
   },
   { 
     name: "The Red One", 
-    description: "Soft red velvet cookie filled with creamy cream cheese and layered with premium white chocolate.", 
-    image: "images/the-red-one.PNG" 
+    description: "Soft red velvet cookie with cream cheese filling white chocolate", 
+    image: "images/the-red-one.png" 
   },
   { 
     name: "The Burnt One", 
-    description: "Rich dark chocolate cookie packed with premium dark chocolate and a luscious cream cheese center.", 
-    image: "images/the-burnt-one.PNG" 
+    description: "Rich dark chocolate cookie with cream cheese center", 
+    image: "images/the-burnt-one.png" 
   },
   { 
     name: "The Bizz", 
-    description: "Chewy cookie with rich Lotus Biscoff flavor, crunchy biscuit bits, and smooth milk chocolate.", 
-    image: "images/the-bizz.PNG" 
+    description: "Chewy Biscoff cookie with biscuit bits milk chocolate rich swirl", 
+    image: "images/the-bizz.png" 
   },
   { 
     name: "The Milky One", 
-    description: "Soft buttery cookie overflowing with creamy white chocolate—sweet, chewy, and irresistibly dreamy.", 
-    image: "images/milky-one.PNG" 
+    description: "Soft buttery cookie with creamy white chocolate pools sweet chewy", 
+    image: "images/milky-one.png" 
   },
   { 
     name: "Pistash", 
-    description: "Tender pistachio cookie infused with pistachio cream and crunch, finished with white and milk chocolate.", 
-    image: "images/pistash.PNG" 
+    description: "Tender pistachio cookie with pistachio cream white and milk chocolate", 
+    image: "images/pistash.png" 
   },
   { 
     name: "The OT", 
-    description: "Malty Ovaltine cookie with a crunchy surprise filling and creamy milk chocolate.", 
-    image: "images/the-ot.PNG" 
+    description: "Malty Ovaltine cookie with crunchy filling milk chocolate sweet bite", 
+    image: "images/the-ot.png" 
   },
   { 
     name: "Nut-so-Carrot", 
-    description: "Moist carrot cake–inspired cookie with cream cheese filling, real carrot goodness, and white chocolate.", 
-    image: "images/nut-so-carrot.PNG" 
+    description: "Moist carrot cookie with cream cheese filling white chocolate warmth", 
+    image: "images/nut-so-carrot.png" 
   },
   { 
     name: "Espress-oh", 
-    description: "Bold coffee cookie with cream cheese filling blended with silky white and milk chocolate.", 
-    image: "images/espressoh.PNG" 
+    description: "Bold coffee cookie with cream cheese filling white milk chocolate", 
+    image: "images/espressoh.png" 
   },
   { 
     name: "Berry Match", 
-    description: "Earthy matcha cookie with tangy berry bits balanced by smooth white chocolate.", 
-    image: "images/berry-match.PNG" 
+    description: "Earthy matcha cookie with berry bits white chocolate tangy finish", 
+    image: "images/berry-match.png" 
   },
   { 
     name: "The Minty One", 
-    description: "Deep dark chocolate cookie with cool peppermint for a perfectly festive bite.", 
-    image: "images/the-minty-one.PNG",
+    description: "Deep dark chocolate cookie with peppermint festive bite", 
+    image: "images/the-minty-one.png",
     tag: "Limited Edition" 
   },
   { 
     name: "The Campfire", 
-    description: "To serve the perfect s'mores - Gooey marshmallow inside toasted on top, on a crispy graham cracker base.", 
-    image: "images/the-campfire.PNG",
+    description: "Gooey marshmallow cookie with toasted top graham crumb cozy pull", 
+    image: "images/the-campfire.png",
     tag: "Limited Edition" 
   },
   { 
     name: "Nut Usual", 
-    description: "Your classic cookie upgraded with the toasted walnuts and an oozy caramel center for ultimate holiday indulgence.", 
-    image: "images/nut-usual.PNG",
+    description: "Classic with toasted walnuts oozy caramel center warm indulgence", 
+    image: "images/nut-usual.png",
     tag: "Limited Edition" 
   }
 ];
@@ -1921,185 +1886,223 @@ function initializeFlavorsGrid(flavors) {
   preloadFlavorImages(flavors);
 }
 
+function equalizeFlavorCardHeights() {
+  // Only apply equal heights on mobile carousel
+  if (window.innerWidth >= 768) {
+    // Reset heights when leaving mobile
+    document.querySelectorAll('.flavor-carousel-item .flavor-card')
+      .forEach(card => {
+        card.style.height = 'auto';
+      });
+    return;
+  }
+
+  const cards = document.querySelectorAll('.flavor-carousel-item .flavor-card');
+  if (!cards.length) return;
+
+  // Make sure all images in the carousel are loaded
+  const images = document.querySelectorAll('.flavor-carousel-item img');
+  const allImagesLoaded = Array.from(images).every(img => img.complete);
+
+  if (!allImagesLoaded) {
+    // Try again shortly, once images have had time to load
+    setTimeout(equalizeFlavorCardHeights, 100);
+    return;
+  }
+
+  // Reset heights first to get natural sizes
+  let maxHeight = 0;
+  cards.forEach(card => {
+    card.style.height = 'auto';
+    const h = card.offsetHeight;
+    if (h > maxHeight) maxHeight = h;
+  });
+
+  // Apply tallest height to all
+  cards.forEach(card => {
+    card.style.height = maxHeight + 'px';
+  });
+}
+
 function initializeFlavorsCarousel(flavors) {
-const track = document.getElementById('flavorsCarouselTrack');
-const currentSlideElement = document.getElementById('currentSlide');
-const totalSlidesElement = document.getElementById('totalSlides');
-const prevButton = document.querySelector('.flavor-carousel-prev');
-const nextButton = document.querySelector('.flavor-carousel-next');
+  const track = document.getElementById('flavorsCarouselTrack');
+  const currentSlideElement = document.getElementById('currentSlide');
+  const totalSlidesElement = document.getElementById('totalSlides');
+  const prevButton = document.querySelector('.flavor-carousel-prev');
+  const nextButton = document.querySelector('.flavor-carousel-next');
 
-if (!track) return;
+  if (!track) return;
 
-// Set total slides count
-if (totalSlidesElement) {
-  totalSlidesElement.textContent = flavors.length;
-}
+  // Set total slides count
+  if (totalSlidesElement) {
+    totalSlidesElement.textContent = flavors.length;
+  }
 
-// Create carousel items
-track.innerHTML = flavors.map((flavor, index) => `
-  <div class="flavor-carousel-item">
-    <div class="flavor-card">
-      <div class="flavor-image-container">
-        ${flavor.tag ? `<div class="flavor-tag">${flavor.tag}</div>` : ''}
-        <img src="${flavor.image}" alt="${flavor.name}" loading="lazy" class="flavor-image">
+  // Create carousel items
+  track.innerHTML = flavors.map((flavor, index) => `
+    <div class="flavor-carousel-item">
+      <div class="flavor-card">
+        <div class="flavor-image-container">
+          ${flavor.tag ? `<div class="flavor-tag">${flavor.tag}</div>` : ''}
+          <img src="${flavor.image}" alt="${flavor.name}" loading="lazy" class="flavor-image">
+        </div>
+        <h3 class="flavor-name">${flavor.name}</h3>
+        <p class="flavor-description">${flavor.description}</p>
       </div>
-      <h3 class="flavor-name">${flavor.name}</h3>
-      <p class="flavor-description">${flavor.description}</p>
     </div>
-  </div>
-`).join('');
+  `).join('');
 
-// Carousel state
-let currentSlide = 0;
-const slideCount = flavors.length;
-let isTransitioning = false;
+  // Carousel state
+  let currentSlide = 0;
+  const slideCount = flavors.length;
+  let isTransitioning = false;
 
-// Update carousel position with smooth transition
-function updateCarousel(instant = false) {
-  if (instant) {
-    track.style.transition = 'none';
-  } else {
-    track.style.transition = 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+  // Update carousel position with smooth transition
+  function updateCarousel(instant = false) {
+    if (instant) {
+      track.style.transition = 'none';
+    } else {
+      track.style.transition = 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+    }
+    
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    // Update counter
+    if (currentSlideElement) {
+      currentSlideElement.textContent = currentSlide + 1;
+    }
+    
+    // Update button states
+    if (prevButton) {
+      prevButton.disabled = currentSlide === 0;
+    }
+    if (nextButton) {
+      nextButton.disabled = currentSlide === slideCount - 1;
+    }
+    
+    // Reset transition flag
+    if (!instant) {
+      isTransitioning = true;
+      setTimeout(() => {
+        isTransitioning = false;
+      }, 500);
+    }
   }
-  
-  track.style.transform = `translateX(-${currentSlide * 100}%)`;
-  
-  // Update counter
-  if (currentSlideElement) {
-    currentSlideElement.textContent = currentSlide + 1;
+
+  // Navigation functions with smooth looping
+  function nextSlide() {
+    if (isTransitioning) return;
+    
+    if (currentSlide < slideCount - 1) {
+      currentSlide++;
+      updateCarousel();
+    } else {
+      // Smooth loop to first slide
+      currentSlide = 0;
+      updateCarousel();
+    }
   }
-  
-  // Update button states
+
+  function prevSlide() {
+    if (isTransitioning) return;
+    
+    if (currentSlide > 0) {
+      currentSlide--;
+      updateCarousel();
+    } else {
+      // Smooth loop to last slide
+      currentSlide = slideCount - 1;
+      updateCarousel();
+    }
+  }
+
+  // Add event listeners to navigation buttons
   if (prevButton) {
-    prevButton.disabled = currentSlide === 0;
+    prevButton.addEventListener('click', prevSlide);
   }
+
   if (nextButton) {
-    nextButton.disabled = currentSlide === slideCount - 1;
+    nextButton.addEventListener('click', nextSlide);
   }
-  
-  // Reset transition flag
-  if (!instant) {
-    isTransitioning = true;
-    setTimeout(() => {
-      isTransitioning = false;
-    }, 500);
+
+  // Touch/swipe support for mobile
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
+
+  track.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  });
+
+  track.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    currentX = e.touches[0].clientX;
+  });
+
+  track.addEventListener('touchend', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    
+    const diff = startX - currentX;
+    const threshold = 50;
+    
+    if (diff > threshold) {
+      nextSlide();
+    } else if (diff < -threshold) {
+      prevSlide();
+    }
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      prevSlide();
+    } else if (e.key === 'ArrowRight') {
+      nextSlide();
+    }
+  });
+
+  // Auto-advance carousel (mobile only)
+  let autoAdvance;
+
+  function startAutoAdvance() {
+    if (window.innerWidth >= 768) return; // Only auto-advance on mobile
+    
+    autoAdvance = setInterval(() => {
+      nextSlide();
+    }, 4000);
   }
-}
 
-// Navigation functions with smooth looping
-function nextSlide() {
-  if (isTransitioning) return;
-  
-  if (currentSlide < slideCount - 1) {
-    currentSlide++;
-    updateCarousel();
-  } else {
-    // Smooth loop to first slide
-    currentSlide = 0;
-    updateCarousel();
+  function stopAutoAdvance() {
+    if (autoAdvance) {
+      clearInterval(autoAdvance);
+    }
   }
-}
 
-function prevSlide() {
-  if (isTransitioning) return;
-  
-  if (currentSlide > 0) {
-    currentSlide--;
-    updateCarousel();
-  } else {
-    // Smooth loop to last slide
-    currentSlide = slideCount - 1;
-    updateCarousel();
-  }
-}
-
-// Add event listeners to navigation buttons
-if (prevButton) {
-  prevButton.addEventListener('click', prevSlide);
-}
-
-if (nextButton) {
-  nextButton.addEventListener('click', nextSlide);
-}
-
-// Touch/swipe support for mobile
-let startX = 0;
-let currentX = 0;
-let isDragging = false;
-
-track.addEventListener('touchstart', (e) => {
-  startX = e.touches[0].clientX;
-  isDragging = true;
-});
-
-track.addEventListener('touchmove', (e) => {
-  if (!isDragging) return;
-  currentX = e.touches[0].clientX;
-});
-
-track.addEventListener('touchend', () => {
-  if (!isDragging) return;
-  isDragging = false;
-  
-  const diff = startX - currentX;
-  const threshold = 50;
-  
-  if (diff > threshold) {
-    nextSlide();
-  } else if (diff < -threshold) {
-    prevSlide();
-  }
-});
-
-// Keyboard navigation
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowLeft') {
-    prevSlide();
-  } else if (e.key === 'ArrowRight') {
-    nextSlide();
-  }
-});
-
-// Auto-advance carousel (mobile only)
-let autoAdvance;
-
-function startAutoAdvance() {
-  if (window.innerWidth >= 768) return; // Only auto-advance on mobile
-  
-  autoAdvance = setInterval(() => {
-    nextSlide();
-  }, 4000);
-}
-
-function stopAutoAdvance() {
-  if (autoAdvance) {
-    clearInterval(autoAdvance);
-  }
-}
-
-// Start auto-advance
-startAutoAdvance();
-
-// Pause auto-advance on hover/touch
-const carouselContainer = document.querySelector('.flavors-carousel-container');
-if (carouselContainer) {
-  carouselContainer.addEventListener('mouseenter', stopAutoAdvance);
-  carouselContainer.addEventListener('mouseleave', startAutoAdvance);
-  carouselContainer.addEventListener('touchstart', stopAutoAdvance);
-  carouselContainer.addEventListener('touchend', startAutoAdvance);
-}
-
-// Handle window resize
-window.addEventListener('resize', () => {
-  stopAutoAdvance();
+  // Start auto-advance
   startAutoAdvance();
-});
 
-// Initial update
-updateCarousel(true);
+  // Pause auto-advance on hover/touch
+  const carouselContainer = document.querySelector('.flavors-carousel-container');
+  if (carouselContainer) {
+    carouselContainer.addEventListener('mouseenter', stopAutoAdvance);
+    carouselContainer.addEventListener('mouseleave', startAutoAdvance);
+    carouselContainer.addEventListener('touchstart', stopAutoAdvance);
+    carouselContainer.addEventListener('touchend', startAutoAdvance);
+  }
 
-// Preload images for carousel
-preloadFlavorImages(flavors);
+  // Handle window resize
+  window.addEventListener('resize', () => {
+    stopAutoAdvance();
+    startAutoAdvance();
+  });
+
+  // Initial update
+  updateCarousel(true);
+
+  // Preload images for carousel
+  preloadFlavorImages(flavors);
 }
 
 function preloadFlavorImages(flavors) {
@@ -2644,6 +2647,20 @@ document.addEventListener('DOMContentLoaded', function() {
   // Homepage initialization
   if (DOM.get('#flavorsCarouselTrack')) {
     initializeHomepage();
+
+    // Run once after everything (images, fonts) are loaded
+    window.addEventListener('load', () => {
+      equalizeFlavorCardHeights();
+    });
+
+    // Re-run when screen size changes (orientation change, etc.)
+    let equalizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(equalizeTimeout);
+      equalizeTimeout = setTimeout(() => {
+        equalizeFlavorCardHeights();
+      }, 150);
+    });
   }
   
   // Order page initialization

@@ -66,12 +66,8 @@ body {
 
 .homepage-body section {
   scroll-snap-align: none !important;
-  min-height: 100vh;
-  display: flex;
   align-items: center;
-  justify-content: center;
   padding: 2rem;
-  flex-direction: column;
   text-align: center;
   background-attachment: scroll;
   background-size: cover;
@@ -627,6 +623,7 @@ form section {
 
 .cookie-collection{
   border-radius: 20px;
+  height: 260px;
 }
 
 @keyframes loading {
@@ -655,6 +652,11 @@ form section {
     width: 40px;
     height: 40px;
     font-size: 1.2rem;
+  }
+
+  .cookie-collection{
+    border-radius: 20px;
+    height: 200px;
   }
 }
 
@@ -1372,10 +1374,6 @@ section > div > label {
     padding: 0.75rem;
   }
   
-  section {
-    padding-bottom: 130px !important;
-  }
-  
   .thankyou-page section{
     padding-bottom: 1.3rem !important;
   }
@@ -1431,10 +1429,6 @@ section > div > label {
   z-index: 100;
 }
 
-/* Adjust section padding to account for fixed buttons */
-section {
-  padding-bottom: 140px !important; /* Extra space for buttons + footer */
-}
 
 /* Show navigation buttons only for the active section */
 section .navigation-buttons {
@@ -1609,7 +1603,7 @@ section.active-section .navigation-buttons {
   }
 
   /* Make sure there is space for nav + footer */
-  section {
+  body:not(.homepage-body):not(.thankyou-page) section {
     padding-bottom: 130px !important;
   }
 }
@@ -1719,9 +1713,8 @@ textarea {
 .about-carousel-track {
   flex: 1;
   max-width: 720px;      /* wider for landscape shots */
-  overflow: hidden;
   position: relative;     /* needed for fade layering */
-  min-height: 320px;      /* ensures space for stacked slides */
+  min-height: 420px;      /* ensures space for stacked slides */
 }
 
 .about-slide {
@@ -1741,10 +1734,6 @@ textarea {
 }
 
 .about-slide-image {
-  width: 100%;
-  max-width: 720px;       /* allow image to be nice & wide */
-  max-height: 320px;      /* taller for landscape */
-  object-fit: cover;
   border-radius: 1.5rem;
   box-shadow: 0 10px 25px rgba(93, 74, 39, 0.18);
   border: 1px solid rgba(93, 74, 39, 0.08);
@@ -1803,4 +1792,18 @@ textarea {
 
 .copy-phone:hover {
   opacity: 0.7;
+}
+
+@media (max-width: 640px) {
+  #about .about-carousel {
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%); /* centers it relative to screen */
+  }
+
+  .about-slide-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
