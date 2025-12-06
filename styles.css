@@ -47,7 +47,7 @@ body.text-brown section {
 }
 
 p {
-  font-size: 1.3rem !important;
+  font-size: 1.4rem !important;
 }
 
 body {
@@ -1795,4 +1795,12 @@ textarea {
     /* max-height: 260px;    a bit taller than before */
     border-radius: 1.25rem;
   }
+}
+
+.copy-phone {
+  transition: opacity 0.2s;
+}
+
+.copy-phone:hover {
+  opacity: 0.7;
 }

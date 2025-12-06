@@ -49,80 +49,9 @@ const PRODUCT_DATA = {
     name: "Samplers",
     description: "6-piece sampler (50g each) — one of every classic flavor. Perfect for tasting it all.",
     price: 320,
-    image: "images/samplers.jpg",
+    image: "images/samplers.JPG",
     id: "samplers"
   }
-};
-
-// Image Optimization Utilities
-const ImageOptimizer = {
-// Preload critical images
-preloadCriticalImages: function() {
-  const criticalImages = [
-    'images/logo.PNG',
-    'images/bg-image-hero.JPG'
-  ];
-  
-  criticalImages.forEach(src => {
-    const img = new Image();
-    img.src = src;
-  });
-},
-
-// Lazy load images with intersection observer
-initLazyLoading: function() {
-  if ('IntersectionObserver' in window) {
-    const lazyImageObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const lazyImage = entry.target;
-          this.loadImage(lazyImage);
-          lazyImageObserver.unobserve(lazyImage);
-        }
-      });
-    });
-
-    document.querySelectorAll('.lazy-image').forEach(lazyImage => {
-      lazyImageObserver.observe(lazyImage);
-    });
-  } else {
-    // Fallback for older browsers
-    document.querySelectorAll('.lazy-image').forEach(this.loadImage);
-  }
-},
-
-loadImage: function(img) {
-  const src = img.dataset.src;
-  if (!src) return;
-
-  const image = new Image();
-  image.onload = () => {
-    img.src = src;
-    img.classList.remove('lazy-image', 'image-loading');
-    img.classList.add('image-loaded');
-  };
-  image.onerror = () => {
-    img.classList.remove('image-loading');
-  };
-  image.src = src;
-},
-
-// Optimize image display
-optimizeImages: function() {
-  document.querySelectorAll('img').forEach(img => {
-    // Add loading lazy for non-critical images
-    if (!img.classList.contains('critical-image')) {
-      img.loading = 'lazy';
-      
-      // Add lazy loading with data-src
-      if (img.src && !img.dataset.src) {
-        img.dataset.src = img.src;
-        img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2Y1ZThkNSIvPjwvc3ZnPg==';
-        img.classList.add('lazy-image', 'image-loading');
-      }
-    }
-  });
-}
 };
 
 // DOM Utilities
@@ -442,32 +371,6 @@ function openProductModal(productId) {
     modal.classList.add("active");
     document.body.classList.add("no-scroll");
   }
-}
-
-function loadProductImage(product) {
-  const productImage = DOM.get('#productImage');
-  const placeholder = DOM.get('#productImagePlaceholder');
-  
-  if (!product.image) {
-    DOM.hide(productImage);
-    DOM.show(placeholder);
-    return;
-  }
-  
-  DOM.addClass(productImage, 'loading');
-  DOM.hide(placeholder);
-  DOM.show(productImage);
-  
-  const img = new Image();
-  img.onload = () => {
-    productImage.src = product.image;
-    DOM.removeClass(productImage, 'loading');
-  };
-  img.onerror = () => {
-    DOM.hide(productImage);
-    DOM.show(placeholder);
-  };
-  img.src = product.image;
 }
 
 // Fixed closeProductModal function
@@ -949,27 +852,6 @@ function isDeliverySectionComplete() {
   return hasDate && hasTime;
 }
 
-function isContactSectionComplete() {
-  const contactField = document.querySelector('input[name="contactNumber"]');
-  const contactValue = contactField ? contactField.value.trim() : '';
-  const phoneRegex = /^(09|\+639)\d{9}$/;
-
-  if (!contactField || !phoneRegex.test(contactValue)) {
-    return false;
-  }
-
-  const socialHandleField = document.querySelector('#socialHandleInput');
-  const socialHandle = socialHandleField ? socialHandleField.value.trim() : '';
-
-  if (!socialHandle) {
-    // no social provided, contact is good
-    return true;
-  }
-
-  const platformSelected = document.querySelector('input[name="socialPlatform"]:checked');
-  return !!platformSelected;
-}
-
 
 function validateForm() {
   console.log('[validateForm] running'); // debug marker so you can see it in console
@@ -1148,21 +1030,6 @@ function updateCurrentSection(sectionId) {
   }
 }
 
-
-// Enhanced navigation buttons with better UX
-function enhanceNavigationButtons() {
-  // Add click handlers to all next/prev buttons
-  document.addEventListener('click', function(e) {
-    const button = e.target.closest('.nav-button, .arrow-btn');
-    if (!button) return;
-    
-    // Add loading state to button
-    button.classList.add('loading');
-    setTimeout(() => {
-      button.classList.remove('loading');
-    }, 500);
-  });
-}
 
 function showFieldError(field, message) {
   if (!field) return;
@@ -2014,19 +1881,19 @@ const flavors = [
   { 
     name: "The Minty One", 
     description: "Deep dark chocolate cookie with cool peppermint for a perfectly festive bite.", 
-    image: "icons/The Minty One.svg",
+    image: "images/the-minty-one.PNG",
     tag: "Limited Edition" 
   },
   { 
     name: "The Campfire", 
     description: "To serve the perfect s'mores - Gooey marshmallow inside toasted on top, on a crispy graham cracker base.", 
-    image: "icons/The Campfire.svg",
+    image: "images/the-campfire.PNG",
     tag: "Limited Edition" 
   },
   { 
     name: "Nut Usual", 
     description: "Your classic cookie upgraded with the toasted walnuts and an oozy caramel center for ultimate holiday indulgence.", 
-    image: "icons/Nut Usual.svg",
+    image: "images/nut-usual.PNG",
     tag: "Limited Edition" 
   }
 ];
@@ -2144,13 +2011,6 @@ function prevSlide() {
     currentSlide = slideCount - 1;
     updateCarousel();
   }
-}
-
-function goToSlide(index) {
-  if (isTransitioning || index < 0 || index >= slideCount) return;
-  
-  currentSlide = index;
-  updateCarousel();
 }
 
 // Add event listeners to navigation buttons
@@ -2738,6 +2598,28 @@ function fallbackCopyTextToClipboard(text) {
   document.body.removeChild(textArea);
 }
 
+function setupPhoneCopy() {
+  document.querySelectorAll('.copy-phone').forEach(el => {
+    el.style.cursor = "pointer";
+
+    el.addEventListener('click', async () => {
+      const phone = el.dataset.number;
+
+      try {
+        await navigator.clipboard.writeText(phone);
+
+        showToast("Phone number copied!");
+        setTimeout(() => {
+          el.textContent = originalText;
+        }, 1500);
+      } catch (err) {
+        console.error("Failed to copy:", err);
+      }
+    });
+  });
+}
+
+
 // Initialize based on page
 document.addEventListener('DOMContentLoaded', function() {
   // Load cart from storage
@@ -2788,7 +2670,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 100);
   }
 
-  
+  setupPhoneCopy();
+
   window.addEventListener('resize', setVH);
   window.addEventListener('orientationchange', setVH);
 });

@@ -39,12 +39,37 @@
             
             <!-- In thank-you.html, update the order details section -->
             <div class="bg-cream p-4 rounded-lg mb-6 text-left">
+                <div class="border-t border-b border-brown-200 mt-3 pt-3">
+                    <p class="text-sm text-brown-700 mb-2">
+                        <strong>What's next?</strong>
+                    </p>
+                    <ul class="text-sm text-brown-600 list-disc list-inside space-y-1" style="font-size: medium;">
+                        <li>Copy your Order ID or take a screenshot of this page and send it to us for confirmation.</li>
+                        <li>Message us on <a class="social-link" href="https://ig.me/m/whydoughcookies">Instagram</a>, <a class="social-link" href="https://www.messenger.com/t/103338884756070">Facebook</a> or <a class="social-link" href="www.tiktok.com/@whydoughcookies">Tiktok</a> with your Order ID and payment receipt.</li>
+                        <li>Prepare your payment using your preferred transfer method.</li>
+
+                        <br>
+                        📌 <strong>Payment Details</strong><br>
+                        <span class="copy-phone" data-number="09177573816">GCash / Maya / MariBank - 📱📋 <b>09177573816</b></span><br>
+                        QR codes and bank transfer details are available upon request — just let us know!
+                        <br>
+                        <br>
+
+                        <li>Please send your payment receipt after transfer to secure your order.</li>
+                        <li>Get ready for delicious cookies! 🍪</li>
+                        <br>
+                    </ul>
+                </div>
+                <br>
                 <p class="text-sm text-brown-700 mb-2">
-                <strong>Order Details:</strong>
+                    <strong>Order Details:</strong>
                 </p>
                 <ul class="text-m text-brown-600 space-y-1">
                     <li><b>• Customer: </b><span id="customerName">-</span></li>
-                    
+                    <!-- Only shown if social is provided -->
+                    <li id="socialRow" class="hidden">
+                        <b>• Social: </b><span id="socialDisplay">-</span>
+                    </li>
 
                     <!-- Delivery date + time slot (shown beside) -->
                     <li><b>• Delivery Date: </b><span id="deliveryDate"></span></li>
@@ -53,12 +78,7 @@
 
                     <!-- Delivery / payment -->
                     <li><b>• Delivery method: </b><span id="deliveryMethodDisplay">-</span></li>
-                    <li><b>• Payment: </b><span id="paymentDisplay">-</span></li>
-
-                    <!-- Only shown if social is provided -->
-                    <li id="socialRow" class="hidden">
-                        <b>• Social: </b><span id="socialDisplay">-</span>
-                    </li>
+                    <li><b>• Payment Option: </b><span id="paymentDisplay">-</span></li>
 
                     <!-- Only shown if notes are provided -->
                     <li id="notesRow" class="hidden">
@@ -70,18 +90,6 @@
                 <!-- Items list will be injected here -->
                 <ul id="orderDetails" class="text-m text-brown-600 space-y-1"></ul>
                 
-                <div class="border-t border-brown-200 mt-3 pt-3">
-                    <p class="text-sm text-brown-700 mb-2">
-                        <strong>What's next?</strong>
-                    </p>
-                    <ul class="text-sm text-brown-600 list-disc list-inside space-y-1">
-                        <li>Copy your Order ID or take a screenshot of this page.</li>
-                        <li>We'll contact you within 4 hours with the contacts you provided.</li>
-                        <li>Or you can contact us at our <a class="social-link" href="https://ig.me/m/whydoughcookies">Instagram</a>, <a class="social-link" href="https://m.me/whydoughcookies">Facebook</a> or <a class="social-link" href="www.tiktok.com/@whydoughcookies">Tiktok</a> with your Order ID.</li>
-                        <li>Prepare your payment amount to transfer with your preferred payment option.</li>
-                        <li>Get ready for delicious cookies! 🍪</li>
-                    </ul>
-                </div>
             </div>
             
             <div class="flex flex-col gap-3">
