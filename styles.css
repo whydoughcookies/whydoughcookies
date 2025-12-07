@@ -656,7 +656,7 @@ form section {
 
   .cookie-collection{
     border-radius: 20px;
-    height: 200px;
+    height: auto;
   }
 }
 
