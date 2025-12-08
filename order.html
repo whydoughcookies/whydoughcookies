@@ -56,7 +56,7 @@
         <button 
           type="button" 
           class="nav-button w-full"
-          onclick="scrollToSection(3)">
+          onclick="buildOrderSummary(); scrollToSection(3)">
           next
         </button>
       </div>      
@@ -163,7 +163,7 @@
         <button 
           type="button" 
           class="nav-button w-full"
-          onclick="scrollToSection(5)">
+          onclick="buildOrderSummary(); scrollToSection(5)">
           next
         </button>
       </div>
@@ -222,7 +222,7 @@
       <div id="proceedCheckoutWrapper" class="mt-4 px-6 max-w-md mx-auto hidden">
         <button 
             type="button"
-            onclick="handleProceedToCheckout()"
+            onclick="handleProceedToCheckout(); buildOrderSummary();"
             class="nav-button w-full">
             Proceed to checkout
         </button>
@@ -288,7 +288,7 @@
         <button 
           type="button" 
           class="nav-button w-full"
-          onclick="scrollToSection(7)">
+          onclick="buildOrderSummary(); scrollToSection(7)">
           next
         </button>
       </div>   

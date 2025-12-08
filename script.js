@@ -15,19 +15,19 @@ const ORDER_LIMITS = {
 };
 
 const COOKIE_FLAVORS = [
-  { name: "The Usual", price: 100 },
-  { name: "The Red One", price: 110 },
-  { name: "The Burnt One", price: 110 },
-  { name: "The Bizz", price: 115 },
-  { name: "The Milky One", price: 110 },
-  { name: "Pistash", price: 120 },
-  { name: "The OT", price: 115 },
-  { name: "Nut-so-Carrot", price: 130 },
-  { name: "Espress-oh", price: 115 },
-  { name: "Berry match", price: 120 },
-  { name: "The Minty One", price: 130 },
-  { name: "The Campfire", price: 115 },
-  { name: "Nut Usual", price: 120 },
+  { name: "The Usual", price: 100, label: "Classic Chocolate chip" },
+  { name: "The Red One", price: 110, label: "Red velvet w/ creamcheese" },
+  { name: "The Burnt One", price: 110, label: "Dark w/ creamcheese" },
+  { name: "The Bizz", price: 115, label: "Lotus Biscoff" },
+  { name: "The Milky One", price: 110, label: "Classic white Chocolate" },
+  { name: "Pistash", price: 120, label: "Pistachio Cream and bits" },
+  { name: "The OT", price: 115, label: "Ovaltine w/ Crunch" },
+  { name: "Nut-so-Carrot", price: 130, label: "Carrot cake inspired" },
+  { name: "Espress-oh", price: 115, label: "Coffee w/ creamcheese" },
+  { name: "Berry match", price: 120, label: "Matcha w/ berry bits" },
+  { name: "The Minty One", price: 130, label: "peppermint" },
+  { name: "The Campfire", price: 115, label: "S'mores" },
+  { name: "Nut Usual", price: 120, label: "Walnut & Caramel" },
 ];
 
 const PRODUCT_DATA = {
@@ -616,7 +616,12 @@ function renderCookieList() {
 
     const label = document.createElement('div');
     label.className = 'flex-1 flex justify-between pr-4 cursor-pointer';
-    label.innerHTML = `<img class="custom-cookie-image" src="icons/${flavor.name}.svg"><span class="cookie-label">${flavor.name}</span><span class="cookie-price">₱${flavor.price}</span>`;
+    label.innerHTML = `<img class="custom-cookie-image" src="icons/${flavor.name}.svg">
+                      <span class="cookie-label">${flavor.name} 
+                        <br> 
+                        <span>(${flavor.label})</span>
+                        </span>
+                        <span class="cookie-price">₱${flavor.price}</span>`;
 
     const qtyDiv = document.createElement('div');
     qtyDiv.className = 'quantity-control hidden items-center';
@@ -1795,69 +1800,69 @@ function initializeFlavorsSection() {
 const flavors = [
   { 
     name: "The Usual", 
-    description: "Crispy outside, soft inside—loaded with dark and milk chocolate", 
+    description: "Crispy outside, soft inside—loaded with premium dark and milk chocolate for the ultimate classic cookie.", 
     image: "images/the-usual.png" 
   },
   { 
     name: "The Red One", 
-    description: "Soft red velvet cookie with cream cheese filling white chocolate", 
+    description: "Soft red velvet cookie filled with creamy cream cheese and layered with premium white chocolate.", 
     image: "images/the-red-one.png" 
   },
   { 
     name: "The Burnt One", 
-    description: "Rich dark chocolate cookie with cream cheese center", 
+    description: "Rich dark chocolate cookie packed with premium dark chocolate and a luscious cream cheese center.", 
     image: "images/the-burnt-one.png" 
   },
   { 
     name: "The Bizz", 
-    description: "Chewy Biscoff cookie with biscuit bits milk chocolate rich swirl", 
+    description: "Chewy cookie with rich Lotus Biscoff flavor, crunchy biscuit bits, and smooth milk chocolate.", 
     image: "images/the-bizz.png" 
   },
   { 
     name: "The Milky One", 
-    description: "Soft buttery cookie with creamy white chocolate pools sweet chewy", 
+    description: "Soft buttery cookie overflowing with creamy white chocolate—sweet, chewy, and irresistibly dreamy.", 
     image: "images/milky-one.png" 
   },
   { 
     name: "Pistash", 
-    description: "Tender pistachio cookie with pistachio cream white and milk chocolate", 
+    description: "Tender pistachio cookie infused with pistachio cream and crunch, finished with white and milk chocolate.", 
     image: "images/pistash.png" 
   },
   { 
     name: "The OT", 
-    description: "Malty Ovaltine cookie with crunchy filling milk chocolate sweet bite", 
+    description: "Malty Ovaltine cookie with a crunchy surprise filling and creamy milk chocolate.", 
     image: "images/the-ot.png" 
   },
   { 
     name: "Nut-so-Carrot", 
-    description: "Moist carrot cookie with cream cheese filling white chocolate warmth", 
+    description: "Moist carrot cake–inspired cookie with cream cheese filling, real carrot goodness, and white chocolate.", 
     image: "images/nut-so-carrot.png" 
   },
   { 
     name: "Espress-oh", 
-    description: "Bold coffee cookie with cream cheese filling white milk chocolate", 
+    description: "Bold coffee cookie with cream cheese filling blended with silky white and milk chocolate.", 
     image: "images/espressoh.png" 
   },
   { 
     name: "Berry Match", 
-    description: "Earthy matcha cookie with berry bits white chocolate tangy finish", 
+    description: "Earthy matcha cookie with tangy berry bits balanced by smooth white chocolate.", 
     image: "images/berry-match.png" 
   },
   { 
     name: "The Minty One", 
-    description: "Deep dark chocolate cookie with peppermint festive bite", 
+    description: "Deep dark chocolate cookie infused with cool peppermint for a perfectly festive bite.", 
     image: "images/the-minty-one.png",
     tag: "Limited Edition" 
   },
   { 
     name: "The Campfire", 
-    description: "Gooey marshmallow cookie with toasted top graham crumb cozy pull", 
+    description: "Gooey marshmallow-filled cookie with two kinds of marshmallow and a crispy graham cracker base.", 
     image: "images/the-campfire.png",
     tag: "Limited Edition" 
   },
   { 
     name: "Nut Usual", 
-    description: "Classic with toasted walnuts oozy caramel center warm indulgence", 
+    description: "Your classic cookie upgraded with toasted walnuts and an oozy caramel center for ultimate holiday indulgence.", 
     image: "images/nut-usual.png",
     tag: "Limited Edition" 
   }
