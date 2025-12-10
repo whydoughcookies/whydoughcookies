@@ -76,7 +76,7 @@ body.text-brown section {
 }
 
 p {
-  font-size: 1.4rem !important;
+  font-size: 1.6rem !important;
 }
 
 body {
@@ -97,7 +97,6 @@ body {
   scroll-snap-align: none !important;
   align-items: center;
   padding: 2rem;
-  text-align: center;
   background-attachment: scroll;
   background-size: cover;
   background-position: center;
@@ -457,7 +456,6 @@ form section {
   box-shadow: 0 4px 20px rgba(93, 74, 39, 0.1);
   transition: all 0.3s ease;
   border: 2px solid transparent;
-  text-align: center;
 }
 
 .flavor-card:hover {
@@ -507,12 +505,14 @@ form section {
   font-weight: bold;
   margin-bottom: 0.5rem;
   color: var(--brown-800);
+  text-align: center;
 }
 
 .flavor-description {
   font-size: 1rem;
   color: var(--brown-600);
   line-height: 1.6;
+  text-align: center;
 }
 
 /* Mobile Carousel Styles */
@@ -583,7 +583,7 @@ form section {
 /* Desktop Grid Layout */
 @media (min-width: 1024px) {
   .flavors-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     padding: 0 2rem;
   }
@@ -1840,5 +1840,17 @@ textarea {
 @media (max-width: 1279px) {
   #cookieCollectionDiv {
       grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1920px) {
+  html {
+    font-size: 19px; /* slightly bigger for big monitors */
+  }
+}
+
+@media (max-width: 360px) {
+  html {
+    font-size: 14px; /* small devices */
   }
 }
