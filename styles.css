@@ -34,6 +34,35 @@ html, body {
   overscroll-behavior: none; /* Prevents pull-to-refresh on many browsers */
 }
 
+html {
+  font-size: clamp(15px, 1.6vw, 18px);
+}
+
+p, .paragraph, .text-base {
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+h2 {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+h3 {
+  font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+}
+
+.section-title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+}
+
+.section-description {
+  font-size: 1rem;
+}
+
 /* Scroll lock ONLY for order page */
 body.order-page {
   height: 100%;
@@ -166,7 +195,7 @@ section::before {
 
 /* Form Elements */
 form section {
-  background-color: var(--cream);
+  background-color: var(--brown-100);
 }
 
 .form-container {
@@ -422,7 +451,7 @@ form section {
 }
 
 .flavor-card {
-  background: var(--cream);
+  background: var(--brown-100);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(93, 74, 39, 0.1);
