@@ -249,7 +249,7 @@ function generateWeekendDates() {
     const displayDate = formatDateDisplay(date);
     
     return `
-      <button type="button" class="quick-date-btn bg-brown-300 hover:bg-brown-400 px-3 py-3 rounded-lg font-medium transition-colors" data-date="${dateStr}">
+      <button type="button" class="quick-date-btn bg-brown-300 hover:bg-brown-400 rounded-lg font-medium transition-colors" data-date="${dateStr}">
         ${displayDate}
       </button>
     `;
@@ -265,7 +265,7 @@ function getAvailableDeliveryDates(startDate) {
   // Skip today and tomorrow (2-day preparation)
   currentDate.setDate(currentDate.getDate() + 2);
   
-  while (dates.length < 8) {
+  while (dates.length < 9) {
     const day = currentDate.getDay();
     // Find next 4 available dates (Thursday-Sunday)
     // Thursday (4), Friday (5), Saturday (6), Sunday (0)
@@ -1724,20 +1724,32 @@ function setupRealTimeValidation() {
     });
   });
 
-  // Contact section next button logic
+    // Contact section next button logic
   const nextBtnWrapper6 = DOM.get('#nextBtnWrapper6');
-  const phoneField = document.querySelector('input[name="contactNumber"]');
-  const socialField = document.querySelector('#socialHandleInput');
-  const socialRadios = document.querySelectorAll('input[name="socialPlatform"]');
 
   function updateContactNextButton() {
     if (!nextBtnWrapper6) return;
+
+    const phoneField = document.querySelector('input[name="contactNumber"]');
+    const socialField = document.querySelector('#socialHandleInput');
+    const socialRadios = document.querySelectorAll('input[name="socialPlatform"]');
+
+    // Clear existing phone error while typing
     clearContactNumberError();
-    const phone = phoneField ? phoneField.value.trim() : '';
-    const phoneValid = /^(09|\+639)\d{9}$/.test(phone);
+
+    // Normalize phone: remove spaces, dashes, etc.
+    const rawPhone = phoneField ? phoneField.value : '';
+    const digitsOnly = rawPhone.replace(/\D/g, ''); // keep numbers only
+
+    // Accept:
+    //  - 11-digit numbers starting with 09
+    //  - or 12-digit numbers starting with 639
+    const phoneValid =
+      /^09\d{9}$/.test(digitsOnly) ||
+      /^639\d{9}$/.test(digitsOnly);
 
     const social = socialField ? socialField.value.trim() : '';
-    const platformSelected = [...socialRadios].some(r => r.checked);
+    const platformSelected = Array.from(socialRadios).some(r => r.checked);
 
     let canProceed = false;
 
@@ -1759,10 +1771,13 @@ function setupRealTimeValidation() {
   }
 
   // Listeners
+  const phoneField = document.querySelector('input[name="contactNumber"]');
+  const socialField = document.querySelector('#socialHandleInput');
+  const socialRadios = document.querySelectorAll('input[name="socialPlatform"]');
+
   if (phoneField) phoneField.addEventListener('input', updateContactNextButton);
   if (socialField) socialField.addEventListener('input', updateContactNextButton);
   socialRadios.forEach(radio => radio.addEventListener('change', updateContactNextButton));
-
 
   // Payment method change → still auto-advance to Section 8
   const paymentSelect = document.querySelector('select[name="payment"]');

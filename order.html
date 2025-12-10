@@ -46,8 +46,8 @@
     <!-- Name Section -->
     <section id="section-2" class="relative" aria-labelledby="name-heading">
       <div class="form-container max-w-md">
-        <label class="text-2xl font-bold mb-4 block text-brown text-center">what's your name? <span class="text-red-500">*</span></label>
-        <input name="name" type="text" maxlength="50" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="your name" />
+        <label class="text-4xl font-bold mb-4 block text-brown text-center">what's your name? <span class="text-red-500">*</span></label>
+        <input name="name" type="text" maxlength="50" class="w-full border border-brown-200 text-2xl p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="your name" />
         <div id="name-required" class="sr-only">This field is required</div>
       </div>
 
@@ -55,7 +55,7 @@
       <div id="nextBtnWrapper2" class="mt-4 px-6 max-w-md mx-auto hidden">
         <button 
           type="button" 
-          class="nav-button w-full"
+          class="nav-button w-full text-2xl"
           onclick="buildOrderSummary(); scrollToSection(3)">
           next
         </button>
@@ -72,7 +72,7 @@
     <!-- Delivery date & method -->
     <section id="section-3" class="relative">
       <div class="form-container max-w-md">
-        <label class="text-2xl font-bold mb-4 block text-brown">delivery date <span class="text-red-500">*</span></label>
+        <label class="text-4xl font-bold mb-4 block text-brown">delivery date <span class="text-red-500">*</span></label>
         
         <!-- Responsive Delivery Disclaimer -->
         <div class="bg-cream border border-brown-200 rounded-lg p-3 mb-4 md:p-4 md:mb-6">
@@ -90,7 +90,7 @@
           </div>
         </div>
         
-        <div id="quickDates" class="grid grid-cols-4 gap-3 mb-6"></div>
+        <div id="quickDates" class="grid grid-cols-3 gap-3 mb-6"></div>
         
         <!-- Date picker field -->
         <div class="mb-6" id="deliverydate-div">
@@ -106,17 +106,17 @@
         </div>
 
         <!-- Time Slot Selection -->
-        <label class="text-2xl font-bold mb-4 block text-brown">preferred time slot <span class="text-red-500">*</span></label>
+        <label class="text-4xl font-bold mb-4 block text-brown">preferred time slot <span class="text-red-500">*</span></label>
         <div class="grid grid-cols-3 gap-3 mb-6" id="timeslot-div">
-          <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '9AM-12PM')">
+          <div class="time-slot-option text-center" onclick="selectTimeSlot(this, '9AM-12PM')">
             <input type="radio" class="hidden time-slot-radio">
             <span class="text-brown">9am - 12pm</span>
           </div>
-          <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '1PM-3PM')">
+          <div class="time-slot-option text-center" onclick="selectTimeSlot(this, '1PM-3PM')">
             <input type="radio" class="hidden time-slot-radio">
             <span class="text-brown">1pm - 3pm</span>
           </div>
-          <div class="time-slot-option delivery-option text-center" onclick="selectTimeSlot(this, '4PM-6PM')">
+          <div class="time-slot-option text-center" onclick="selectTimeSlot(this, '4PM-6PM')">
             <input type="radio" class="hidden time-slot-radio">
             <span class="text-brown">4pm - 6pm</span>
           </div>          
@@ -135,11 +135,11 @@
     <!-- Delivery Method Section -->
     <section id="section-4" class="relative">
       <div class="form-container max-w-md">
-        <label class="text-2xl font-bold mb-4 block text-brown">delivery method <span class="text-red-500">*</span></label>
+        <label class="text-4xl font-bold mb-4 block text-brown">delivery method <span class="text-red-500">*</span></label>
         <div class="space-y-4">
           <div class="delivery-option" onclick="selectDeliveryMethod(this, 'delivery')">
             <input type="radio" name="deliveryMethod" value="delivery" class="hidden">
-            <span class="font-semibold text-brown text-lg">delivery</span>
+            <span class="font-semibold text-brown text-2xl">delivery</span>
           </div>
           <div id="deliveryDetails" class="hidden mt-2 p-4 bg-cream rounded-lg border border-brown-200">
             <p class="text-sm text-brown-700 mb-2"><strong>Delivery Areas:</strong> Metro Manila only</p>
@@ -149,7 +149,7 @@
 
           <div class="delivery-option" onclick="selectDeliveryMethod(this, 'pickup')">
             <input type="radio" name="deliveryMethod" value="pickup" class="hidden">
-            <span class="font-semibold text-brown text-lg">pick up</span>
+            <span class="font-semibold text-brown text-2xl">pick up</span>
           </div>
           <div id="pickupDetails" class="hidden mt-2 p-4 bg-cream rounded-lg border border-brown-200">
             <p class="text-sm text-brown-700 mb-2"><strong>Pickup Location:</strong> 1755 Dominga Street, Pasay City, Metro Manila</p>
@@ -162,7 +162,7 @@
       <div id="deliveryNextWrapper" class="mt-4 hidden px-6 max-w-md mx-auto">
         <button 
           type="button" 
-          class="nav-button w-full"
+          class="nav-button w-full text-2xl"
           onclick="buildOrderSummary(); scrollToSection(5)">
           next
         </button>
@@ -181,39 +181,36 @@
     <!-- Cookie selection -->
     <section id="section-5" class="relative">
       <div class="form-container max-w-4xl">
-        <h2 class="text-3xl font-bold text-brown text-center mb-4">Choose your cookies <span class="text-red-500">*</span></h2>
+        <h2 class="text-4xl font-bold text-brown text-center mb-4">Choose your cookies <span class="text-red-500">*</span></h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
 
           <!-- Customize Your Cookie Box Card -->
-          <div class="cookie-card" onclick="toggleCustomBoxCard(this)">
-            <p class="font-semibold text-xl mb-4 text-brown">Customize Your Cookie Set</p>
-            <p class="text-sm text-brown-600 mb-4">Create your own cookie selection</p>
-            <div class="text-sm text-brown-600 mt-2">Click to customize</div>
+          <div class="cookie-card" id="customCookieCard" onclick="toggleCustomBoxCard(this)">
+            <p class="font-semibold text-xl mb-4">Customize Your Cookie Set</p>
+            <p class="text-sm mb-4">Create your own cookie selection</p>
+            <div class="text-lg mt-2">Click to customize</div>
           </div>
 
           <!-- OG Set Card -->
-          <div class="cookie-card" onclick="openProductModal('ogSet')">
-            <p class="font-semibold text-xl mb-2 text-brown">The OG Set</p>
-            <p class="text-sm text-brown-600 mb-4">(3 cookies: The Usual, The Red One, The Burnt One) <span class="font-bold text-brown-700">100g</span></p>
-            <p class="font-bold text-brown-700 mb-4 text-xl">₱320</p>
-            <div class="text-sm text-brown-600 mt-2">Click to view details</div>
+          <div class="cookie-card" id="ogCookieCard" onclick="openProductModal('ogSet')">
+            <p class="font-semibold text-xl mb-2">The OG Set - ₱320</p>
+            <p class="text-sm mb-4">(3 cookies: The Usual, The Red One, The Burnt One) <span class="font-bold">100g</span></p>
+            <div class="text-lg mt-2">Click to view details</div>
           </div>
 
           <!-- The Classics Card -->
-          <div class="cookie-card" onclick="openProductModal('classic6')">
-            <p class="font-semibold text-xl mb-2 text-brown">The Classics</p>
-            <p class="text-sm text-brown-600 mb-4">(6 cookies: Usual, Red, Burnt, Milky, Pistash, Bizz) <span class="font-bold text-brown-700">100g</span></p>
-            <p class="font-bold text-brown-700 mb-4 text-xl">₱660</p>
-            <div class="text-sm text-brown-600 mt-2">Click to view details</div>
+          <div class="cookie-card" id="classicCookieCard" onclick="openProductModal('classic6')">
+            <p class="font-semibold text-xl mb-2">The Classics - ₱660</p>
+            <p class="text-sm mb-4">(6 cookies: Usual, Red, Burnt, Milky, Pistash, Bizz) <span class="font-bold">100g</span></p>
+            <div class="text-lg mt-2">Click to view details</div>
           </div>
 
           <!-- Samplers Card -->
-          <div class="cookie-card" onclick="openProductModal('samplers')">
-            <p class="font-semibold text-xl mb-2 text-brown">Samplers</p>
-            <p class="text-sm text-brown-600 mb-4">(6 pcs of Classics, 50g each)</p>
-            <p class="font-bold text-brown-700 mb-4 text-xl">₱320</p>
-            <div class="text-sm text-brown-600 mt-2">Click to view details</div>
+          <div class="cookie-card" id="samplerCookieCard" onclick="openProductModal('samplers')">
+            <p class="font-semibold text-xl mb-2">Samplers - ₱320</p>
+            <p class="text-sm mb-4">(6 pcs of Classics, 50g each)</p>
+            <div class="text-lg mt-2">Click to view details</div>
           </div>
         </div>
       </div>
@@ -223,7 +220,7 @@
         <button 
             type="button"
             onclick="handleProceedToCheckout(); buildOrderSummary();"
-            class="nav-button w-full">
+            class="nav-button w-full text-2xl">
             Proceed to checkout
         </button>
       </div>
@@ -241,43 +238,43 @@
     <!-- Contact details -->
     <section id="section-6" class="relative">
       <div class="form-container max-w-md">
-        <label class="text-2xl font-bold mb-6 block text-brown">Contact Details</label>
+        <label class="text-4xl font-bold mb-6 block text-brown">Contact Details</label>
         
-        <label class="block font-semibold mb-3 text-brown-800">Contact Number <span class="text-red-500">*</span></label>
-        <input name="contactNumber" title="Please enter an 11-digit number (e.g., 09123456789)" placeholder="e.g. 09XXXXXXXXX" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 focus:ring-accent focus:border-transparent" />
+        <label class="block font-semibold mb-3 text-brown-800 text-2xl">Contact Number <span class="text-red-500">*</span></label>
+        <input name="contactNumber" title="Please enter an 11-digit number (e.g., 09123456789)" placeholder="e.g. 09XXXXXXXXX" class="w-full border border-brown-200 p-4 rounded-xl mb-6 focus:ring-2 text-2xl focus:ring-accent focus:border-transparent" />
         
         <!-- Social Media Handle Input -->
-        <label class="block font-semibold mb-3 text-brown-800">Social Media Handle <span class="text-gray-500 text-sm">(Optional)</span></label>
+        <label class="block font-semibold mb-3 text-brown-800 text-2xl">Social Media Handle <span class="text-gray-500 text-sm">(Optional)</span></label>
         <input 
           name="socialHandle" 
           type="text" 
           placeholder="Enter your FB or IG or Tiktok" 
-          class="w-full border border-brown-200 p-4 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent" 
+          class="w-full border border-brown-200 p-4 rounded-xl text-2xl focus:ring-2 focus:ring-accent focus:border-transparent" 
           oninput="toggleSocialPlatformSelection(this)"
           onfocus="checkSocialHandleFocus(this)"
           id="socialHandleInput"
         />
 
         <!-- Social Media Platform Selection (Initially Hidden) -->
-        <div id="socialPlatformSelection" class="hidden mt-4">
-          <p class="text-sm text-brown-700 mb-3">Select platform: <span class="text-red-500">*</span></p>
+        <div id="socialPlatformSelection" class="hidden mt-6">
+          <p class="text-sm text-brown-700 mb-3 font-semibold">Select platform: <span class="text-red-500">*</span></p>
           <div class="flex sm:flex-row gap-3 mb-3">
             <label class="social-platform-option flex items-center justify-center gap-2 cursor-pointer py-3 flex-1" onclick="selectSocialPlatform(this)">
               <input type="radio" name="socialPlatform" value="Facebook" class="hidden" id="platformFacebook">
               <i class="fab fa-facebook text-blue-600 text-xl"></i>
-              <span class="text-brown text-sm sm:text-base">Facebook</span>
+              <span class="text-brown text-xl sm:text-base">Facebook</span>
             </label>
             
             <label class="social-platform-option flex items-center justify-center gap-2 cursor-pointer py-3 flex-1" onclick="selectSocialPlatform(this)">
               <input type="radio" name="socialPlatform" value="Instagram" class="hidden" id="platformInstagram">
               <i class="fab fa-instagram text-pink-600 text-xl"></i>
-              <span class="text-brown text-sm sm:text-base">Instagram</span>
+              <span class="text-brown text-xl sm:text-base">Instagram</span>
             </label>
 
             <label class="social-platform-option flex items-center justify-center gap-2 cursor-pointer py-3 flex-1" onclick="selectSocialPlatform(this)">
               <input type="radio" name="socialPlatform" value="Tiktok" class="hidden" id="platformTiktok">
               <i class="fab fa-tiktok text-gray-800 text-xl"></i>
-              <span class="text-brown text-sm sm:text-base">Tiktok</span>
+              <span class="text-brown text-xl sm:text-base">Tiktok</span>
             </label>
           </div>
         </div>
@@ -287,7 +284,7 @@
       <div id="nextBtnWrapper6" class="mt-4 px-6 max-w-md mx-auto hidden">
         <button 
           type="button" 
-          class="nav-button w-full"
+          class="nav-button w-full text-2xl"
           onclick="buildOrderSummary(); scrollToSection(7)">
           next
         </button>
@@ -306,8 +303,8 @@
     <!-- Payment -->
     <section id="section-7" class="relative">
       <div class="form-container max-w-md">
-        <label class="text-2xl font-bold mb-4 block text-brown">Payment Method <span class="text-red-500">*</span></label>
-        <select name="payment" class="w-full border border-brown-200 p-4 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent">
+        <label class="text-4xl font-bold mb-4 block text-brown">Payment Method <span class="text-red-500">*</span></label>
+        <select name="payment" class="w-full border border-brown-200 p-4 text-2xl rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent">
           <option value="" disabled selected>Select payment method</option>
           <option value="GCash">GCash</option>
           <option value="Maya">Maya</option>
@@ -327,15 +324,15 @@
     <!-- Notes -->
     <section id="section-8" class="relative">
       <div class="form-container max-w-md">
-        <label class="text-2xl font-bold mb-4 block text-brown">Notes (Optional)</label>
-        <textarea name="notes" maxlength="200" class="w-full border border-brown-200 p-4 rounded-xl h-32 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Any special requests or instructions..."></textarea>
+        <label class="text-4xl font-bold mb-4 block text-brown">Notes (Optional)</label>
+        <textarea name="notes" maxlength="200" class="w-full border border-brown-200 text-2xl p-4 rounded-xl h-32 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Any special requests or instructions..."></textarea>
       </div>
 
       <!-- New Next button for Notes section -->
       <div id="nextBtnWrapper8" class="mt-4 px-6 max-w-md mx-auto hidden">
         <button 
           type="button" 
-          class="nav-button w-full"
+          class="nav-button w-full text-2xl"
           onclick="scrollToSection(9)">
           next
         </button>
@@ -354,14 +351,14 @@
     <!-- Summary -->
     <section id="section-9" class="relative">
       <div class="form-container max-w-lg">
-        <h2 class="text-2xl font-bold mb-6 text-brown">order summary</h2>
-        <div id="summaryContent" class="text-left space-y-3 text-brown-800"></div>
+        <h2 class="text-4xl font-bold mb-6 text-brown">order summary</h2>
+        <div id="summaryContent" class="text-left space-y-3 text-brown-800 text-2xl"></div>
       </div>
       <div class="navigation-buttons">
         <button type="button" onclick="scrollToSection(8)" class="arrow-btn">
           <img src="icons/wd-up.svg" alt="Previous section" class="nav-icon">
         </button>
-        <button type="submit" class="nav-button bg-brown-600 hover:bg-brown-700">
+        <button type="submit" class="nav-button bg-brown-600 hover:bg-brown-700 text-2xl">
           submit order
         </button>
       </div>
@@ -370,7 +367,7 @@
   </form>
 
   <!-- Footer -->
-  <div class="footer">
+  <div class="footer text-lg">
     #WhyNot<span class="uppercase-wd">WhyDough</span>  |  #WeDoughItBetter
   </div>
 

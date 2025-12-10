@@ -76,7 +76,7 @@ body.text-brown section {
 }
 
 p {
-  font-size: 1.6rem !important;
+  font-size: 1.8rem !important;
 }
 
 body {
@@ -312,6 +312,7 @@ form section {
 
 .quick-date-btn{
   border: 2px solid #e5e7eb;
+  padding: .5rem;
 }
 
 .quick-date-btn.active {
@@ -1202,8 +1203,8 @@ section > div > label {
   }
 
   .quick-date-btn {
-    padding: 0.75rem 0.5rem;
-    font-size: 1rem;
+    padding: 0.5rem 0.5rem;
+    font-size: 1.3rem;
   }
 
   /* Time slot buttons adjustment */
@@ -1213,11 +1214,11 @@ section > div > label {
   }
 
   .time-slot-option  {
-    padding: 0.75rem 0.5rem;
+    padding: 0.5rem 0.5rem;
   }
 
   .time-slot-option span{
-    font-size: 1rem;
+    font-size: 1.3rem;
   }
 }
 
@@ -1853,4 +1854,28 @@ textarea {
   html {
     font-size: 14px; /* small devices */
   }
+}
+
+#customCookieCard {
+  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/bg-image-hero.JPG) center / cover;
+  color: white;
+}
+
+#ogCookieCard {
+  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/og-set.JPG) center / cover;
+  color: white;
+}
+
+#classicCookieCard {
+  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/classics.JPG) center / cover;
+  color: white;
+}
+
+#samplerCookieCard {
+  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/samplers.JPG) center / cover;
+  color: white;
+}
+
+#proceedCheckoutWrapper {
+  z-index: 1;
 }
