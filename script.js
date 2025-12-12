@@ -89,6 +89,12 @@ function setupExternalNavigation() {
 }
 
 function scrollToSection(sectionId) {
+  // ✅ Prevent focused inputs (like Notes textarea) from snapping scroll back
+  const active = document.activeElement;
+  if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT')) {
+    active.blur();
+  }
+  
   const element = document.getElementById(`section-${sectionId}`);
   if (!element) return;
 
@@ -830,6 +836,9 @@ function selectSocialPlatform(element) {
   const radio = element.querySelector('input[type="radio"]');
   if (radio) {
     radio.checked = true;
+
+    // ✅ Trigger listeners that depend on "change" (like updateContactNextButton)
+    radio.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
   // Clear the error whenever a valid platform is selected
@@ -920,6 +929,11 @@ function canProceedFromSection(sectionNumber) {
       return false;
     }
 
+    if (value.length < 3) {
+      showFieldError(nameField, 'Name must be at least 3 characters');
+      showToast('Please enter at least 3 characters for your name.', 'error');
+      return false;
+    }
     return true;
   }
 
@@ -1013,6 +1027,12 @@ function canProceedFromSection(sectionNumber) {
     const socialHandle = socialHandleField ? socialHandleField.value.trim() : '';
     const platformSelected = document.querySelector('input[name="socialPlatform"]:checked');
 
+    if (socialHandle && socialHandle.length < 5) {
+      showFieldError(socialHandleField, 'Social handle must be at least 5 characters');
+      showToast('Please enter at least 5 characters for your social handle.', 'error');
+      return false;
+    }
+    
     if (socialHandle && !platformSelected) {
       const socialContainer = document.querySelector('#socialPlatformSelection');
       showContainerError(
@@ -1060,6 +1080,10 @@ function validateForm() {
     showFieldError(nameField, 'Please enter your name');
     return scrollToErrorSection(2, nameField, 'Please complete your name first.');
   } else {
+    if (nameValue.length < 3) {
+      showFieldError(nameField, 'Name must be at least 3 characters');
+      return scrollToErrorSection(2, nameField, 'Please enter at least 3 characters for your name.');
+    }    
     const nameRegex = /^[A-Za-z\s'.-]+$/;
     if (!nameRegex.test(nameValue)) {
       showFieldError(
@@ -1160,6 +1184,11 @@ function validateForm() {
   const socialHandle = socialHandleField ? socialHandleField.value.trim() : '';
   const platformSelected = document.querySelector('input[name="socialPlatform"]:checked');
 
+  if (socialHandle && socialHandle.length < 5) {
+    showFieldError(socialHandleField, 'Social handle must be at least 5 characters');
+    return scrollToErrorSection(6, socialHandleField, 'Please enter at least 5 characters for your social handle.');
+  }
+  
   if (socialHandle && !platformSelected) {
     const socialContainer = document.querySelector('#socialPlatformSelection');
     showContainerError(
@@ -1698,7 +1727,7 @@ function setupRealTimeValidation() {
       if (cleaned !== this.value) this.value = cleaned;
 
       const value = cleaned.trim();
-      const valid = /^[A-Za-z\s'.-]+$/.test(value);
+      const valid = /^[A-Za-z\s'.-]+$/.test(value) && value.length >= 3;
 
       if (valid && value.length > 0) {
         nextBtnWrapper2.classList.remove('hidden');
@@ -1737,23 +1766,20 @@ function setupRealTimeValidation() {
     // Clear existing phone error while typing
     clearContactNumberError();
 
-    // Normalize phone: remove spaces, dashes, etc.
     const rawPhone = phoneField ? phoneField.value : '';
-    const digitsOnly = rawPhone.replace(/\D/g, ''); // keep numbers only
+    const digitsOnly = rawPhone.replace(/\D/g, ''); // remove spaces/dashes etc.
 
-    // Accept:
-    //  - 11-digit numbers starting with 09
-    //  - or 12-digit numbers starting with 639
     const phoneValid =
-      /^09\d{9}$/.test(digitsOnly) ||
-      /^639\d{9}$/.test(digitsOnly);
+      /^09\d{9}$/.test(digitsOnly) ||   // 09XXXXXXXXX
+      /^639\d{9}$/.test(digitsOnly);    // 639XXXXXXXXX
 
     const social = socialField ? socialField.value.trim() : '';
+    const socialOk = social === '' || social.length >= 5;
     const platformSelected = Array.from(socialRadios).some(r => r.checked);
 
     let canProceed = false;
 
-    if (phoneValid) {
+    if (phoneValid && socialOk) {
       if (social === '') {
         // No social → OK
         canProceed = true;

@@ -333,16 +333,16 @@
         <button 
           type="button" 
           class="nav-button w-full text-2xl"
-          onclick="scrollToSection(9)">
+          onclick="buildOrderSummary(); scrollToSection(9)">
           next
         </button>
       </div>      
 
       <div class="navigation-buttons">
-        <button type="button" onclick="scrollToSection(7)" class="arrow-btn">
+        <button type="button" onclick="buildOrderSummary(); scrollToSection(7)" class="arrow-btn">
           <img src="icons/wd-up.svg" alt="Previous section" class="nav-icon">
         </button>
-        <button type="button" onclick="buildOrderSummary(); scrollToSection(9);" class="arrow-btn">
+        <button type="button" onclick="document.activeElement && document.activeElement.blur(); buildOrderSummary(); scrollToSection(9);" class="arrow-btn">
           <img src="icons/wd-down.svg" alt="Next section" class="nav-icon">
         </button>
       </div>
