@@ -1879,3 +1879,21 @@ textarea {
 #proceedCheckoutWrapper {
   z-index: 1;
 }
+
+/* Tablet landscape: keep scrollable form containers like mobile */
+@media (min-width: 769px) and (max-width: 1180px) and (orientation: landscape) {
+  #section-3 .form-container,
+  #section-5 .form-container {
+    max-height: 65vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 80px; /* space for sticky nav row */
+  }
+
+  #section-3 .form-container .flex.justify-between,
+  #section-5 .form-container .flex.justify-between {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+  }
+}

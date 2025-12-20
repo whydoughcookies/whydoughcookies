@@ -1374,7 +1374,7 @@ function generateOrderId(name) {
   const sequenceKey = `orderSequence_${month}${day}${year}`;
   let sequence = parseInt(localStorage.getItem(sequenceKey)) || 1;
   
-  const orderId = `WD${month}${day}${year}${initials}${sequence.toString().padStart(3, '0')}`;
+  const orderId = `WD${month}${day}${initials}${sequence.toString().padStart(2, '0')}`;
   
   localStorage.setItem(sequenceKey, sequence + 1);
   
