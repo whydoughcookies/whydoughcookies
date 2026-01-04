@@ -1918,8 +1918,17 @@ textarea {
 }
 
 .ios-scrollable {
-  overflow-y: auto;
+  overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+}
+
+.ios-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ios-scrollable::-webkit-scrollbar-thumb {
+  background-color: rgba(93, 74, 39, 0.6);
+  border-radius: 6px;
 }
 
 /* hidden by default */
@@ -1947,4 +1956,27 @@ textarea {
 /* Only visible when needed */
 .ios-scroll-wrapper.has-ios-scroll .ios-scrollbar {
   opacity: 1;
+}
+
+/* iOS scroll hint – always visible */
+.ios-scroll-wrapper.has-ios-scroll::after {
+  content: "Scroll for more";
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(93, 74, 39, 0.9);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 20;
+  pointer-events: none;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -6px); }
 }
