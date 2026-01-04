@@ -1,5 +1,8 @@
 // script.js - Complete with Mobile & Carousel Fixes
 
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
 // Global state
 const state = {
   cart: [],
@@ -2599,6 +2602,43 @@ function addScrollIndicator(container) {
   }, 8000);
 }
 
+function setupIOSVisualScrollbar(container) {
+  if (!isIOS) return;
+
+  const wrapper = container.closest('.ios-scroll-wrapper');
+  if (!wrapper) return;
+
+  const bar = wrapper.querySelector('.ios-scrollbar');
+  const thumb = wrapper.querySelector('.ios-scrollbar-thumb');
+  if (!bar || !thumb) return;
+
+  function update() {
+    const scrollHeight = container.scrollHeight;
+    const clientHeight = container.clientHeight;
+
+    if (scrollHeight <= clientHeight) {
+      wrapper.classList.remove('has-ios-scroll');
+      return;
+    }
+
+    wrapper.classList.add('has-ios-scroll');
+
+    const scrollRatio =
+      container.scrollTop / (scrollHeight - clientHeight);
+
+    const maxMove =
+      bar.clientHeight - thumb.clientHeight;
+
+    thumb.style.transform =
+      `translateY(${scrollRatio * maxMove}px)`;
+  }
+
+  container.addEventListener('scroll', update);
+  window.addEventListener('resize', update);
+
+  update();
+}
+
 function displayOrderDetails() {
   const orderData = getOrderData();
   console.log('Retrieved order data:', orderData); // Debug log
@@ -2880,7 +2920,7 @@ function setupPhoneCopy() {
 // Initialize based on page
 document.addEventListener('DOMContentLoaded', function() {
   // Load cart from storage
-  console.log('Why Dough script loaded – v2.4.0');
+  console.log('Why Dough script loaded – v2.5.0');
 
   const savedCart = localStorage.getItem('whyDoughCart');
   if (savedCart) {
@@ -2897,6 +2937,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
   setVH();
   setTimeout(setupScrollableSections, 500);
+
+  if (isIOS) {
+    const s3 = document.querySelector('#section-3 .ios-scrollable');
+    const s5 = document.querySelector('#section-5 .ios-scrollable');
+    const s6 = document.querySelector('#section-6 .ios-scrollable');
+  
+    if (s3) setupIOSVisualScrollbar(s3);
+    if (s5) setupIOSVisualScrollbar(s5);
+    if (s6) setupIOSVisualScrollbar(s6);
+  }
   
   // Homepage initialization
   if (DOM.get('#flavorsCarouselTrack')) {
