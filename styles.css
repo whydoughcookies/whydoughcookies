@@ -802,7 +802,8 @@ section > div > label {
   
   /* Only allow scrolling within specific containers */
   #section-3 .form-container,
-  #section-5 .form-container {
+  #section-5 .form-container,
+  #section-6 .form-container {
     max-height: 60vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -1134,7 +1135,8 @@ section > div > label {
 @media (max-width: 768px) {
   /* Make sections 3 and 5 scrollable with proper spacing */
   #section-3 .form-container,
-  #section-5 .form-container {
+  #section-5 .form-container,
+  #section-6 .form-container {
     max-height: 65vh;
     overflow-y: auto;
     padding: 1.5rem;
@@ -1146,38 +1148,44 @@ section > div > label {
     scrollbar-color: var(--accent) var(--brown-200);
   }
   #section-3 .form-container,
-  #section-5 .form-container{
+  #section-5 .form-container,
+  #section-6 .form-container{
     margin-top: 50px;
     overflow: auto;
   }
 
   /* Custom scrollbar for webkit browsers */
   #section-3 .form-container::-webkit-scrollbar,
-  #section-5 .form-container::-webkit-scrollbar {
+  #section-5 .form-container::-webkit-scrollbar,
+  #section-6 .form-container::-webkit-scrollbar {
     width: 6px;
   }
 
   #section-3 .form-container::-webkit-scrollbar-track,
-  #section-5 .form-container::-webkit-scrollbar-track {
+  #section-5 .form-container::-webkit-scrollbar-track,
+  #section-6 .form-container::-webkit-scrollbar-track {
     background: var(--brown-200);
     border-radius: 10px;
     margin: 5px;
   }
 
   #section-3 .form-container::-webkit-scrollbar-thumb,
-  #section-5 .form-container::-webkit-scrollbar-thumb {
+  #section-5 .form-container::-webkit-scrollbar-thumb,
+  #section-6 .form-container::-webkit-scrollbar-thumb {
     background: var(--accent);
     border-radius: 10px;
   }
 
   #section-3 .form-container::-webkit-scrollbar-thumb:hover,
-  #section-5 .form-container::-webkit-scrollbar-thumb:hover {
+  #section-5 .form-container::-webkit-scrollbar-thumb:hover,
+  #section-6 .form-container::-webkit-scrollbar-thumb:hover {
     background: var(--brown-700);
   }
 
   /* Make navigation buttons sticky at the bottom of the scrollable container */
   #section-3 .form-container .flex.justify-between,
-  #section-5 .form-container .flex.justify-between {
+  #section-5 .form-container .flex.justify-between,
+  #section-6 .form-container .flex.justify-between {
     position: sticky;
     bottom: 0;
     padding: 1rem 0;
@@ -1268,7 +1276,8 @@ section > div > label {
 @supports (-webkit-touch-callout: none) {
   @media (max-width: 768px) {
     #section-3 .form-container,
-    #section-5 .form-container {
+    #section-5 .form-container,
+    #section-6 .form-container {
       max-height: 60vh; /* Slightly less on iOS due to browser UI */
     }
   }
@@ -1652,7 +1661,8 @@ section.active-section .navigation-buttons {
   }
 
   #section-3 .form-container,
-  #section-5 .form-container {
+  #section-5 .form-container,
+  #section-6 .form-container {
     max-height: 75vh;
   }
 }
@@ -1884,7 +1894,8 @@ textarea {
 /* Tablet landscape: keep scrollable form containers like mobile */
 @media (min-width: 769px) and (max-width: 1180px) and (orientation: landscape) {
   #section-3 .form-container,
-  #section-5 .form-container {
+  #section-5 .form-container,
+  #section-6 .form-container {
     max-height: 65vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -1892,7 +1903,8 @@ textarea {
   }
 
   #section-3 .form-container .flex.justify-between,
-  #section-5 .form-container .flex.justify-between {
+  #section-5 .form-container .flex.justify-between,
+  #section-6 .form-container .flex.justify-between {
     position: sticky;
     bottom: 0;
     z-index: 10;
