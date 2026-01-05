@@ -1891,8 +1891,17 @@ textarea {
   z-index: 1;
 }
 
+#section-3 .form-container,
+#section-5 .form-container,
+#section-6 .form-container {
+  max-height: 75vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 80px; /* space for sticky nav row */
+}
+
 /* Tablet landscape: keep scrollable form containers like mobile */
-@media (min-width: 769px) and (max-width: 1180px) and (orientation: landscape) {
+@media (min-width: 769px) and (max-width: 1300px) and (orientation: landscape) {
   #section-3 .form-container,
   #section-5 .form-container,
   #section-6 .form-container {

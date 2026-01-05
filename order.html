@@ -219,11 +219,10 @@
       </div>
  
       <!-- Proceed to checkout button (only shown when cart has items) -->
-      <div id="proceedCheckoutWrapper" class="mt-4 px-6 max-w-md mx-auto hidden">
+      <div id="proceedCheckoutWrapper" class="mt-4 px-6 max-w-md mx-auto hidden" style="z-index: 1;">
         <button 
             type="button"
             onclick="handleProceedToCheckout(); buildOrderSummary();"
-            style="z-index: 1;"
             class="nav-button w-full text-2xl">
             Proceed to checkout
         </button>
