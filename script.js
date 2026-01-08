@@ -589,20 +589,19 @@ function toggleCustomBoxCard(card) {
   }
 }
 
-// Fixed openCustomizeModal function
 function openCustomizeModal() {
   const modal = document.getElementById("customizeModal");
-  if (modal) {
-    modal.classList.add("active");
-    document.body.classList.add("no-scroll");
-    renderCookieList();
-    state.selectedBoxSize = null;
-    
-    document.querySelectorAll('.boxsize-row').forEach(r => r.classList.remove('active'));
-    
-    const sizeInfo = document.getElementById('selectedSizeInfo');
-    if (sizeInfo) sizeInfo.classList.add('hidden');
-  }
+  if (!modal) return;
+
+  modal.classList.add("active");
+  document.body.classList.add("no-scroll");
+
+  renderCookieList();
+  state.selectedBoxSize = null;
+
+  // 👇 ADD THIS
+  const cookieList = document.getElementById('selectedSizeInfo');
+  setupScrollIndicatorForModal(cookieList);
 }
 
 // Fixed closeCustomizeModal function
@@ -2564,10 +2563,43 @@ function setupScrollableSections() {
         scrollTimeout = setTimeout(() => {
           if (this.scrollTop === 0 || 
               this.scrollTop + this.clientHeight >= this.scrollHeight - 10) {
-            this.style.overflowY = 'hidden';
+            this.style.overflowY = 'auto';
           }
         }, 1500);
       });
+    }
+  });
+}
+
+function setupScrollIndicatorForModal(scrollContainer) {
+  if (!scrollContainer) return;
+
+  // Prevent duplicates
+  if (scrollContainer.querySelector('.scroll-indicator')) return;
+
+  const indicator = document.createElement('div');
+  indicator.className = 'scroll-indicator';
+  indicator.textContent = '↓ scroll for more';
+
+  // IMPORTANT: attach to modal body, not body
+  scrollContainer.style.position = 'relative';
+  scrollContainer.appendChild(indicator);
+
+  const hideIndicator = () => {
+    indicator.style.opacity = '0';
+    setTimeout(() => indicator.remove(), 300);
+    scrollContainer.removeEventListener('scroll', hideIndicator);
+  };
+
+  // Only show if scrollable
+  requestAnimationFrame(() => {
+    if (scrollContainer.scrollHeight > scrollContainer.clientHeight) {
+      scrollContainer.addEventListener('scroll', hideIndicator, { once: true });
+
+      // auto-hide after 6s
+      setTimeout(hideIndicator, 6000);
+    } else {
+      indicator.remove();
     }
   });
 }
@@ -2584,7 +2616,7 @@ function addScrollIndicator(container) {
   indicator.style.color = 'white';
   indicator.style.padding = '6px 12px';
   indicator.style.borderRadius = '20px';
-  indicator.style.fontSize = '0.75rem';
+  indicator.style.fontSize = '1.2rem';
   indicator.style.fontWeight = 'bold';
   indicator.style.zIndex = '10';
   indicator.style.pointerEvents = 'none';

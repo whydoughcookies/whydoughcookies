@@ -1377,37 +1377,6 @@ section > div > label {
     position: relative;
   }
 
-  /* Scroll hint animation */
-  @keyframes scrollHint {
-    0% { opacity: 0; transform: translateY(-10px); }
-    50% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(10px); }
-  }
-
-  /* Add scroll indicator for iOS */
-  #section-3 .form-container::after,
-  #section-5 .form-container::after {
-    content: "↓ Scroll for more";
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: var(--accent);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    animation: scrollHint 3s infinite;
-    pointer-events: none;
-    z-index: 5;
-  }
-
-  /* Hide scroll hint when user starts scrolling */
-  #section-3 .form-container.scrolling::after,
-  #section-5 .form-container.scrolling::after {
-    display: none;
-  }
-
   .navigation-buttons {
     width: 95%;
     bottom: 70px; /* Closer to footer on mobile */
@@ -1442,6 +1411,31 @@ section > div > label {
   z-index: 10;
   pointer-events: none;
 }
+
+/* Scroll indicator INSIDE modal */
+.modal-body .scroll-indicator {
+  position: sticky;
+  bottom: 12px;
+
+  margin: 0 auto;
+  width: fit-content;
+
+  background: var(--accent);
+  color: white;
+
+  padding: 6px 14px;
+  border-radius: 999px;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  opacity: 0.9;
+  animation: bounce 2s infinite;
+
+  pointer-events: none;
+  z-index: 20;
+}
+
 
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
@@ -1534,7 +1528,7 @@ body:not(.homepage-body):not(.thankyou-page) section {
 #section-6 .form-container,
 #section-7 .form-container,
 #section-8 .form-container {
-  max-width: 400px;
+  max-width: 450px;
 }
 
 /* Wider for cookie selection */
@@ -1893,7 +1887,8 @@ textarea {
 
 #section-3 .form-container,
 #section-5 .form-container,
-#section-6 .form-container {
+#section-6 .form-container,
+#section-9 .form-container {
   max-height: 75vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -1905,7 +1900,7 @@ textarea {
   #section-3 .form-container,
   #section-5 .form-container,
   #section-6 .form-container {
-    max-height: 65vh;
+    max-height: 70vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 80px; /* space for sticky nav row */
