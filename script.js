@@ -93,9 +93,6 @@ function setupExternalNavigation() {
 function scrollToSection(sectionId) {
   if (blurFromKeyboard) return;
 
-  const section = document.getElementById(`section-${sectionNumber}`);
-  if (!section) return;
-  
   // ✅ Prevent focused inputs (like Notes textarea) from snapping scroll back
   const active = document.activeElement;
   if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT')) {
@@ -2890,7 +2887,7 @@ function setupPhoneCopy() {
 // Initialize based on page
 document.addEventListener('DOMContentLoaded', function() {
   // Load cart from storage
-  console.log('Why Dough script loaded – v2.5.0');
+  console.log('Why Dough script loaded – v2.6.0');
 
   const savedCart = localStorage.getItem('whyDoughCart');
   if (savedCart) {
