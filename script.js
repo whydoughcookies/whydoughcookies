@@ -1697,7 +1697,7 @@ function setupRealTimeValidation() {
       validateSingleField(this);
 
       if (!isOrderPage()) return;
-
+      /*
       const name  = this.name || this.id;
       const value = this.value ? this.value.trim() : '';
 
@@ -1710,8 +1710,9 @@ function setupRealTimeValidation() {
 
       // SECTION 7 – Payment → Section 8
       if (name === 'payment' && value) {
-        autoAdvanceFromSection(7);
+        autoAdvanceFromSection(7); 
       }
+      */
     });
   });
 
