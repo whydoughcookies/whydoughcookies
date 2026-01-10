@@ -1697,7 +1697,7 @@ function setupRealTimeValidation() {
       validateSingleField(this);
 
       if (!isOrderPage()) return;
-      /*
+      
       const name  = this.name || this.id;
       const value = this.value ? this.value.trim() : '';
 
@@ -1712,7 +1712,6 @@ function setupRealTimeValidation() {
       if (name === 'payment' && value) {
         autoAdvanceFromSection(7); 
       }
-      */
     });
   });
 
@@ -2981,15 +2980,19 @@ document.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('orientationchange', setVH);
 });
 
-// Prevent Enter key from submitting or jumping sections in text fields
-document.addEventListener('keydown', function(e) {
+
+document.addEventListener('keydown', function (e) {
   const target = e.target;
 
-  // Only for INPUT fields (not textarea)
-  if (e.key === 'Enter' && target.tagName === 'INPUT') {
+  // Only for text-like inputs
+  if (
+    e.key === 'Enter' &&
+    target instanceof HTMLInputElement &&
+    target.type === 'text'
+  ) {
     e.preventDefault();
-    
-    // Blur the input → closes the keyboard on mobile
+
+    // Close Android keyboard
     target.blur();
 
     return false;
