@@ -1412,6 +1412,10 @@ section > div > label {
   pointer-events: none;
 }
 
+.form-container.scrolling .scroll-indicator {
+  display: none;
+}
+
 /* Scroll indicator INSIDE modal */
 .modal-body .scroll-indicator {
   position: sticky;

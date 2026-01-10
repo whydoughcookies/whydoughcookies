@@ -1,5 +1,7 @@
 // script.js - Complete with Mobile & Carousel Fixes
 
+let blurFromKeyboard = false;
+
 // Global state
 const state = {
   cart: [],
@@ -89,6 +91,11 @@ function setupExternalNavigation() {
 }
 
 function scrollToSection(sectionId) {
+  if (blurFromKeyboard) return;
+
+  const section = document.getElementById(`section-${sectionNumber}`);
+  if (!section) return;
+  
   // ✅ Prevent focused inputs (like Notes textarea) from snapping scroll back
   const active = document.activeElement;
   if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT')) {
@@ -612,7 +619,6 @@ function closeCustomizeModal() {
     document.body.classList.remove("no-scroll");
   }
 }
-
 
 function selectBoxSize(row) {
   document.querySelectorAll('.boxsize-row').forEach(r => r.classList.remove('active'));
@@ -2520,54 +2526,42 @@ function setupSmoothScrolling() {
 
 // Enhanced scroll handling for iOS
 function setupScrollableSections() {
-  const scrollableContainers = [
-    document.querySelector('#section-3 .form-container'),
-    document.querySelector('#section-5 .form-container')
-  ];
+  const containers = document.querySelectorAll(
+    '#section-3 .form-container, #section-5 .form-container'
+  );
 
-  scrollableContainers.forEach(container => {
-    if (!container) return;
+  containers.forEach(container => {
+    let hideTimeout;
 
-    // Add scrollable class for CSS targeting
-    container.classList.add('scrollable');
+    function checkScrollable() {
+      const isScrollable =
+        container.scrollHeight > container.clientHeight + 5;
 
-    // Detect if content is scrollable
-    const isScrollable = container.scrollHeight > container.clientHeight;
-    
-    if (isScrollable) {
-      // Add scroll indicator
-      addScrollIndicator(container);
-      
-      // Track scrolling to hide hints
-      container.addEventListener('scroll', function() {
-        this.classList.add('scrolling');
-        
-        // Remove scroll indicator after first scroll
-        const indicator = this.querySelector('.scroll-indicator');
-        if (indicator) {
-          indicator.style.opacity = '0';
-          setTimeout(() => indicator.remove(), 300);
-        }
-      });
-
-      // Show scrollbars on touch start (iOS)
-      container.addEventListener('touchstart', function() {
-        this.style.overflowY = 'auto';
-      });
-
-      // Hide scrollbars after a delay when not scrolling
-      let scrollTimeout;
-      container.addEventListener('scroll', function() {
-        this.style.overflowY = 'auto';
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-          if (this.scrollTop === 0 || 
-              this.scrollTop + this.clientHeight >= this.scrollHeight - 10) {
-            this.style.overflowY = 'auto';
-          }
-        }, 1500);
-      });
+      if (isScrollable) {
+        addScrollIndicator(container);
+        container.classList.add('scrollable');
+      } else {
+        container.classList.remove('scrollable');
+      }
     }
+
+    // Initial check (after layout & images)
+    setTimeout(checkScrollable, 300);
+
+    // Re-check on resize (rotation, keyboard open/close)
+    window.addEventListener('resize', checkScrollable);
+
+    container.addEventListener('scroll', () => {
+      container.classList.add('scrolling');
+
+      clearTimeout(hideTimeout);
+      hideTimeout = setTimeout(() => {
+        // Only show indicator again if user is near the top
+        if (container.scrollTop < 20) {
+          container.classList.remove('scrolling');
+        }
+      }, 200);
+    });
   });
 }
 
@@ -2605,31 +2599,14 @@ function setupScrollIndicatorForModal(scrollContainer) {
 }
 
 function addScrollIndicator(container) {
+  // Prevent duplicates
+  if (container.querySelector('.scroll-indicator')) return;
+
   const indicator = document.createElement('div');
   indicator.className = 'scroll-indicator';
-  indicator.textContent = 'Scroll for more';
-  indicator.style.position = 'absolute';
-  indicator.style.bottom = '70px';
-  indicator.style.left = '50%';
-  indicator.style.transform = 'translateX(-50)';
-  indicator.style.background = 'var(--accent)';
-  indicator.style.color = 'white';
-  indicator.style.padding = '6px 12px';
-  indicator.style.borderRadius = '20px';
-  indicator.style.fontSize = '1.2rem';
-  indicator.style.fontWeight = 'bold';
-  indicator.style.zIndex = '10';
-  indicator.style.pointerEvents = 'none';
-  indicator.style.animation = 'bounce 2s infinite';
-  
-  container.style.position = 'relative';
-  container.appendChild(indicator);
+  indicator.textContent = '↓ Scroll for more';
 
-  // Auto-remove after 8 seconds
-  setTimeout(() => {
-    indicator.style.opacity = '0';
-    setTimeout(() => indicator.remove(), 300);
-  }, 8000);
+  container.appendChild(indicator);
 }
 
 function displayOrderDetails() {
@@ -2929,7 +2906,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   setVH();
-  setTimeout(setupScrollableSections, 500);
+  setupScrollableSections();
   
   // Homepage initialization
   if (DOM.get('#flavorsCarouselTrack')) {
@@ -2980,21 +2957,23 @@ document.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('orientationchange', setVH);
 });
 
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    blurFromKeyboard = true;
+    setTimeout(() => blurFromKeyboard = false, 300);
+  }
+});
 
-document.addEventListener('keydown', function (e) {
-  const target = e.target;
+document.addEventListener('beforeinput', e => {
+  if (e.inputType === 'insertLineBreak') {
+    blurFromKeyboard = true;
+    setTimeout(() => blurFromKeyboard = false, 300);
+  }
+});
 
-  // Only for text-like inputs
-  if (
-    e.key === 'Enter' &&
-    target instanceof HTMLInputElement &&
-    target.type === 'text'
-  ) {
-    e.preventDefault();
-
-    // Close Android keyboard
-    target.blur();
-
-    return false;
+document.addEventListener('input', e => {
+  if (e.inputType === 'insertLineBreak') {
+    blurFromKeyboard = true;
+    setTimeout(() => blurFromKeyboard = false, 300);
   }
 });
