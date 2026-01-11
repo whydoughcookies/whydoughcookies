@@ -263,6 +263,9 @@
           oninput="toggleSocialPlatformSelection(this)"
           onfocus="checkSocialHandleFocus(this)"
           id="socialHandleInput"
+          enterkeyhint="done"
+          inputmode="text"
+          onkeydown="return event.key !== 'Enter';"
         />
 
         <!-- Social Media Platform Selection (Initially Hidden) -->
@@ -336,7 +339,14 @@
     <section id="section-8" class="relative">
       <div class="form-container max-w-md">
         <label class="text-4xl font-bold mb-4 block text-brown">Notes (Optional)</label>
-        <textarea name="notes" maxlength="200" class="w-full border border-brown-200 text-2xl p-4 rounded-xl h-32 focus:ring-2 focus:ring-accent focus:border-transparent" placeholder="Any special requests or instructions..."></textarea>
+        <textarea name="notes" 
+          maxlength="200"
+          enterkeyhint="done"
+          inputmode="text"
+          onkeydown="return event.key !== 'Enter';"
+          class="w-full border border-brown-200 text-2xl p-4 rounded-xl h-32 focus:ring-2 focus:ring-accent focus:border-transparent" 
+          placeholder="Any special requests or instructions...">
+        </textarea>
       </div>
 
       <!-- New Next button for Notes section -->
@@ -387,7 +397,7 @@
   <div id="cartModal" class="modal">
     <div class="modal-content">
       <div class="modal-header flex justify-between items-center">
-        <h3 class="text-lg font-semibold text-brown"><span class="uppercase-wd">Why Dough</span> Cart</h3>
+        <h3 class="text-3xl font-semibold text-brown"><span class="uppercase-wd">Why Dough</span> Cart</h3>
         <button type="button" onclick="closeCartModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
       </div>
       <div class="modal-body">
@@ -395,11 +405,13 @@
         <div id="emptyCartMessage" class="text-center text-brown-600 py-8">
           Your cart is empty
         </div>
-        <div id="cartTotal" class="cart-total mt-4 hidden">
-          Total: ₱<span id="cartTotalAmount">0</span>
-        </div>
+        
       </div>
       <div class="modal-footer">
+        <div id="cartTotal" class="cart-total mt-4 hidden text-3xl">
+          Total: ₱<span id="cartTotalAmount">0</span>
+        </div>
+        <br>
         <button type="button" onclick="closeCartModal()" class="w-full bg-accent hover:bg-brown-700 text-white font-semibold py-3 rounded-lg transition-all duration-300">
           Continue Shopping
         </button>
@@ -411,7 +423,7 @@
   <div id="customizeModal" class="modal">
     <div class="modal-content">
       <div class="modal-header flex justify-between items-center">
-        <h3 class="text-lg font-semibold text-brown">Customize Your Cookie set</h3>
+        <h3 class="text-3xl font-semibold text-brown">Customize Your Cookie set</h3>
         <button type="button" onclick="closeCustomizeModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
       </div>
       <div class="modal-body">
@@ -457,7 +469,7 @@
   <div id="productModal" class="modal">
     <div class="modal-content max-w-md">
       <div class="modal-header flex justify-between items-center">
-        <h3 class="text-lg font-semibold text-brown" id="productModalTitle">Product Details</h3>
+        <h3 class="text-3xl font-semibold text-brown" id="productModalTitle">Product Details</h3>
         <button type="button" onclick="closeProductModal()" class="text-gray-500 hover:text-black text-2xl">&times;</button>
       </div>
       <div class="modal-body">

@@ -1401,11 +1401,11 @@ section > div > label {
   bottom: 60px; /* Above the sticky buttons */
   left: 50%;
   transform: translateX(-50%);
-  background: var(--accent);
-  color: white;
+  background: var(--brown-300);
+  color: var(--brown);;
   padding: 6px 12px;
   border-radius: 20px;
-  font-size: 0.75rem;
+  font-size: 1.2rem;
   font-weight: bold;
   animation: bounce 2s infinite;
   z-index: 10;
@@ -1917,4 +1917,9 @@ textarea {
     bottom: 0;
     z-index: 10;
   }
+}
+
+.custom-pack-number {
+  color: var(--accent);
+  font-weight: bold;
 }

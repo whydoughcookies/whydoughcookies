@@ -159,7 +159,6 @@ function updateCartDisplay() {
   saveCartToStorage();
 }
 
-
 function updateCartModal(totalItems, totalAmount) {
   const cartItems = DOM.get('#cartItems');
   const emptyCartMessage = DOM.get('#emptyCartMessage');
@@ -176,11 +175,21 @@ function updateCartModal(totalItems, totalAmount) {
     DOM.hide(emptyCartMessage);
     DOM.show(cartTotal);
     
+    let customBoxCounter = 0;
+
     cartItems.innerHTML = state.cart.map((item, index) => `
       <div class="cart-modal-item p-4 rounded-lg mb-3">
         <div class="flex justify-between items-center">
           <div class="flex-1">
-            <h4 class="font-bold text-brown text-lg">${item.name}</h4>
+            ${(() => {
+              if (item.type === 'customBox') {
+                customBoxCounter++;
+                return `<h4 class="font-bold text-brown text-2xl">
+                  Custom Cookie Set #${customBoxCounter}
+                </h4>`;
+              }
+              return `<h4 class="font-bold text-brown text-2xl">${item.name}</h4>`;
+            })()}
             ${item.type === 'customBox' ? 
               `<p class="text-sm text-brown-700">Pack of ${item.boxSize}</p>
                <p class="text-sm text-brown-600">${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')}</p>` : 
@@ -579,6 +588,7 @@ function selectDeliveryMethod(element, method) {
 
 // Fixed toggleCustomBoxCard function
 function toggleCustomBoxCard(card) {
+  resetCustomizeModal();
   const isActive = card.classList.contains('active');
   
   document.querySelectorAll('.cookie-card').forEach(c => {
@@ -616,6 +626,31 @@ function closeCustomizeModal() {
     document.body.classList.remove("no-scroll");
   }
 }
+
+function resetCustomizeModal() {
+  // Reset box size radios
+  document
+    .querySelectorAll('#customizeModal input[name="boxSize"]')
+    .forEach(input => input.checked = false);
+
+  document
+    .querySelectorAll('#customizeModal .boxsize-row')
+    .forEach(row => row.classList.remove('active'));
+
+  // Reset cookies
+  document
+    .querySelectorAll('#customizeModal .cookie-row')
+    .forEach(row => row.classList.remove('active'));
+
+  document
+    .querySelectorAll('#customizeModal .cookie-qty-input')
+    .forEach(input => input.value = 0);
+
+  // Hide size info message
+  const info = document.getElementById('selectedSizeInfo');
+  if (info) info.classList.add('hidden');
+}
+
 
 function selectBoxSize(row) {
   document.querySelectorAll('.boxsize-row').forEach(r => r.classList.remove('active'));
@@ -2570,7 +2605,7 @@ function setupScrollIndicatorForModal(scrollContainer) {
 
   const indicator = document.createElement('div');
   indicator.className = 'scroll-indicator';
-  indicator.textContent = '↓ scroll for more';
+  indicator.textContent = 'scroll for more';
 
   // IMPORTANT: attach to modal body, not body
   scrollContainer.style.position = 'relative';
@@ -2601,7 +2636,7 @@ function addScrollIndicator(container) {
 
   const indicator = document.createElement('div');
   indicator.className = 'scroll-indicator';
-  indicator.textContent = '↓ Scroll for more';
+  indicator.textContent = 'Scroll for more';
 
   container.appendChild(indicator);
 }
