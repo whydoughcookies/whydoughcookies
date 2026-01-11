@@ -1672,7 +1672,7 @@ async function handleFormSubmit(e) {
 
     // Add a small delay to ensure storage is written
     setTimeout(() => {
-      window.location.href = '/thank-you.html';
+      window.location.href = '/thank-you';
     }, 1000);
 
   } catch (error) {
@@ -1682,7 +1682,7 @@ async function handleFormSubmit(e) {
     // Still redirect to thank you page even if submission fails
     clearCartAfterSubmission();
     setTimeout(() => {
-      window.location.href = '/thank-you.html';
+      window.location.href = '/thank-you';
     }, 1000);
   } finally {
     // Restore button state
