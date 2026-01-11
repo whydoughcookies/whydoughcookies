@@ -2887,7 +2887,7 @@ function setupPhoneCopy() {
 // Initialize based on page
 document.addEventListener('DOMContentLoaded', function() {
   // Load cart from storage
-  console.log('Why Dough script loaded – v2.6.0');
+  console.log('Why Dough script loaded – v2.6.1');
 
   const savedCart = localStorage.getItem('whyDoughCart');
   if (savedCart) {
@@ -2961,16 +2961,14 @@ document.addEventListener('keydown', e => {
   }
 });
 
-document.addEventListener('beforeinput', e => {
-  if (e.inputType === 'insertLineBreak') {
-    blurFromKeyboard = true;
-    setTimeout(() => blurFromKeyboard = false, 300);
+document.addEventListener('keydown', function (e) {
+  if (
+    e.key === 'Enter' &&
+    e.target.matches('input[name="name"]')
+  ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    e.target.blur(); // closes keyboard
+    return false;
   }
-});
-
-document.addEventListener('input', e => {
-  if (e.inputType === 'insertLineBreak') {
-    blurFromKeyboard = true;
-    setTimeout(() => blurFromKeyboard = false, 300);
-  }
-});
+}, true); // 👈 capture phase (CRITICAL)
