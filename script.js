@@ -209,8 +209,20 @@ function updateCartModal(totalItems, totalAmount) {
 function removeFromCart(index) {
   const removedItem = state.cart[index];
   state.cart.splice(index, 1);
+
+  // ✅ NEW: clean dependent add-ons
+  removeInvalidCustomAddOns();
+
   updateCartDisplay();
-  showToast(`Removed ${removedItem.name} from cart`, 'warning');
+
+  if (removedItem?.type === 'premade') {
+    showToast(
+      'A main box was removed. Add-on cookies below minimum were also removed.',
+      'warning'
+    );
+  } else {
+    showToast(`Removed ${removedItem.name} from cart`, 'warning');
+  }
 }
 
 function addProductToCart() {
@@ -260,7 +272,19 @@ function generateWeekendDates() {
       day: 'numeric' 
     });
   }
-  
+
+  const dateInput = document.getElementById('deliveryDateInput');
+  if (dateInput) {
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() + 2); // prep time
+
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 30); // 30-day window
+
+    dateInput.min = minDate.toISOString().split('T')[0];
+    dateInput.max = maxDate.toISOString().split('T')[0];
+  }
+
   const deliveryDates = getAvailableDeliveryDates(today);
   
   container.innerHTML = deliveryDates.map(date => {
@@ -279,22 +303,20 @@ function generateWeekendDates() {
 
 function getAvailableDeliveryDates(startDate) {
   const dates = [];
-  let currentDate = new Date(startDate);
-  
-  // Skip today and tomorrow (2-day preparation)
-  currentDate.setDate(currentDate.getDate() + 2);
-  
-  while (dates.length < 9) {
-    const day = currentDate.getDay();
-    // Find next 4 available dates (Thursday-Sunday)
-    // Thursday (4), Friday (5), Saturday (6), Sunday (0)
-    /*if ([4, 5, 6, 0].includes(day)) {
-      dates.push(new Date(currentDate));
-    }*/
+
+  const minDate = new Date(startDate);
+  minDate.setDate(minDate.getDate() + 2); // prep time
+
+  const maxDate = new Date(startDate);
+  maxDate.setDate(maxDate.getDate() + 30); // 30-day limit
+
+  let currentDate = new Date(minDate);
+
+  while (currentDate <= maxDate && dates.length < 9) {
     dates.push(new Date(currentDate));
     currentDate.setDate(currentDate.getDate() + 1);
   }
-  
+
   return dates;
 }
 
@@ -323,6 +345,11 @@ function setupDateSelection() {
       
       // Clear delivery date error when a date is selected
       clearDeliveryDateError();
+
+      // ✅ NEW: auto-advance if time slot already selected
+      if (isDeliverySectionComplete()) {
+        autoAdvanceFromSection(3);
+      }
     });
   });
   
@@ -330,6 +357,7 @@ function setupDateSelection() {
   if (dateInput) {
     dateInput.addEventListener('change', () => {
       const selectedDate = dateInput.value;
+    
       quickDateBtns.forEach(btn => {
         if (btn.dataset.date === selectedDate) {
           DOM.addClass(btn, 'active');
@@ -337,9 +365,13 @@ function setupDateSelection() {
           DOM.removeClass(btn, 'active');
         }
       });
-      
-      // Clear delivery date error when date is selected via input
+    
       clearDeliveryDateError();
+    
+      // ✅ NEW: auto-advance if time slot already selected
+      if (isDeliverySectionComplete()) {
+        autoAdvanceFromSection(3);
+      }
     });
     
     // Also clear on input for manual typing
@@ -603,6 +635,23 @@ function toggleCustomBoxCard(card) {
   }
 }
 
+function updateOthersBoxLabel() {
+  const othersRow = document.querySelector(
+    '#customizeModal input[name="boxSize"][value="others"]'
+  )?.closest('.boxsize-row');
+
+  if (!othersRow) return;
+
+  const labelSpan = othersRow.querySelector('span');
+  if (!labelSpan) return;
+
+  const hasPremade = hasPremadeSetInCart();
+
+  labelSpan.textContent = hasPremade
+    ? 'Others (Add-on: minimum 1 cookie)'
+    : 'Others (Minimum 3 cookies)';
+}
+
 function openCustomizeModal() {
   const modal = document.getElementById("customizeModal");
   if (!modal) return;
@@ -612,6 +661,8 @@ function openCustomizeModal() {
 
   renderCookieList();
   state.selectedBoxSize = null;
+
+  updateOthersBoxLabel();
 
   // 👇 ADD THIS
   const cookieList = document.getElementById('selectedSizeInfo');
@@ -662,10 +713,14 @@ function selectBoxSize(row) {
   const sizeMessage = document.getElementById('sizeMessage');
   
   if (sizeInfo && sizeMessage) {
-    sizeMessage.textContent = state.selectedBoxSize === 'others' 
-      ? 'Please select at least 3 cookies for your custom pack.'
-      : `Please select exactly ${state.selectedBoxSize} cookies for your pack.`;
-    sizeInfo.classList.remove('hidden');
+    if (state.selectedBoxSize === 'others') {
+      const hasPremade = hasPremadeSetInCart();
+      sizeMessage.textContent = hasPremade
+        ? 'You may add at least 1 cookie since you already have a box in your cart.'
+        : 'Please select at least 3 cookies for your custom pack.';
+    } else {
+      sizeMessage.textContent = `Please select exactly ${state.selectedBoxSize} cookies for your pack.`;
+    }
   }
 }
 
@@ -760,6 +815,33 @@ function getSelectedCookies(){
   return selections; 
 }
 
+function hasPremadeSetInCart() {
+  return state.cart.some(item => item.type === 'premade');
+}
+
+function removeInvalidCustomAddOns() {
+  const hasPremade = hasPremadeSetInCart();
+
+  // If premade still exists, nothing to clean
+  if (hasPremade) return;
+
+  // Remove custom "Others" packs with < 3 cookies
+  state.cart = state.cart.filter(item => {
+    if (item.type !== 'customBox') return true;
+
+    // Only apply to "Others" packs
+    const isOthersPack =
+      item.name?.toLowerCase().includes('custom pack') &&
+      item.boxSize === item.items?.reduce((sum, i) => sum + i.qty, 0).toString();
+
+    if (!isOthersPack) return true;
+
+    const totalQty = item.items.reduce((sum, i) => sum + i.qty, 0);
+
+    return totalQty >= 3;
+  });
+}
+
 // Fixed addCustomBoxToCart function
 function addCustomBoxToCart() {
   if (!state.selectedBoxSize) { 
@@ -776,8 +858,16 @@ function addCustomBoxToCart() {
   const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
   
   if (state.selectedBoxSize === 'others') {
-    if (totalQty < 3) {
-      showToast(`Please select at least 3 cookies for your custom pack. Currently selected: ${totalQty}`, 'warning');
+    const hasPremade = hasPremadeSetInCart();
+    const minRequired = hasPremade ? 1 : 3;
+  
+    if (totalQty < minRequired) {
+      showToast(
+        hasPremade
+          ? 'You can add at least 1 cookie as an add-on'
+          : 'Please select at least 3 cookies for your custom pack',
+        'warning'
+      );
       return;
     }
   } else {
