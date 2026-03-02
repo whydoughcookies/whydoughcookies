@@ -27,9 +27,9 @@ const COOKIE_FLAVORS = [
   { name: "Nut-so-Carrot", price: 130, label: "Carrot cake inspired" },
   { name: "Espress-oh", price: 115, label: "Coffee w/ creamcheese" },
   { name: "Berry match", price: 120, label: "Matcha w/ berry bits" },
-  { name: "The Minty One", price: 130, label: "peppermint" },
-  { name: "The Campfire", price: 115, label: "S'mores" },
-  { name: "Nut Usual", price: 120, label: "Walnut & Caramel" },
+  //{ name: "The Minty One", price: 130, label: "peppermint" },
+  //{ name: "The Campfire", price: 115, label: "S'mores" },
+  //{ name: "Nut Usual", price: 120, label: "Walnut & Caramel" },
 ];
 
 const PRODUCT_DATA = {
@@ -2228,19 +2228,19 @@ const flavors = [
     name: "The Minty One", 
     description: "Deep dark chocolate cookie infused with cool peppermint for a perfectly festive bite.", 
     image: "images/the-minty-one.png",
-    tag: "Limited Edition" 
+    tag: "  Sold-out  " 
   },
   { 
     name: "The Campfire", 
     description: "Gooey marshmallow-filled cookie with two kinds of marshmallow and a crispy graham cracker base.", 
     image: "images/the-campfire.png",
-    tag: "Limited Edition" 
+    tag: "Sold-out" 
   },
   { 
     name: "Nut Usual", 
     description: "Your classic cookie upgraded with toasted walnuts and an oozy caramel center for ultimate holiday indulgence.", 
     image: "images/nut-usual.png",
-    tag: "Limited Edition" 
+    tag: "Sold-out" 
   }
 ];
 
