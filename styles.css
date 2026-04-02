@@ -31,7 +31,6 @@ html, body {
   overflow-x: hidden;
   overflow-y: auto;
   font-family: 'WhyDoughFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  overscroll-behavior: none; /* Prevents pull-to-refresh on many browsers */
 }
 
 html {
@@ -412,7 +411,7 @@ form section {
 
 /* Footer */
 .footer {
-  position: fixed;
+  position: relative;
   bottom: 0;
   left: 0;
   right: 0;
@@ -431,7 +430,7 @@ form section {
 /* Homepage Specific */
 .hero-section {
   background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url('images/bg-image-hero.JPG') center/cover;
-  background-attachment: fixed;
+  background-attachment: scroll;
   min-height: 100vh;
 }
 
@@ -1576,7 +1575,7 @@ section.active-section .navigation-buttons {
 /* === Footer (already used site-wide) === */
 
 .footer {
-  position: fixed;
+  position: relative;
   bottom: 0;
   left: 0;
   right: 0;
