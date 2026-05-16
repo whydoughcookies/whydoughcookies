@@ -330,6 +330,37 @@
       </div>
     </div>
   </footer>
+  <!-- Latest Product Modal -->
+  <div id="latestProductModal" class="modal">
+    <div class="modal-content">
+      
+      <div class="modal-header flex justify-between items-center">
+        <h2 class="text-3xl font-bold">🔥New drop🔥</h2>
+        <button onclick="closeLatestProductModal()">✕</button>
+      </div>
+
+      <div class="modal-body text-center">
+        <div class="flex justify-center mb-4">
+          <img 
+            src="images/the-dubai-chewy-cookie.png"
+            alt="Dubai Chewy Cookie"
+            class="rounded-xl object-cover max-h-[320px] w-auto"
+          >
+        </div>
+        <p class="text-l">
+          Meet the Dubai Chewy Cookie — soft, stretchy, pistachio-kataifi filled, cocoa-dusted, irresistibly chewy goodness.
+        </p>
+
+      </div>
+
+      <div class="modal-footer text-center">
+        <a href="/order" class="nav-button w-full justify-center" onclick="handleLatestProductCTA()">
+          Order Now
+        </a>
+      </div>
+
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

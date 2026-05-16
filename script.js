@@ -1,6 +1,7 @@
 // script.js - Complete with Mobile & Carousel Fixes
 
 let blurFromKeyboard = false;
+const NEW_PRODUCT_MODAL_KEY = 'whyDoughNewProductShown';
 
 // Global state
 const state = {
@@ -31,6 +32,16 @@ const COOKIE_FLAVORS = [
   //{ name: "The Campfire", price: 115, label: "S'mores" },
   //{ name: "Nut Usual", price: 120, label: "Walnut & Caramel" },
 ];
+
+const DUBAI_FLAVORS = [
+  { name: "the dubai chewy cookie", price: 150 },
+  { name: "the biscoff chewy cookie", price: 150 }
+];
+
+const dubaiState = {
+  boxSize: null,
+  selections: []
+};
 
 const PRODUCT_DATA = {
   ogSet: {
@@ -177,30 +188,63 @@ function updateCartModal(totalItems, totalAmount) {
     
     let customBoxCounter = 0;
 
-    cartItems.innerHTML = state.cart.map((item, index) => `
-      <div class="cart-modal-item p-4 rounded-lg mb-3">
-        <div class="flex justify-between items-center">
-          <div class="flex-1">
-            ${(() => {
-              if (item.type === 'customBox') {
-                customBoxCounter++;
-                return `<h4 class="font-bold text-brown text-2xl">
-                  Custom Cookie Set #${customBoxCounter}
-                </h4>`;
-              }
-              return `<h4 class="font-bold text-brown text-2xl">${item.name}</h4>`;
-            })()}
-            ${item.type === 'customBox' ? 
-              `<p class="text-sm text-brown-700">Pack of ${item.boxSize}</p>
-               <p class="text-sm text-brown-600">${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')}</p>` : 
-              `<p class="text-sm text-brown-700">Quantity: ${item.quantity}</p>`
-            }
-            <p class="font-bold text-brown-800 text-xl mt-2">₱${item.total}</p>
+    cartItems.innerHTML = state.cart.map((item, index) => {
+
+      let title = "";
+      let description = "";
+    
+      // ✅ CUSTOM COOKIE SET
+      if (item.type === 'customBox') {
+        title = `Custom Cookie Set`;
+        description = `
+          <p class="text-sm text-brown-700">Pack of ${item.boxSize}</p>
+          <p class="text-sm text-brown-600">
+            ${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')}
+          </p>
+        `;
+      }
+    
+      // ✅ DUBAI COOKIE (NEW)
+      else if (item.type === 'dubaiBox') {
+        title = `Dubai Chewy Cookie`;
+    
+        const packLabel = item.boxSize === '4'
+          ? 'Box of 4'
+          : 'Individual Pack';
+    
+        description = `
+          <p class="text-sm text-brown-700">${packLabel}</p>
+          <p class="text-sm text-brown-600">
+            ${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')}
+          </p>
+        `;
+      }
+    
+      // ✅ PREMADE
+      else {
+        title = item.name;
+        description = `
+          <p class="text-sm text-brown-700">Quantity: ${item.quantity}</p>
+        `;
+      }
+    
+      return `
+        <div class="cart-modal-item p-4 rounded-lg mb-3">
+          <div class="flex justify-between items-center">
+            <div class="flex-1">
+              <h4 class="font-bold text-brown text-2xl">${title}</h4>
+              ${description}
+              <p class="font-bold text-brown-800 text-xl mt-2">₱${item.total}</p>
+            </div>
+    
+            <button type="button" onclick="removeFromCart(${index})"
+              class="text-red-600 hover:text-red-800 ml-4 bg-white p-2 rounded-full shadow">
+              🗑️
+            </button>
           </div>
-          <button type="button" onclick="removeFromCart(${index})" class="text-red-600 hover:text-red-800 ml-4 bg-white p-2 rounded-full shadow transition-colors">🗑️</button>
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
 
     if (cartTotalAmount) cartTotalAmount.textContent = totalAmount;
   }
@@ -2175,6 +2219,18 @@ function escapeHtml(str){
 function initializeFlavorsSection() {
 const flavors = [
   { 
+    name: "The Dubai Chewy Cookie", 
+    description: "soft, stretchy, pistachio-kataifi filled, cocoa-dusted, irresistibly chewy goodness.", 
+    image: "images/the-dubai-chewy-cookie.png",
+    tag: "New" 
+  },
+  { 
+    name: "The Biscoff Chewy Cookie", 
+    description: "soft, stretchy, Biscoff bits-dusted, with rich caramelized Biscoff kataifi inside.", 
+    image: "images/the-biscoff-chewy-cookie.png",
+    tag: "New"
+  },
+  { 
     name: "The Usual", 
     description: "Crispy outside, soft inside—loaded with premium dark and milk chocolate for the ultimate classic cookie.", 
     image: "images/the-usual.png" 
@@ -2343,7 +2399,7 @@ function initializeFlavorsCarousel(flavors) {
     if (instant) {
       track.style.transition = 'none';
     } else {
-      track.style.transition = 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+      track.style.transition = 'transform 1s cubic-bezier(0.4, 0, 0.2, 1)';
     }
     
     track.style.transform = `translateX(-${currentSlide * 100}%)`;
@@ -2366,7 +2422,7 @@ function initializeFlavorsCarousel(flavors) {
       isTransitioning = true;
       setTimeout(() => {
         isTransitioning = false;
-      }, 500);
+      }, 3500);
     }
   }
 
@@ -3008,11 +3064,282 @@ function setupPhoneCopy() {
   });
 }
 
+function openLatestProductModal() {
+
+  // ✅ prevent reopening in same session
+  if (sessionStorage.getItem(NEW_PRODUCT_MODAL_KEY)) {
+    return;
+  }
+
+  const modal = document.getElementById("latestProductModal");
+
+  if (modal) {
+    modal.classList.add("active");
+    document.body.classList.add("no-scroll");
+  }
+}
+
+function closeLatestProductModal() {
+
+  // ✅ mark as seen
+  sessionStorage.setItem(NEW_PRODUCT_MODAL_KEY, 'true');
+
+  const modal = document.getElementById("latestProductModal");
+
+  if (modal) {
+    modal.classList.remove("active");
+    document.body.classList.remove("no-scroll");
+  }
+}
+
+function handleLatestProductCTA() {
+
+  // ✅ prevent future popup this session
+  sessionStorage.setItem(NEW_PRODUCT_MODAL_KEY, 'true');
+
+  closeLatestProductModal();
+}
+
+function openDubaiModal() {
+  const modal = document.getElementById("dubaiModal");
+  modal.classList.add("active");
+  document.body.classList.add("no-scroll");
+
+  const flavorList = document.getElementById('dubaiFlavorList');
+  setupScrollIndicatorForModal(flavorList);
+
+  renderDubaiFlavors();
+}
+
+function closeDubaiModal() {
+  const modal = document.getElementById("dubaiModal");
+  modal.classList.remove("active");
+  document.body.classList.remove("no-scroll");
+
+  resetDubaiModal();
+}
+
+function selectDubaiBox(row, size) {
+  document.querySelectorAll('#dubaiModal .boxsize-row')
+    .forEach(r => r.classList.remove('active'));
+
+  row.classList.add('active');
+
+  // ✅ FORCE CONSISTENT VALUE
+  dubaiState.boxSize = size.toLowerCase();
+
+  const info = document.getElementById('dubaiSizeInfo');
+
+  if (dubaiState.boxSize === '4') {
+    info.textContent = "Select exactly 4 cookies.";
+  } else {
+    info.textContent = "Minimum of 2 cookies required.";
+  }
+
+  info.classList.remove('hidden');
+}
+
+function toggleDubaiSelection(row) {
+  const isActive = row.classList.contains('active');
+  const qtyControl = row.querySelector('.quantity-control');
+  const input = row.querySelector('input');
+
+  if (isActive) {
+    row.classList.remove('active');
+    qtyControl.classList.add('hidden');
+
+    // ✅ RESET TO ZERO (not 1)
+    input.value = 0;
+
+  } else {
+    row.classList.add('active');
+    qtyControl.classList.remove('hidden');
+
+    // ✅ START AT 1 when selected
+    input.value = 1;
+  }
+}
+
+function renderDubaiFlavors() {
+  const container = document.getElementById('dubaiFlavorList');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  DUBAI_FLAVORS.forEach((flavor) => {
+    const row = document.createElement('div');
+    row.className = 'cookie-row';
+    row.dataset.flavor = flavor.name;
+
+    row.onclick = function () {
+      toggleDubaiSelection(this);
+    };
+
+    row.innerHTML = `
+      <div class="flex-1 flex justify-between pr-4 cursor-pointer items-center">
+
+      <div class="flex items-center gap-3">
+
+        <img 
+          class="custom-cookie-image"
+          src="images/${flavor.name}.png"
+          alt="${flavor.name}"
+        >
+
+        <span class="cookie-label">
+          ${flavor.name}
+        </span>
+
+      </div>
+
+      <span class="cookie-price">
+        ₱150
+      </span>
+
+    </div>
+
+      <!-- 👇 SAME STRUCTURE AS CUSTOM -->
+      <div class="quantity-control hidden items-center">
+        <button type="button" class="qty-btn" onclick="event.stopPropagation(); updateDubaiQty(this, -1)">-</button>
+        <input type="number" value="1" min="0" class="cookie-qty-input" onclick="event.stopPropagation()">
+        <button type="button" class="qty-btn" onclick="event.stopPropagation(); updateDubaiQty(this, 1)">+</button>
+      </div>
+    `;
+
+    container.appendChild(row);
+  });
+}
+
+function updateDubaiQty(btn, delta) {
+  const input = btn.parentElement.querySelector('input');
+  let val = parseInt(input.value) || 0;
+
+  val += delta;
+
+  if (val < 0) val = 0;
+  if (val > 50) val = 50; // optional limit
+
+  input.value = val;
+
+  // auto deactivate if 0
+  if (val === 0) {
+    const row = btn.closest('.cookie-row');
+    row.classList.remove('active');
+    row.querySelector('.quantity-control').classList.add('hidden');
+  }
+}
+
+function getDubaiSelections() {
+  const rows = document.querySelectorAll('#dubaiFlavorList .cookie-row');
+
+  let selections = [];
+
+  rows.forEach(row => {
+    // ✅ ONLY count active rows
+    if (!row.classList.contains('active')) return;
+
+    const qty = parseInt(row.querySelector('input').value) || 0;
+
+    if (qty > 0) {
+      const name = row.dataset.flavor;
+      const flavor = DUBAI_FLAVORS.find(f => f.name === name);
+
+      if (!flavor) return;
+
+      selections.push({
+        name,
+        qty,
+        price: flavor.price
+      });
+    }
+  });
+
+  return selections;
+}
+
+function validateDubai() {
+  if (!dubaiState.boxSize) {
+    showToast("Select a box size", "error");
+    return false;
+  }
+
+  const selections = getDubaiSelections();
+  const totalQty = selections.reduce((sum, s) => sum + s.qty, 0);
+
+  // 🔍 DEBUG (remove later)
+  console.log("VALIDATION:", dubaiState.boxSize, totalQty);
+
+  // ✅ BOX OF 4
+  if (dubaiState.boxSize === '4' && totalQty !== 4) {
+    showToast("You need exactly 4 cookies for this box", "error");
+    return false;
+  }
+
+  // ✅ INDIVIDUAL (STRICT)
+  if (
+    dubaiState.boxSize === 'individual' &&
+    (totalQty < 2 || selections.length === 0)
+  ) {
+    showToast("Minimum of 2 cookies required", "error");
+    return false;
+  }
+
+  return true;
+}
+
+function addDubaiToCart() {
+  if (!validateDubai()) return;
+
+  const selections = getDubaiSelections();
+  const totalQty = selections.reduce((sum, s) => sum + s.qty, 0);
+
+  if (dubaiState.boxSize === 'individual' && totalQty === 1) {
+    showToast("Add 1 more cookie to proceed", "warning");
+    return;
+  }
+  let total = 0;
+
+  if (dubaiState.boxSize === '4') {
+    total = 550; // fixed price
+  } else {
+    total = totalQty * 150;
+  }
+
+  state.cart.push({
+    id: "dubaiBox_" + Date.now(),
+    type: "customBox", // 👈 CHANGE THIS
+    name: "Dubai Chewy Cookie",
+    boxSize: dubaiState.boxSize === '4' ? 4 : totalQty,
+    items: selections,
+    total
+  });
+
+  updateCartDisplay();
+  closeDubaiModal();
+
+  showToast("Dubai cookies added to cart 🍪");
+}
+
+function resetDubaiModal() {
+  dubaiState.boxSize = null;
+
+  document.querySelectorAll('#dubaiModal input')
+    .forEach(i => i.value = 0);
+
+  document.querySelectorAll('#dubaiModal .boxsize-row')
+    .forEach(r => r.classList.remove('active'));
+}
 
 // Initialize based on page
 document.addEventListener('DOMContentLoaded', function() {
   // Load cart from storage
-  console.log('Why Dough script loaded – v2.6.1');
+  console.log('Why Dough script loaded – v2.7.2');
+
+  if (document.body.classList.contains("homepage-body")) {
+    setTimeout(() => {
+      openLatestProductModal();
+    }, 1000);
+  }
 
   const savedCart = localStorage.getItem('whyDoughCart');
   if (savedCart) {

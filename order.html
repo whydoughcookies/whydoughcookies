@@ -194,6 +194,12 @@
         <h2 class="text-4xl font-bold text-brown text-center mb-4">Choose your cookies <span class="text-red-500">*</span></h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <!-- Dubai Chewy -->
+          <div class="cookie-card" id="chewyCookieCard" onclick="openDubaiModal()">
+            <p class="font-semibold text-xl mb-2">Dubai Chewy Cookie</p>
+            <p class="text-sm mb-4">Pistachio & Biscoff flavors</p>
+            <div class="text-lg mt-2">Click to customize</div>
+          </div>
 
           <!-- Customize Your Cookie Box Card -->
           <div class="cookie-card" id="customCookieCard" onclick="toggleCustomBoxCard(this)">
@@ -504,6 +510,66 @@
           Add to Cart
         </button>
       </div>
+    </div>
+  </div>
+
+  <div id="dubaiModal" class="modal">
+    <div class="modal-content max-w-xl">
+  
+      <!-- HEADER -->
+      <div class="modal-header flex justify-between items-center">
+        <h2 class="text-2xl font-bold">Chewy Cookie</h2>
+        <button onclick="closeDubaiModal()">✕</button>
+      </div>
+      
+      <!-- BODY -->
+      <div class="modal-body">
+
+        <!-- BOX SIZE -->
+        <p class="font-semibold mb-2 text-brown">
+          Select Box Size:
+        </p>
+      
+        <div class="boxsize-list">
+      
+          <label class="boxsize-row" onclick="selectDubaiBox(this, '4')">
+            <input type="radio" name="dubaiBox" hidden>
+            <span class="text-brown">Box of 4</span>
+          </label>
+      
+          <label class="boxsize-row" onclick="selectDubaiBox(this, 'individual')">
+            <input type="radio" name="dubaiBox" hidden>
+            <span class="text-brown">Individual Pack</span>
+          </label>
+      
+        </div>
+      
+        <!-- INFO BOX -->
+        <div id="dubaiSizeInfo"
+          class="mt-4 p-3 bg-cream rounded-lg hidden border border-brown-200">
+      
+          <p class="text-sm text-brown-800" id="dubaiSizeMessage"></p>
+      
+        </div>
+      
+        <!-- FLAVORS -->
+        <p class="font-semibold mt-6 mb-2 text-brown">
+          Select Flavors:
+        </p>
+      
+        <div id="dubaiFlavorList" class="cookie-list">
+          <!-- populated by JS -->
+        </div>
+      
+      </div>
+  
+      <!-- FOOTER -->
+      <div class="modal-footer">
+        <button onclick="addDubaiToCart()" class="nav-button w-full">
+          Add to Cart
+        </button>
+      </div>
+  
     </div>
   </div>
 

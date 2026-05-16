@@ -1884,6 +1884,11 @@ textarea {
   color: white;
 }
 
+#chewyCookieCard {
+  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/the-dubai-chewy-cookie.png) center / cover;
+  color: white;
+}
+
 #proceedCheckoutWrapper {
   z-index: 1;
 }
@@ -1921,4 +1926,12 @@ textarea {
 .custom-pack-number {
   color: var(--accent);
   font-weight: bold;
+}
+
+.custom-cookie-image{
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
 }
