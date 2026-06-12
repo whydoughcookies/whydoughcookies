@@ -105,7 +105,21 @@
     </section>
     <div id="toastContainer" class="toast-container"></div>
     
-    <script src="script.js"></script>
+    <!-- Refactored modular scripts (IIFE, dependency order) -->
+    <script src="js/data/constants.js"></script>
+    <script src="js/utils/dom.js"></script>
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/utils/toast.js"></script>
+    <script src="js/data/dates.js"></script>
+    <script src="js/cart/index.js"></script>
+    <script src="js/cart/custom-box.js"></script>
+    <script src="js/form/validation.js"></script>
+    <script src="js/form/auto-advance.js"></script>
+    <script src="js/form/submission.js"></script>
+    <script src="js/home/flavors.js"></script>
+    <script src="js/home/carousel.js"></script>
+    <script src="js/thankyou.js"></script>
+    <script src="js/main.js"></script>
     <script>
         // Make sure global scroll locks don't apply on thank-you page
         document.addEventListener('DOMContentLoaded', function () {

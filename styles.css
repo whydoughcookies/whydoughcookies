@@ -54,14 +54,6 @@ h3 {
   font-size: clamp(1.2rem, 2.2vw, 1.75rem);
 }
 
-.section-title {
-  font-size: clamp(1.4rem, 3vw, 2rem);
-}
-
-.section-description {
-  font-size: 1rem;
-}
-
 /* Scroll lock ONLY for order page */
 body.order-page {
   height: 100%;
@@ -117,13 +109,6 @@ section::before {
 }
 
 /* Header & Navigation */
-.simple-header {
-  background-color: transparent;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  pointer-events: none;
-}
 
 .logo-link {
   pointer-events: auto;
@@ -672,11 +657,6 @@ form section {
     min-height: auto;
   }
 
-  .flavor-carousel-image {
-    width: 150px;
-    height: 150px;
-  }
-
   .flavor-carousel-nav {
     width: 40px;
     height: 40px;
@@ -705,7 +685,6 @@ form section {
 .bg-brown-100 { background-color: var(--brown-100); }
 .bg-brown-200 { background-color: var(--brown-200); }
 .text-brown { color: var(--brown); }
-.text-accent { color: var(--accent); }
 
 /* Add to styles.css - Mobile Form Consistency */
 .form-container {
@@ -902,10 +881,6 @@ section > div > label {
   font-size: 3rem;
 }
 
-.quantity-btn {
-  transition: all 0.2s ease;
-}
-
 .quantity-btn:active {
   transform: scale(0.95);
 }
@@ -983,29 +958,10 @@ section > div > label {
 }
 
 /* Progressive loading */
-.image-loading {
-  opacity: 0.7;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-}
-
-.image-loaded {
-  opacity: 1;
-  animation: none;
-}
 
 /* Critical images - preload these */
-.critical-image {
-  opacity: 1;
-  background: transparent;
-}
 
 /* Lazy loading for non-critical images */
-.lazy-image {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
 
 .lazy-image.loaded {
   opacity: 1;
@@ -1439,7 +1395,6 @@ section > div > label {
   z-index: 20;
 }
 
-
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
     transform: translateX(-50%) translateY(0);
@@ -1465,7 +1420,6 @@ section > div > label {
   border-radius: 16px;
   z-index: 100;
 }
-
 
 /* Show navigation buttons only for the active section */
 section .navigation-buttons {
@@ -1718,11 +1672,6 @@ textarea {
   text-align: center;
 }
 
-.social-link{
-  text-decoration: underline;
-  color: var(--brown-900);
-}
-
 @media (max-width: 640px) {
   #socialPlatformSelection .flex {
     flex-wrap: wrap;
@@ -1921,11 +1870,6 @@ textarea {
     bottom: 0;
     z-index: 10;
   }
-}
-
-.custom-pack-number {
-  color: var(--accent);
-  font-weight: bold;
 }
 
 .custom-cookie-image{
