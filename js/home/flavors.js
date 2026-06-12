@@ -145,20 +145,20 @@ function equalizeFlavorCardHeights() {
 
 function initializeFlavorsCarousel(flavors) {
   const track = document.getElementById('flavorsCarouselTrack');
-  const currentSlideElement = document.getElementById('currentSlide');
-  const totalSlidesElement = document.getElementById('totalSlides');
+  const currentSlideEl = document.getElementById('currentSlide');
+  const totalSlidesEl = document.getElementById('totalSlides');
   const prevButton = document.querySelector('.flavor-carousel-prev');
   const nextButton = document.querySelector('.flavor-carousel-next');
 
   if (!track) return;
 
-  // Set total slides count
-  if (totalSlidesElement) {
-    totalSlidesElement.textContent = flavors.length;
+  // Show total count
+  if (totalSlidesEl) {
+    totalSlidesEl.textContent = flavors.length;
   }
 
   // Create carousel items
-  track.innerHTML = flavors.map((flavor, index) => `
+  track.innerHTML = flavors.map((flavor) => `
     <div class="flavor-carousel-item">
       <div class="flavor-card">
         <div class="flavor-image-container">
@@ -176,105 +176,80 @@ function initializeFlavorsCarousel(flavors) {
   const slideCount = flavors.length;
   let isTransitioning = false;
 
-  // Update carousel position with smooth transition
-  function updateCarousel(instant = false) {
+  // --- Update display ---
+  function updateCarousel(instant) {
     if (instant) {
       track.style.transition = 'none';
     } else {
       track.style.transition = 'transform 1s cubic-bezier(0.4, 0, 0.2, 1)';
     }
-    
-    track.style.transform = `translateX(-${currentSlide * 100}%)`;
-    
+
+    track.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+
     // Update counter
-    if (currentSlideElement) {
-      currentSlideElement.textContent = currentSlide + 1;
+    if (currentSlideEl) {
+      currentSlideEl.textContent = currentSlide + 1;
     }
-    
-    // Update button states
-    if (prevButton) {
-      prevButton.disabled = currentSlide === 0;
-    }
-    if (nextButton) {
-      nextButton.disabled = currentSlide === slideCount - 1;
-    }
-    
-    // Reset transition flag
+
+    // Transition lock (matches CSS transition)
     if (!instant) {
       isTransitioning = true;
-      setTimeout(() => {
+      setTimeout(function () {
         isTransitioning = false;
-      }, 3500);
+      }, 1000);
     }
   }
 
-  // Navigation functions with smooth looping
+  // --- Navigation (always loops — no disabled state) ---
   function nextSlide() {
     if (isTransitioning) return;
-    
-    if (currentSlide < slideCount - 1) {
-      currentSlide++;
-      updateCarousel();
-    } else {
-      // Smooth loop to first slide
-      currentSlide = 0;
-      updateCarousel();
-    }
+    currentSlide = (currentSlide + 1) % slideCount;
+    updateCarousel();
   }
 
   function prevSlide() {
     if (isTransitioning) return;
-    
-    if (currentSlide > 0) {
-      currentSlide--;
-      updateCarousel();
-    } else {
-      // Smooth loop to last slide
-      currentSlide = slideCount - 1;
-      updateCarousel();
-    }
+    currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+    updateCarousel();
   }
 
-  // Add event listeners to navigation buttons
-  if (prevButton) {
-    prevButton.addEventListener('click', prevSlide);
-  }
+  // Button listeners (always active)
+  if (prevButton) prevButton.addEventListener('click', prevSlide);
+  if (nextButton) nextButton.addEventListener('click', nextSlide);
 
-  if (nextButton) {
-    nextButton.addEventListener('click', nextSlide);
-  }
+  // --- Touch/swipe ---
+  var startX = 0;
+  var currentX = 0;
+  var isDragging = false;
 
-  // Touch/swipe support for mobile
-  let startX = 0;
-  let currentX = 0;
-  let isDragging = false;
-
-  track.addEventListener('touchstart', (e) => {
+  track.addEventListener('touchstart', function (e) {
     startX = e.touches[0].clientX;
     isDragging = true;
+    stopAutoAdvance();
   });
 
-  track.addEventListener('touchmove', (e) => {
+  track.addEventListener('touchmove', function (e) {
     if (!isDragging) return;
     currentX = e.touches[0].clientX;
   });
 
-  track.addEventListener('touchend', () => {
+  track.addEventListener('touchend', function () {
     if (!isDragging) return;
     isDragging = false;
-    
-    const diff = startX - currentX;
-    const threshold = 50;
-    
+
+    var diff = startX - currentX;
+    var threshold = 50;
+
     if (diff > threshold) {
       nextSlide();
     } else if (diff < -threshold) {
       prevSlide();
     }
+    startAutoAdvance();
   });
 
-  // Keyboard navigation
-  document.addEventListener('keydown', (e) => {
+  // --- Keyboard navigation ---
+  document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowLeft') {
       prevSlide();
     } else if (e.key === 'ArrowRight') {
@@ -282,45 +257,45 @@ function initializeFlavorsCarousel(flavors) {
     }
   });
 
-  // Auto-advance carousel (mobile only)
-  let autoAdvance;
+  // --- Auto-advance (mobile only) ---
+  var autoAdvance;
 
   function startAutoAdvance() {
-    if (window.innerWidth >= 768) return; // Only auto-advance on mobile
-    
-    autoAdvance = setInterval(() => {
-      nextSlide();
+    if (window.innerWidth >= 768) return;
+    stopAutoAdvance();
+    autoAdvance = setInterval(function () {
+      if (!isTransitioning) {
+        nextSlide();
+      }
     }, 4000);
   }
 
   function stopAutoAdvance() {
     if (autoAdvance) {
       clearInterval(autoAdvance);
+      autoAdvance = null;
     }
   }
 
-  // Start auto-advance
   startAutoAdvance();
 
-  // Pause auto-advance on hover/touch
-  const carouselContainer = document.querySelector('.flavors-carousel-container');
-  if (carouselContainer) {
-    carouselContainer.addEventListener('mouseenter', stopAutoAdvance);
-    carouselContainer.addEventListener('mouseleave', startAutoAdvance);
-    carouselContainer.addEventListener('touchstart', stopAutoAdvance);
-    carouselContainer.addEventListener('touchend', startAutoAdvance);
+  // Pause on hover/touch
+  var container = document.querySelector('.flavors-carousel-container');
+  if (container) {
+    container.addEventListener('mouseenter', stopAutoAdvance);
+    container.addEventListener('mouseleave', startAutoAdvance);
+    container.addEventListener('touchstart', stopAutoAdvance);
+    container.addEventListener('touchend', startAutoAdvance);
   }
 
-  // Handle window resize
-  window.addEventListener('resize', () => {
+  // Handle resize
+  window.addEventListener('resize', function () {
     stopAutoAdvance();
     startAutoAdvance();
   });
 
-  // Initial update
+  // --- Init ---
   updateCarousel(true);
-
-  // Preload images for carousel
   preloadFlavorImages(flavors);
 }
 
@@ -332,4 +307,3 @@ flavors.forEach(flavor => {
   }
 });
 }
-

@@ -8,7 +8,7 @@
   <link rel="icon" href="images/logo.PNG" type="image/png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.min.css">
 </head>
 <body class="text-brown homepage-body">
   <!-- Navigation -->
@@ -18,7 +18,7 @@
       <div class="container mx-auto px-6 py-4">
         <div class="flex justify-between items-center">
           <a href="/" class="logo-link" aria-label="Why Dough Cookies Home">
-            <img src="images/logo.PNG" alt="Why Dough Cookies Logo" class="h-11 mr-2" loading="lazy">
+            <img src="images/logo.PNG" alt="Why Dough Cookies Logo" class="h-11 mr-2" fetchpriority="high">
           </a>
           
           <div class="hidden md:flex space-x-8" role="menubar">
@@ -81,7 +81,9 @@
             <div class="about-carousel-track">
               <div class="about-slide about-slide-active">
                 <img
-                  src="images/showcase-1.JPG"
+                  src="images/showcase-1-800w.webp"
+                  srcset="images/showcase-1-400w.webp 400w, images/showcase-1-800w.webp 800w, images/showcase-1-1200w.webp 1200w"
+                  sizes="(max-width: 640px) 400px, (max-width: 1024px) 800px, 1200px"
                   alt="The Usual cookie"
                   class="about-slide-image"
                   loading="lazy"
@@ -90,7 +92,9 @@
 
               <div class="about-slide">
                 <img
-                  src="images/showcase-2.JPG"
+                  src="images/showcase-2-800w.webp"
+                  srcset="images/showcase-2-400w.webp 400w, images/showcase-2-800w.webp 800w, images/showcase-2-1200w.webp 1200w"
+                  sizes="(max-width: 640px) 400px, (max-width: 1024px) 800px, 1200px"
                   alt="The Red One cookie"
                   class="about-slide-image"
                   loading="lazy"
@@ -99,7 +103,9 @@
 
               <div class="about-slide">
                 <img
-                  src="images/showcase-3.JPG"
+                  src="images/showcase-3-800w.webp"
+                  srcset="images/showcase-3-400w.webp 400w, images/showcase-3-800w.webp 800w, images/showcase-3-1200w.webp 1200w"
+                  sizes="(max-width: 640px) 400px, (max-width: 1024px) 800px, 1200px"
                   alt="The Burnt One cookie"
                   class="about-slide-image"
                   loading="lazy"
@@ -108,7 +114,9 @@
 
               <div class="about-slide">
                 <img
-                  src="images/showcase-4.JPG"
+                  src="images/showcase-4-800w.webp"
+                  srcset="images/showcase-4-400w.webp 400w, images/showcase-4-800w.webp 800w, images/showcase-4-1200w.webp 1200w"
+                  sizes="(max-width: 640px) 400px, (max-width: 1024px) 800px, 1200px"
                   alt="The Classics cookie set"
                   class="about-slide-image"
                   loading="lazy"
@@ -117,7 +125,9 @@
 
               <div class="about-slide">
                 <img
-                  src="images/showcase-5.JPG"
+                  src="images/showcase-5-800w.webp"
+                  srcset="images/showcase-5-400w.webp 400w, images/showcase-5-800w.webp 800w, images/showcase-5-1200w.webp 1200w"
+                  sizes="(max-width: 640px) 400px, (max-width: 1024px) 800px, 1200px"
                   alt="Samplers cookie set"
                   class="about-slide-image"
                   loading="lazy"
@@ -152,7 +162,9 @@
           <!-- OG Set -->
           <div class="flavor-card bg-brown-100 rounded-2xl p-8">
             <div class="bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <img src="images/og-set.JPG"
+              <img src="images/og-set-400w.webp"
+                srcset="images/og-set-400w.webp 400w, images/og-set-800w.webp 800w"
+                sizes="(max-width: 768px) 400px, 800px"
                 alt="The OG cookie set"
                 class="cookie-collection"
                 loading="lazy">
@@ -164,7 +176,9 @@
           <!-- The Classics -->
           <div class="flavor-card bg-brown-100 rounded-2xl p-8">
             <div class="bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <img src="images/classics.JPG"
+              <img src="images/classics-400w.webp"
+                srcset="images/classics-400w.webp 400w, images/classics-800w.webp 800w"
+                sizes="(max-width: 768px) 400px, 800px"
                 alt="The Classics cookie set"
                 class="cookie-collection"
                 loading="lazy">
@@ -176,7 +190,9 @@
           <!-- Samplers -->
           <div class="flavor-card bg-brown-100 rounded-2xl p-8">
             <div class="bg-brown/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <img src="images/samplers.JPG"
+              <img src="images/samplers-400w.webp"
+                srcset="images/samplers-400w.webp 400w, images/samplers-800w.webp 800w"
+                sizes="(max-width: 768px) 400px, 800px"
                 alt="Samplers cookie set"
                 class="cookie-collection"
                 loading="lazy">
@@ -189,7 +205,7 @@
     </section>
 
     <!-- About Us Section -->
-    <section id="about" class="section-padding bg-brown-100 parallax-section" style="background-image: linear-gradient(rgba(253, 244, 213, 0.9), rgba(253, 244, 213, 0.9)), url('images/bg-image-hero.JPG')">
+    <section id="about" class="section-padding bg-brown-100 parallax-section" style="background-image: linear-gradient(rgba(253, 244, 213, 0.9), rgba(253, 244, 213, 0.9)), url('images/bg-image-hero.webp')">
       <div class="container mx-auto px-6">
         <div class="max-w-4xl mx-auto">
           <h1 class="text-5xl font-bold mb-8">Our Story</h1>
@@ -229,14 +245,14 @@
             <!-- Carousel items will be populated by JavaScript -->
           </div>
           
-          <!-- Carousel Navigation & Counter -->
+          <!-- Carousel Navigation: Prev, Counter, Next -->
           <div class="carousel-counter">
             <button class="flavor-carousel-nav flavor-carousel-prev" aria-label="Previous flavor">
               <i class="fas fa-chevron-left"></i>
             </button>
             
             <div class="counter-display">
-              <span id="currentSlide">1</span> / <span id="totalSlides">6</span>
+              <span id="currentSlide">1</span> / <span id="totalSlides">15</span>
             </div>
             
             <button class="flavor-carousel-nav flavor-carousel-next" aria-label="Next flavor">
@@ -248,7 +264,7 @@
     </section>
 
     <!-- Testimonials Slider -- To update soon-->
-    <!--<section id="testimonials" class="section-padding bg-brown-100 parallax-section" style="background-image: linear-gradient(rgba(253, 244, 213, 0.9), rgba(253, 244, 213, 0.9)), url('images/bg-image-hero.JPG')">
+    <!--<section id="testimonials" class="section-padding bg-brown-100 parallax-section" style="background-image: linear-gradient(rgba(253, 244, 213, 0.9), rgba(253, 244, 213, 0.9)), url('images/bg-image-hero.webp')">
       <div class="container mx-auto px-6">
         <h1 class="text-5xl font-bold text-center mb-4">What Our Customers Say</h1>
         <p class="text-lg text-center mb-12 max-w-2xl mx-auto">
@@ -288,7 +304,7 @@
     </section>-->
 
     <!-- CTA Section -->
-    <section class="section-padding bg-white cta-light" style="background-image: linear-gradient(rgba(253, 244, 213, 0.9), rgba(253, 244, 213, 0.9)), url('images/bg-image-hero.JPG')">
+    <section class="section-padding bg-white cta-light" style="background-image: linear-gradient(rgba(253, 244, 213, 0.9), rgba(253, 244, 213, 0.9)), url('images/bg-image-hero.webp')">
       <div class="container mx-auto px-6 text-center">
         <h1 class="text-5xl font-bold mb-6" style="color: #5d4a27;">Ready to Taste the Difference?</h1>
         <p class="text-xl mb-8 max-w-2xl mx-auto" style="color: #5d4a27;">
@@ -362,7 +378,7 @@
     </div>
   </div>
 
-      <!-- Flat modules (same global scope as original script.js) -->
+      <!-- Modular JS (flat global scope) -->
       <script src="js/core.js"></script>
       <script src="js/utils/dom.js"></script>
       <script src="js/utils/helpers.js"></script>

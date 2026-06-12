@@ -1,7 +1,8 @@
 /* Why Dough Custom Font */
 @font-face {
   font-family: 'WhyDoughFont';
-  src: url('fonts/WhyDough-Regular.otf') format('opentype'),
+  src: url('fonts/WhyDough-Regular.woff2') format('woff2'),
+       url('fonts/WhyDough-Regular.otf') format('opentype'),
        url('fonts/WhyDough-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
@@ -414,7 +415,7 @@ form section {
 
 /* Homepage Specific */
 .hero-section {
-  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url('images/bg-image-hero.JPG') center/cover;
+  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url('images/bg-image-hero.webp') center/cover;
   background-attachment: scroll;
   min-height: 100vh;
 }
@@ -538,6 +539,7 @@ form section {
   text-align: center;
 }
 
+/* --- Carousel Dots --- */
 .flavor-carousel-nav {
   background: var(--accent);
   color: white;
@@ -1814,22 +1816,22 @@ textarea {
 }
 
 #customCookieCard {
-  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/bg-image-hero.JPG) center / cover;
+  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/bg-image-hero.webp) center / cover;
   color: white;
 }
 
 #ogCookieCard {
-  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/og-set.JPG) center / cover;
+  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/og-set-800w.webp) center / cover;
   color: white;
 }
 
 #classicCookieCard {
-  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/classics.JPG) center / cover;
+  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/classics-800w.webp) center / cover;
   color: white;
 }
 
 #samplerCookieCard {
-  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/samplers.JPG) center / cover;
+  background: linear-gradient(135deg, rgba(93, 74, 39, 0.9) 0%, rgba(168, 120, 86, 0.8) 100%), url(images/samplers-800w.webp) center / cover;
   color: white;
 }
 
