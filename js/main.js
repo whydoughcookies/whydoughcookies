@@ -23,7 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   setVH();
-  setupScrollableSections();
+  if (!document.body.classList.contains("thankyou-page")) {
+    setupScrollableSections();
+  }
   
   // Homepage initialization
   if (DOM.get('#flavorsCarouselTrack')) {
