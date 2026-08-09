@@ -85,14 +85,18 @@ npx wrangler pages deploy .
 Uploads static files **and** compiles `functions/` automatically (so
 `/api/notify` works). Output prints a `*.pages.dev` URL.
 
-## 8. Attach the custom domain
+## 8. Attach the custom domain (dashboard — there is NO `wrangler pages domain` CLI command)
 
-```bash
-npx wrangler pages domain add whydoughcookies <domain>  # e.g. www.whydoughcookies.com
-```
+1. Cloudflare dashboard → **Workers & Pages** → select the `whydoughcookies` project.
+2. **Custom domains** tab → **Set up a custom domain**.
+3. Enter `www.whydoughcookies.com` → Cloudflare detects the domain is on your
+   account → **Activate domain** (the DNS record is created automatically).
+4. Repeat for the apex `whydoughcookies.com`, or add a **redirect rule** so one
+   canonical host forwards to the other (pick one primary host — the sitemap and
+   canonical tags use `www.`).
 
-DNS is already on Cloudflare → the record is created automatically. Also add
-the apex `whydoughcookies.com` if it isn't attached.
+Note: the domain can only be attached after the first successful deployment
+(step 7).
 
 ---
 
