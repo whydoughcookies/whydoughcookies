@@ -310,39 +310,3 @@ function clearSocialMediaError() {
   }
 }
 
-async function submitToGoogleForms() {
-  const googleForm = DOM.get('#googleForm');
-  if (!googleForm) {
-    return false;
-  }
-  
-  try {
-    const formData = new URLSearchParams();
-    const inputs = googleForm.querySelectorAll('input');
-    
-    if (inputs.length === 0) {
-      return false;
-    }
-    
-    inputs.forEach(input => {
-      if (input.name && input.value) {
-        formData.append(input.name, input.value);
-      }
-    });
-    
-    await fetch(googleForm.action, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: formData
-    });
-    
-    return true;
-    
-  } catch (error) {
-    return false;
-  }
-}
-

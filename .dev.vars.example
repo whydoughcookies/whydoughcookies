@@ -1,0 +1,19 @@
+# Copy this file to `.dev.vars` and fill in your keys.
+# `.dev.vars` is gitignored — never commit real keys.
+#
+# Production: set these same names in the Cloudflare Pages dashboard as
+# encrypted environment variables (Settings -> Functions -> Environment variables).
+
+# --- PayMongo (stashed integration — see PAYMONGO-ROADMAP.md) ---
+PAYMONGO_SECRET_KEY = "sk_test_xxx"
+PAYMONGO_WEBHOOK_SECRET = "whsec_xxx"
+
+# --- Order notification email (Resend) ---
+# Get an API key at https://resend.com/api-keys
+RESEND_API_KEY = "re_xxx"
+# Verified sender. `onboarding@resend.dev` only works for testing (delivers to
+# the account owner's email). For production, verify your domain
+# (whydoughcookies.com) in Resend and use e.g.
+# "Why Dough Cookies <orders@whydoughcookies.com>".
+RESEND_FROM = "Why Dough Cookies <onboarding@resend.dev>"
+RESEND_TO = "whydoughcookies@gmail.com"

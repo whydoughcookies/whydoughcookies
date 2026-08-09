@@ -1,0 +1,13 @@
+# Local discussion docs — do NOT push to the repo
+ROADMAP.md
+PAYMONGO-ROADMAP.md
+
+# Dependencies
+node_modules/
+
+# Local secrets (never commit)
+.dev.vars
+.wrangler/
+
+# Logs
+*.log
