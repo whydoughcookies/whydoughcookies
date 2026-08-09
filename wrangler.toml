@@ -1,5 +1,8 @@
 name = "whydoughcookies"
 compatibility_date = "2026-08-08"
+# Required by Pages so wrangler uses this config (vars/bindings).
+# The output dir is supplied here; deploy commands must NOT also pass it as an argument.
+pages_build_output_dir = "."
 
 # ---------------------------------------------------------------------------
 # Non-secret vars. Secrets (RESEND_API_KEY, PayMongo keys) go in `.dev.vars`
