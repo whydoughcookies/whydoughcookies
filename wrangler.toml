@@ -1,6 +1,5 @@
 name = "whydoughcookies"
 compatibility_date = "2026-08-08"
-pages_build_output_dir = "."
 
 # ---------------------------------------------------------------------------
 # Non-secret vars. Secrets (RESEND_API_KEY, PayMongo keys) go in `.dev.vars`
