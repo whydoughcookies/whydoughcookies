@@ -1,0 +1,30 @@
+name = "whydoughcookies"
+compatibility_date = "2026-08-08"
+pages_build_output_dir = "."
+
+# ---------------------------------------------------------------------------
+# Non-secret vars. Secrets (RESEND_API_KEY, PayMongo keys) go in `.dev.vars`
+# for local dev and in the Cloudflare Pages dashboard as encrypted env vars.
+# ---------------------------------------------------------------------------
+[vars]
+RESEND_FROM = "Why Dough Cookies <onboarding@resend.dev>"
+RESEND_TO = "whydoughcookies@gmail.com"
+PAYMONGO_PUBLIC_KEY = "pk_test_replace_me"
+
+# ---------------------------------------------------------------------------
+# KV namespace — used by the PayMongo order-status work (see PAYMONGO-ROADMAP.md)
+# Create with:  npx wrangler kv namespace create ORDERS
+# ---------------------------------------------------------------------------
+# [[kv_namespaces]]
+# binding = "ORDERS"
+# id = "00000000000000000000000000000000"
+# preview_id = "00000000000000000000000000000000"
+
+# ---------------------------------------------------------------------------
+# D1 database — planned for the order backend / admin dashboard (see ROADMAP B.1)
+# Create with:  npx wrangler d1 create whydough-orders
+# ---------------------------------------------------------------------------
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "whydough-orders"
+# database_id = "00000000-0000-0000-0000-000000000000"
