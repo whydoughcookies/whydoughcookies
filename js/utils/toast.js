@@ -19,10 +19,17 @@ function showToast(message, type = 'success') {
     warning: '⚠️'
   };
   
-  toast.innerHTML = `
-    <span class="toast-icon">${icons[type] || '📢'}</span>
-    <span class="toast-message">${message}</span>
-  `;
+  // Build with textContent — toast messages may include user-provided text.
+  const iconEl = document.createElement('span');
+  iconEl.className = 'toast-icon';
+  iconEl.textContent = icons[type] || '📢';
+
+  const msgEl = document.createElement('span');
+  msgEl.className = 'toast-message';
+  msgEl.textContent = message;
+
+  toast.appendChild(iconEl);
+  toast.appendChild(msgEl);
   
   toastContainer.appendChild(toast);
   

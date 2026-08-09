@@ -1,6 +1,7 @@
 # Local discussion docs — do NOT push to the repo
 ROADMAP.md
 PAYMONGO-ROADMAP.md
+GBP-ROADMAP.md
 
 # Dependencies
 node_modules/

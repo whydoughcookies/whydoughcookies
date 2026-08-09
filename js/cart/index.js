@@ -53,9 +53,9 @@ function updateCartModal(totalItems, totalAmount) {
       if (item.type === 'customBox') {
         title = `Custom Cookie Set`;
         description = `
-          <p class="text-sm text-brown-700">Pack of ${item.boxSize}</p>
+          <p class="text-sm text-brown-700">Pack of ${escapeHtml(item.boxSize)}</p>
           <p class="text-sm text-brown-600">
-            ${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')}
+            ${item.items.map(it => `${escapeHtml(it.name)} (x${escapeHtml(it.qty)})`).join(', ')}
           </p>
         `;
       }
@@ -69,18 +69,18 @@ function updateCartModal(totalItems, totalAmount) {
           : 'Individual Pack';
     
         description = `
-          <p class="text-sm text-brown-700">${packLabel}</p>
+          <p class="text-sm text-brown-700">${escapeHtml(packLabel)}</p>
           <p class="text-sm text-brown-600">
-            ${item.items.map(it => `${it.name} (x${it.qty})`).join(', ')}
+            ${item.items.map(it => `${escapeHtml(it.name)} (x${escapeHtml(it.qty)})`).join(', ')}
           </p>
         `;
       }
     
       // ✅ PREMADE
       else {
-        title = item.name;
+        title = escapeHtml(item.name);
         description = `
-          <p class="text-sm text-brown-700">Quantity: ${item.quantity}</p>
+          <p class="text-sm text-brown-700">Quantity: ${escapeHtml(item.quantity)}</p>
         `;
       }
     
@@ -90,7 +90,7 @@ function updateCartModal(totalItems, totalAmount) {
             <div class="flex-1">
               <h4 class="font-bold text-brown text-2xl">${title}</h4>
               ${description}
-              <p class="font-bold text-brown-800 text-xl mt-2">₱${item.total}</p>
+              <p class="font-bold text-brown-800 text-xl mt-2">₱${escapeHtml(item.total)}</p>
             </div>
     
             <button type="button" onclick="removeFromCart(${index})"

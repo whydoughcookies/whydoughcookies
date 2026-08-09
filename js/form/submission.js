@@ -46,11 +46,11 @@ function buildOrderSummary() {
     state.cart.forEach((item) => {
       totalAmount += item.total;
       if (item.type === 'customBox') {
-        html += `- ${item.name}: ` +
-          item.items.map(it => `${it.name} x ${it.qty}`).join(', ') +
-          ` = ₱${item.total}<br>`;
+        html += `- ${escapeHtml(item.name)}: ` +
+          item.items.map(it => `${escapeHtml(it.name)} x ${escapeHtml(it.qty)}`).join(', ') +
+          ` = ₱${escapeHtml(item.total)}<br>`;
       } else {
-        html += `- ${item.name} x ${item.quantity} = ₱${item.total}<br>`;
+        html += `- ${escapeHtml(item.name)} x ${escapeHtml(item.quantity)} = ₱${escapeHtml(item.total)}<br>`;
       }
     });
   } else {

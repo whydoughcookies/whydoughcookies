@@ -107,13 +107,13 @@ function generateOrderItemsHtml(cart) {
       // Custom pack items with commas, only show cookies with qty > 0
       const cookiesText = (item.items || [])
         .filter(cookieItem => cookieItem.qty > 0)
-        .map(cookieItem => `${cookieItem.name} (×${cookieItem.qty})`)
+        .map(cookieItem => `${escapeHtml(cookieItem.name)} (×${escapeHtml(cookieItem.qty)})`)
         .join(', ');
 
-      itemsHtml += `<li class="ml-4 text-brown-600">- ${item.name}: ${cookiesText}</li>`;
+      itemsHtml += `<li class="ml-4 text-brown-600">- ${escapeHtml(item.name)}: ${cookiesText}</li>`;
     } else {
       // Premade items
-      itemsHtml += `<li class="ml-4 text-brown-600">- ${item.name} × ${item.quantity}</li>`;
+      itemsHtml += `<li class="ml-4 text-brown-600">- ${escapeHtml(item.name)} × ${escapeHtml(item.quantity)}</li>`;
     }
   });
 
