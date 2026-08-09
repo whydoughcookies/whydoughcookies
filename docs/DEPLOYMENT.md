@@ -79,8 +79,13 @@ npx wrangler d1 execute whydough-orders --file=./schema.sql --remote
 ## 7. Deploy the site
 
 ```bash
-npx wrangler pages deploy .
+npm run deploy:prod        # == npx wrangler pages deploy . --branch main
 ```
+
+**⚠️ Deploy to the production branch (`main`, set in step 2).** Running plain
+`wrangler pages deploy .` while on a feature branch (e.g. `seo-tier1`) creates a
+*preview* deployment — production stays empty and the custom domain serves
+"Deployment Not Found". Use `--branch main` (or `npm run deploy:prod`).
 
 Uploads static files **and** compiles `functions/` automatically (so
 `/api/notify` works). Output prints a `*.pages.dev` URL.

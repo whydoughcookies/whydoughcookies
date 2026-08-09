@@ -1,3 +1,6 @@
-/*    /index.html   200
+# Specific rewrites first — the catch-all must not shadow these.
 /order    /order.html   200
 /thank-you    /thank-you.html   200
+
+# SPA-style fallback (optional — see docs/DEPLOYMENT.md for the 404/SEO tradeoff)
+/*    /index.html   200
