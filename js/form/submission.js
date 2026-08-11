@@ -46,11 +46,11 @@ function buildOrderSummary() {
     state.cart.forEach((item) => {
       totalAmount += item.total;
       if (item.type === 'customBox') {
-        html += `- ${escapeHtml(item.name)}: ` +
-          item.items.map(it => `${escapeHtml(it.name)} x ${escapeHtml(it.qty)}`).join(', ') +
-          ` = ₱${escapeHtml(item.total)}<br>`;
+        html += `- ${item.name}: ` +
+          item.items.map(it => `${it.name} x ${it.qty}`).join(', ') +
+          ` = ₱${item.total}<br>`;
       } else {
-        html += `- ${escapeHtml(item.name)} x ${escapeHtml(item.quantity)} = ₱${escapeHtml(item.total)}<br>`;
+        html += `- ${item.name} x ${item.quantity} = ₱${item.total}<br>`;
       }
     });
   } else {
@@ -113,6 +113,8 @@ function prepareFormSubmitData() {
         return `${item.name} x ${item.quantity} = ₱${item.total}`;
       }
     }).join('\n');
+
+    const cookieQuantities = calculateCookieQuantities();
 
     const orderData = {
       orderId: orderId,
@@ -181,12 +183,86 @@ Order received: ${new Date().toLocaleString()}
       subjectField.value = `Why Dough Order #${orderId} - ${name} - ${itemCount} item(s) - ₱${totalAmount}`;
     }
     
+    setupGoogleFormsData(orderId, name, socialDisplay, contactNumber, deliveryDate, timeSlot, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount);
+    
     return orderData;
     
   } catch (error) {
     console.error('Error preparing form data:', error);
     return null;
   }
+}
+
+function calculateCookieQuantities() {
+  const quantities = {};
+  
+  state.cart.forEach(item => {
+    if (item.type === 'premade') {
+      if (item.name === 'The OG Set') {
+        quantities['The Usual'] = (quantities['The Usual'] || 0) + item.quantity;
+        quantities['The Red One'] = (quantities['The Red One'] || 0) + item.quantity;
+        quantities['The Burnt One'] = (quantities['The Burnt One'] || 0) + item.quantity;
+      } else if (item.name === 'The Classics') {
+        quantities['The Usual'] = (quantities['The Usual'] || 0) + item.quantity;
+        quantities['The Red One'] = (quantities['The Red One'] || 0) + item.quantity;
+        quantities['The Burnt One'] = (quantities['The Burnt One'] || 0) + item.quantity;
+        quantities['The Milky One'] = (quantities['The Milky One'] || 0) + item.quantity;
+        quantities['Pistash'] = (quantities['Pistash'] || 0) + item.quantity;
+        quantities['The Bizz'] = (quantities['The Bizz'] || 0) + item.quantity;
+      } else if (item.name === 'Samplers') {
+        quantities['Sampler Pack'] = (quantities['Sampler Pack'] || 0) + item.quantity;
+      }
+    } else if (item.type === 'customBox') {
+      item.items.forEach(cookieItem => {
+        quantities[cookieItem.name] = (quantities[cookieItem.name] || 0) + cookieItem.qty;
+      });
+    }
+  });
+  
+  return quantities;
+}
+
+function setupGoogleFormsData(orderId, name, social, contactNumber, deliveryDate, timeSlot, deliveryMethod, payment, notes, orderDetails, cookieQuantities, totalAmount) {
+  let googleForm = DOM.get('#googleForm');
+  if (!googleForm) {
+    googleForm = document.createElement('form');
+    googleForm.id = 'googleForm';
+    googleForm.style.display = 'none';
+    googleForm.method = 'POST';
+    googleForm.action = 'https://docs.google.com/forms/d/e/1FAIpQLSfEhi7T_6QIM52HL9YDgM3WkkmC4DVGUIDmdSexcpD7GF41Jw/formResponse';
+    document.body.appendChild(googleForm);
+  }
+  
+  googleForm.innerHTML = '';
+  
+  const fieldMapping = {
+    'entry.1702384608': orderId,
+    'entry.884438646': name,
+    'entry.1424096514': social,
+    'entry.2010027852': contactNumber,
+    'entry.1965862851': deliveryDate,
+    'entry.57353341': timeSlot,
+    'entry.376530706': deliveryMethod,
+    'entry.603581341': payment,
+    'entry.658455856': notes,
+    'entry.1597602789': orderDetails,
+    'entry.1560348506': formatCookieQuantities(cookieQuantities),
+    'entry.891879407': `₱${totalAmount}`,
+  };
+  
+  Object.entries(fieldMapping).forEach(([fieldId, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = fieldId;
+    input.value = value || '';
+    googleForm.appendChild(input);
+  });
+}
+
+function formatCookieQuantities(cookieQuantities) {
+  return Object.entries(cookieQuantities)
+    .map(([cookie, qty]) => `${cookie}: ${qty}`)
+    .join('; ');
 }
 
 // Enhanced handleFormSubmit function
@@ -228,14 +304,13 @@ async function handleFormSubmit(e) {
     // STORE ORDER DATA FOR THANK-YOU PAGE
     storeOrderDataForThankYouPage(orderData);
     
-    // Send the new-order notification email via the Worker → Resend.
-    // Email-only for now — no order database until the D1 backend (B.1).
-    const notifySuccess = await sendOrderNotification(orderData);
+    // Submit to both services
+    const googleSuccess = await submitToGoogleForms();
 
-    if (notifySuccess) {
-      showToast('Order submitted successfully! 📬', 'success');
+    if (googleSuccess) {
+      showToast('Order submitted successfully! 📊', 'success');
     } else {
-        showToast('Order received! We\'ll still contact you to confirm.', 'warning');
+        showToast('Order received! Tracking failed, but your order is saved.', 'warning');
     }
 
     // Clear cart and redirect
@@ -284,33 +359,6 @@ function storeOrderDataForThankYouPage(orderData) {
     return true;
   } catch (error) {
     console.error('Error storing order data:', error);
-    return false;
-  }
-}
-
-// Sends the new-order notification email via the Pages Function /api/notify,
-// which relays to Resend → whydoughcookies@gmail.com. Email-only order record
-// until the D1 order backend ships (see ROADMAP B.1).
-async function sendOrderNotification(orderData) {
-  try {
-    const summaryField = DOM.get('#orderSummaryField');
-    const text =
-      summaryField && summaryField.value
-        ? summaryField.value
-        : JSON.stringify(orderData, null, 2);
-
-    const subject = `Why Dough Order #${orderData.orderId} - ${orderData.customerName}`;
-
-    const res = await fetch('/api/notify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderId: orderData.orderId, subject, text }),
-    });
-
-    const data = await res.json().catch(() => null);
-    return res.ok && data && data.ok === true;
-  } catch (error) {
-    console.error('sendOrderNotification error:', error);
     return false;
   }
 }
