@@ -856,6 +856,24 @@ section > div > label {
   display:flex; 
 }
 
+.cookie-row.sold-out { 
+  cursor:not-allowed; 
+  background:#f3f4f6; 
+  opacity:.6; 
+}
+
+.cookie-row.sold-out:hover { 
+  background:#f3f4f6; 
+}
+
+.sold-out-badge { 
+  color:#b91c1c; 
+  font-size:.9rem; 
+  font-weight:700; 
+  text-transform:uppercase; 
+  letter-spacing:.02em; 
+}
+
 .cookie-qty-input { 
   width:56px; 
   text-align:center; 

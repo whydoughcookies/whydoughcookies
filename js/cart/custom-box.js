@@ -112,27 +112,36 @@ function renderCookieList() {
     const row = document.createElement('div');
     row.className = 'cookie-row';
     row.dataset.cookie = flavor.name;
-    row.onclick = function() { toggleCookieSelection(this); };
+
+    if (flavor.soldOut) {
+      row.classList.add('sold-out');
+      row.setAttribute('aria-disabled', 'true');
+    } else {
+      row.onclick = function() { toggleCookieSelection(this); };
+    }
 
     const label = document.createElement('div');
-    label.className = 'flex-1 flex justify-between pr-4 cursor-pointer';
+    label.className = 'flex-1 flex justify-between pr-4' + (flavor.soldOut ? '' : ' cursor-pointer');
     label.innerHTML = `<img class="custom-cookie-image" src="icons/${flavor.name}.svg">
                       <span class="cookie-label">${flavor.name} 
                         <br> 
                         <span>(${flavor.label})</span>
                         </span>
-                        <span class="cookie-price">₱${flavor.price}</span>`;
-
-    const qtyDiv = document.createElement('div');
-    qtyDiv.className = 'quantity-control hidden items-center';
-    qtyDiv.innerHTML = `
-      <button type="button" class="qty-btn" onclick="event.stopPropagation(); updateCookieQty(this, -1)">-</button>
-      <input type="number" value="1" min="0" class="cookie-qty-input" onclick="event.stopPropagation()">
-      <button type="button" class="qty-btn" onclick="event.stopPropagation(); updateCookieQty(this, 1)">+</button>
-    `;
+                        <span class="cookie-price">${flavor.soldOut ? '<span class="sold-out-badge">Sold out</span>' : `₱${flavor.price}`}</span>`;
 
     row.appendChild(label);
-    row.appendChild(qtyDiv);
+
+    if (!flavor.soldOut) {
+      const qtyDiv = document.createElement('div');
+      qtyDiv.className = 'quantity-control hidden items-center';
+      qtyDiv.innerHTML = `
+        <button type="button" class="qty-btn" onclick="event.stopPropagation(); updateCookieQty(this, -1)">-</button>
+        <input type="number" value="1" min="0" class="cookie-qty-input" onclick="event.stopPropagation()">
+        <button type="button" class="qty-btn" onclick="event.stopPropagation(); updateCookieQty(this, 1)">+</button>
+      `;
+      row.appendChild(qtyDiv);
+    }
+
     container.appendChild(row);
   });
 }

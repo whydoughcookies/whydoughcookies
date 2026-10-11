@@ -24,13 +24,13 @@ const COOKIE_FLAVORS = [
   { name: "The Bizz", price: 115, label: "Lotus Biscoff" },
   { name: "The Milky One", price: 110, label: "Classic white Chocolate" },
   { name: "Pistash", price: 120, label: "Pistachio Cream and bits" },
-  { name: "The OT", price: 115, label: "Ovaltine w/ Crunch" },
   { name: "Nut-so-Carrot", price: 130, label: "Carrot cake inspired" },
   { name: "Espress-oh", price: 115, label: "Coffee w/ creamcheese" },
   { name: "Berry match", price: 120, label: "Matcha w/ berry bits" },
-  //{ name: "The Minty One", price: 130, label: "peppermint" },
-  //{ name: "The Campfire", price: 115, label: "S'mores" },
-  //{ name: "Nut Usual", price: 120, label: "Walnut & Caramel" },
+  { name: "The OT", price: 115, label: "Ovaltine w/ Crunch", soldOut: true },
+  { name: "The Minty One", price: 130, label: "peppermint", soldOut: true },
+  { name: "The Campfire", price: 115, label: "S'mores", soldOut: true },
+  { name: "Nut Usual", price: 120, label: "Walnut & Caramel", soldOut: true },
 ];
 
 const DUBAI_FLAVORS = [

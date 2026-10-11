@@ -45,7 +45,8 @@ const flavors = [
   { 
     name: "The OT", 
     description: "Malty Ovaltine cookie with a crunchy surprise filling and creamy milk chocolate.", 
-    image: "images/the-ot.png" 
+    image: "images/the-ot.png",
+    tag: "Sold-out" 
   },
   { 
     name: "Nut-so-Carrot", 
